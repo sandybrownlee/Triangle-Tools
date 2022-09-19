@@ -6,8 +6,7 @@ let
   type Rec ~ record x: Integer, x: Integer end;
 
   var me: Name;
-  var silly : maxint;
-  var silly: Rec;
+  var silly : Rec;
 
   proc putstr (s: String) ~
     let var i: Integer

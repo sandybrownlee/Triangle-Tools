@@ -8,5 +8,5 @@ dependencies {
 }
 
 application {
-	mainClass = 'Triangle.AbstractMachine.Disassembler'
+	mainClassName = 'Triangle.AbstractMachine.Disassembler'
 }
