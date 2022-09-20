@@ -14,6 +14,9 @@
 
 package triangle.treeDrawer;
 
+/**
+ * used to keep track of the position for components in the tree to be drawn
+ */
 class Polyline {
 	int dx, dy;
 	Polyline link;

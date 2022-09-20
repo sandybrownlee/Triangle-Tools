@@ -33,6 +33,8 @@ public class Compiler {
 
 	/** The filename for the object program, normally obj.tam. */
 	static String objectName = "obj.tam";
+	
+	static boolean showTree = false;
 
 	private static Scanner scanner;
 	private static Parser parser;
@@ -71,7 +73,7 @@ public class Compiler {
 		}
 
 		scanner = new Scanner(source);
-		reporter = new ErrorReporter();
+		reporter = new ErrorReporter(false);
 		parser = new Parser(scanner, reporter);
 		checker = new Checker(reporter);
 		emitter = new Emitter(reporter);
@@ -80,7 +82,7 @@ public class Compiler {
 
 		// scanner.enableDebugging();
 		theAST = parser.parseProgram(); // 1st pass
-		if (reporter.numErrors == 0) {
+		if (reporter.getNumErrors() == 0) {
 			// if (showingAST) {
 			// drawer.draw(theAST);
 			// }
@@ -89,13 +91,13 @@ public class Compiler {
 			if (showingAST) {
 				drawer.draw(theAST);
 			}
-			if (reporter.numErrors == 0) {
+			if (reporter.getNumErrors() == 0) {
 				System.out.println("Code Generation ...");
 				encoder.encodeRun(theAST, showingTable); // 3rd pass
 			}
 		}
 
-		boolean successful = (reporter.numErrors == 0);
+		boolean successful = (reporter.getNumErrors() == 0);
 		if (successful) {
 			emitter.saveObjectProgram(objectName);
 			System.out.println("Compilation was successful.");
@@ -114,16 +116,29 @@ public class Compiler {
 	public static void main(String[] args) {
 
 		if (args.length < 1) {
-			System.out.println("Usage: tc filename [tree]");
+			System.out.println("Usage: tc filename [-o=outputfilename] [tree]");
 			System.exit(1);
 		}
+		
+		parseArgs(args);
 
 		String sourceName = args[0];
-		boolean tree = (args.length > 1 && args[1].equalsIgnoreCase("tree"));
-		var compiledOK = compileProgram(sourceName, objectName, tree, false);
+		
+		var compiledOK = compileProgram(sourceName, objectName, showTree, false);
 
-		if (!tree) {
+		if (!showTree) {
 			System.exit(compiledOK ? 0 : 1);
+		}
+	}
+	
+	private static void parseArgs(String[] args) {
+		for (String s : args) {
+			var sl = s.toLowerCase();
+			if (sl.equals("tree")) {
+				showTree = true;
+			} else if (sl.startsWith("-o=")) {
+				objectName = s.substring(3);
+			}
 		}
 	}
 }

@@ -42,6 +42,13 @@ public class Drawer {
 
 		FontMetrics fontMetrics = frame.getFontMetrics(font);
 
+		// another class of visitor is used for drawing the tree: LayoutVisitor
+		// LayoutVisitor is passed to the AST which, in turn, calls visitProgram
+		// and then each AST node is visited. This ultimately constructs a 
+		// DrawingTree, which is structurally the same as the AST but is decorated
+		// with coordinates (and has only DrawingTree objects as nodes)
+		// Each DrawingTree object knows how to paint itself, so it's passed to a
+		// DrawerPanel and DrawerFrame for display 
 		LayoutVisitor layout = new LayoutVisitor(fontMetrics);
 		theDrawing = (DrawingTree) theAST.visit(layout, null);
 		theDrawing.position(new Point(2048, 10));
