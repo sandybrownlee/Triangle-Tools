@@ -1,0 +1,13 @@
+let
+ var i: Integer;
+ var j: Integer;
+ var s: Integer;
+ var p: Integer
+in
+ begin
+ getint (var i); getint (var j);
+ s := i + j;
+ p := i * j;
+ putint (s); puteol();
+ putint (p); puteol();
+ end

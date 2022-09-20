@@ -113,6 +113,8 @@ import triangle.codeGenerator.entities.TypeRepresentation;
 import triangle.codeGenerator.entities.UnknownAddress;
 import triangle.codeGenerator.entities.UnknownRoutine;
 import triangle.codeGenerator.entities.UnknownValue;
+import triangle.treeDrawer.DrawingTree;
+import triangle.abstractSyntaxTrees.commands.RepeatCommand;
 
 public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 		ActualParameterSequenceVisitor<Frame, Integer>, ArrayAggregateVisitor<Frame, Integer>,
@@ -167,6 +169,11 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 	public Void visitSequentialCommand(SequentialCommand ast, Frame frame) {
 		ast.C1.visit(this, frame);
 		ast.C2.visit(this, frame);
+		return null;
+	}
+	
+	@Override
+	public Void visitRepeatCommand(RepeatCommand ast, Frame obj) {
 		return null;
 	}
 
