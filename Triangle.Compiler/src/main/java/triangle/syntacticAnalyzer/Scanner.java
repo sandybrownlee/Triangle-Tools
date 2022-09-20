@@ -65,7 +65,9 @@ public final class Scanner {
 		switch (currentChar) {
 		
 		// comment
-		case '!': {
+		case '!':
+			//# comment
+			case '#': {
 			takeIt();
 			while ((currentChar != SourceFile.EOL) && (currentChar != SourceFile.EOT))
 				takeIt();
@@ -73,15 +75,6 @@ public final class Scanner {
 				takeIt();
 		}
 		break;
-		   //# comment
-			case '#': {
-				takeIt();
-				while ((currentChar != SourceFile.EOL) && (currentChar != SourceFile.EOT))
-					takeIt();
-				if (currentChar == SourceFile.EOL)
-					takeIt();
-			}
-			break;
 			//$ comment
 			case '$': {
 				takeIt();
