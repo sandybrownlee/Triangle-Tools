@@ -34,7 +34,7 @@ public final class Scanner {
 	// isOperator returns true iff the given character is an operator character.
 
 	private boolean isOperator(char c) {
-		return (c == '+' || c == '-' || c == '*' || c == '/' || c == '=' || c == '<' || c == '>' || c == '\\'
+		return (c == '|' || c == '+' || c == '-' || c == '*' || c == '/' || c == '=' || c == '<' || c == '>' || c == '\\'
 				|| c == '&' || c == '@' || c == '%' || c == '^' || c == '?');
 	}
 
@@ -73,7 +73,25 @@ public final class Scanner {
 				takeIt();
 		}
 			break;
-
+			
+		case '#': {
+			takeIt();
+			while ((currentChar != SourceFile.EOL) && (currentChar != SourceFile.EOT))
+				takeIt();
+			if (currentChar == SourceFile.EOL)
+				takeIt();
+		}
+			break;
+			
+		case '$': {
+			takeIt();
+			while ((currentChar != '$') && (currentChar != SourceFile.EOT))
+				takeIt();
+			if (currentChar == '$')
+				takeIt();
+		}
+			break;
+			
 		// whitespace
 		case ' ':
 		case '\n':
@@ -173,6 +191,7 @@ public final class Scanner {
 		case '%':
 		case '^':
 		case '?':
+		case '|':
 			takeIt();
 			while (isOperator(currentChar))
 				takeIt();
@@ -251,7 +270,7 @@ public final class Scanner {
 
 		currentlyScanningToken = false;
 		// skip any whitespace or comments
-		while (currentChar == '!' || currentChar == ' ' || currentChar == '\n' || currentChar == '\r'
+		while (currentChar == '$' || currentChar == '#' || currentChar == '!' || currentChar == ' ' || currentChar == '\n' || currentChar == '\r'
 				|| currentChar == '\t')
 			scanSeparator();
 

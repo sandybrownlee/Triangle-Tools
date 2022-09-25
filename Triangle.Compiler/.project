@@ -20,4 +20,11 @@
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.eclipse.buildship.core.gradleprojectnature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>programs</name>
+			<type>2</type>
+			<location>/home/david/Documents/ERASMUS-stirling/courses/autumn/CSCU9A5-Code-Analysis-And-Performance/week2/Triangle-Tools/programs</location>
+		</link>
+	</linkedResources>
 </projectDescription>
