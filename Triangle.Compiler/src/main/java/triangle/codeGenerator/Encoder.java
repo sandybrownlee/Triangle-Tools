@@ -40,6 +40,7 @@ import triangle.abstractSyntaxTrees.commands.IfCommand;
 import triangle.abstractSyntaxTrees.commands.LetCommand;
 import triangle.abstractSyntaxTrees.commands.SequentialCommand;
 import triangle.abstractSyntaxTrees.commands.WhileCommand;
+import triangle.abstractSyntaxTrees.commands.RepeatCommand;
 import triangle.abstractSyntaxTrees.declarations.BinaryOperatorDeclaration;
 import triangle.abstractSyntaxTrees.declarations.ConstDeclaration;
 import triangle.abstractSyntaxTrees.declarations.Declaration;
@@ -564,7 +565,7 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 		if (frame == null) { // in this case, we're just using the frame to wrap up the size
 			frame = Frame.Initial;
 		}
-		
+
 		var offset = frame.getSize();
 		int fieldSize;
 		if (ast.entity == null) {

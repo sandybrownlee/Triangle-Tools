@@ -20,7 +20,7 @@ import triangle.syntacticAnalyzer.SourcePosition;
 
 public class RepeatCommand extends Command {
 
-	public WhileCommand(Expression eAST, Command cAST, SourcePosition position) {
+	public RepeatCommand(Expression eAST, Command cAST, SourcePosition position) {
 		super(position);
 		E = eAST;
 		C = cAST;
