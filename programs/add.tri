@@ -6,12 +6,12 @@ in
  begin
  getint (var x);
  getint (var y);
- ! display sum of x and y
+ ! sum of x and y
  putint (x); put ('+'); putint (y); put ('='); putint (x+y);
  put(' ');
- ! display product of x and y
+ ! product of x and y
  putint (x); put ('*'); putint (y); put ('='); putint (x*y); put(' ');
- ! display "same" if x and y are the same, otherwise nothing
+ ! "same" if x and y are the same, otherwise nothing
  if x=y
  then
  begin
