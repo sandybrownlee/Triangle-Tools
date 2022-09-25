@@ -185,6 +185,12 @@ public final class Checker implements ActualParameterVisitor<FormalParameter, Vo
 		return null;
 	}
 
+	@Override
+	public void visitRepeatCommand(RepeatCommand ast, Void arg) {
+		return;
+	}
+
+
 	// Expressions
 
 	// Returns the TypeDenoter denoting the type of the expression. Does

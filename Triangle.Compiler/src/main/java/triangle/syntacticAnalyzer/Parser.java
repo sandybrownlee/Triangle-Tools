@@ -330,6 +330,16 @@ public class Parser {
 		}
 			break;
 
+			case Token.REPEAT: {
+				acceptIt();
+				Expression eAST = parseExpression();
+				accept(Token.UNTIL);
+				Command cAST = parseSingleCommand();
+				finish(commandPos);
+				commandAST = new RepeatCommand(eAST, cAST, commandPos);
+			}
+				break;
+	
 		case Token.SEMICOLON:
 		case Token.END:
 		case Token.ELSE:

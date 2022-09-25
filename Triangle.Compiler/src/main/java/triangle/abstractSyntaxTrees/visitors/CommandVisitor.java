@@ -24,4 +24,6 @@ public interface CommandVisitor<TArg, TResult> {
 
 	TResult visitWhileCommand(WhileCommand ast, TArg arg);
 
+	TResult visitRepeatCommand(RepeatCommand ast, TArg arg);
+
 }
