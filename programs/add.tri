@@ -1,7 +1,6 @@
 let
  var x: Integer;
  var y: Integer
-
 in
  begin
  getint (var x);
