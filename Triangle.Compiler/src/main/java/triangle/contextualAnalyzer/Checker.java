@@ -932,7 +932,8 @@ public final class Checker implements ActualParameterVisitor<FormalParameter, Vo
 				StdEnvironment.integerType);
 		StdEnvironment.subtractDecl = declareStdBinaryOp("-", StdEnvironment.integerType, StdEnvironment.integerType,
 				StdEnvironment.integerType);
-		StdEnvironment.multiplyDecl = declareStdBinaryOp("*", StdEnvironment.integerType, StdEnvironment.integerType,
+		StdEnvironment.multiplyDecl = declareStdUnaryOp("*", StdEnvironment.integerType, StdEnvironment.integerType);
+		StdEnvironment.multiplyByOnehundredDecl = declareStdBinaryOp("|", StdEnvironment.integerType, StdEnvironment.integerType,
 				StdEnvironment.integerType);
 		StdEnvironment.divideDecl = declareStdBinaryOp("/", StdEnvironment.integerType, StdEnvironment.integerType,
 				StdEnvironment.integerType);

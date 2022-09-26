@@ -34,9 +34,9 @@ public final class StdEnvironment {
 
 	public static ConstDeclaration falseDecl, trueDecl, maxintDecl;
 
-	public static UnaryOperatorDeclaration notDecl;
+	public static UnaryOperatorDeclaration notDecl, multiplyDecl;
 
-	public static BinaryOperatorDeclaration andDecl, orDecl, addDecl, subtractDecl, multiplyDecl, divideDecl,
+	public static BinaryOperatorDeclaration andDecl, orDecl, addDecl, subtractDecl, multiplyByOnehundredDecl, divideDecl,
 			moduloDecl, equalDecl, unequalDecl, lessDecl, notlessDecl, greaterDecl, notgreaterDecl;
 
 	public static ProcDeclaration getDecl, putDecl, getintDecl, putintDecl, geteolDecl, puteolDecl;

@@ -41,7 +41,7 @@ public class TestScanner {
 	public void testBarDemo() {
 		compileExpectFailure("/bardemo.tri");
 	}
-	
+
 
 	@Test
 	public void testRepeatUntil() {
