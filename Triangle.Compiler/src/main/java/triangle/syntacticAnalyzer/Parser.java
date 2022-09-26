@@ -274,6 +274,26 @@ public class Parser {
 				finish(commandPos);
 				commandAST = new CallCommand(iAST, apsAST, commandPos);
 
+			}else if(currentToken.kind == Token.OPERATOR){
+
+				acceptIt();
+				 //Set up the operator
+				 String spelling = "+";
+				 Operator operator = new Operator(spelling, previousTokenPosition);
+
+				 //Set up the IntegerExpression
+				 String IntegerLiteralSpelling = "1";
+				 IntegerLiteral integerLiteral = new IntegerLiteral(IntegerLiteralSpelling,previousTokenPosition);
+                 IntegerExpression iEXP = new IntegerExpression(integerLiteral,previousTokenPosition);
+
+                 //Set up the variable name expression
+				Vname vAST = parseRestOfVname(iAST);
+                 VnameExpression vnameExpression = new VnameExpression(vAST,previousTokenPosition);
+
+				 //Set up the binary expression
+				 BinaryExpression binaryExpression = new BinaryExpression(vnameExpression, operator, iEXP, previousTokenPosition);
+                 commandAST = new AssignCommand(vAST,binaryExpression,previousTokenPosition);
+
 			} else {
 
 				Vname vAST = parseRestOfVname(iAST);
