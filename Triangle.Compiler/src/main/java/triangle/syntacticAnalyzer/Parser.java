@@ -333,9 +333,9 @@ public class Parser {
 
 			case Token.REPEAT: {
 				acceptIt();
-				Expression eAST = parseExpression();
-				accept(Token.UNTIL);
 				Command cAST = parseSingleCommand();
+				accept(Token.UNTIL);
+				Expression eAST = parseExpression();
 				finish(commandPos);
 				commandAST = new RepeatCommand(eAST, cAST, commandPos);
 			}
