@@ -3,19 +3,19 @@ let
 	var b : Integer
 in
 begin
-	getint (var a);
-	getint (var b);
-	putint (a + b); puteol ();
-	putint (a * b); puteol ();
+	getint(var a);
+	getint(var b);
+	putint(a + b); puteol();
+	putint(a * b); puteol();
 	if a = b
 	then
 		begin
-			put ('S');
-			put ('a');
-			put ('m');
-			put ('e');
-			put ('!');
-			puteol ();
+			put('S');
+			put('a');
+			put('m');
+			put('e');
+			put('!');
+			puteol();
 		end
 	else;
 end
