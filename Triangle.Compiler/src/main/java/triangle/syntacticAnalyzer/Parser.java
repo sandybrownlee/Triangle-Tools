@@ -563,7 +563,7 @@ public class Parser {
 				acceptIt();
 				Identifier iAST = parseIdentifier();
 				vAST = new DotVname(vAST, iAST, vnamePos);
-			} else {
+			} else if (currentToken.kind == Token.LBRACKET) {
 				acceptIt();
 				Expression eAST = parseExpression();
 				accept(Token.RBRACKET);
