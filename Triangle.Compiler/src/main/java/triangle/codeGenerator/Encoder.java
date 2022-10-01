@@ -93,20 +93,7 @@ import triangle.abstractSyntaxTrees.vnames.DotVname;
 import triangle.abstractSyntaxTrees.vnames.SimpleVname;
 import triangle.abstractSyntaxTrees.vnames.SubscriptVname;
 import triangle.abstractSyntaxTrees.vnames.Vname;
-import triangle.codeGenerator.entities.AddressableEntity;
-import triangle.codeGenerator.entities.EqualityRoutine;
-import triangle.codeGenerator.entities.FetchableEntity;
-import triangle.codeGenerator.entities.Field;
-import triangle.codeGenerator.entities.KnownAddress;
-import triangle.codeGenerator.entities.KnownRoutine;
-import triangle.codeGenerator.entities.KnownValue;
-import triangle.codeGenerator.entities.PrimitiveRoutine;
-import triangle.codeGenerator.entities.RoutineEntity;
-import triangle.codeGenerator.entities.RuntimeEntity;
-import triangle.codeGenerator.entities.TypeRepresentation;
-import triangle.codeGenerator.entities.UnknownAddress;
-import triangle.codeGenerator.entities.UnknownRoutine;
-import triangle.codeGenerator.entities.UnknownValue;
+import triangle.codeGenerator.entities.*;
 
 public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 		ActualParameterSequenceVisitor<Frame, Integer>, ArrayAggregateVisitor<Frame, Integer>,
@@ -703,6 +690,10 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 		routineDeclaration.entity = new EqualityRoutine(Machine.closureSize, primitive);
 		writeTableDetails(routineDeclaration);
 	}
+	private final void elaborateBarPrimitiveRoutine(Declaration routineDeclaration, Primitive primitive) {
+		routineDeclaration.entity = new BarPrimitiveRoutine(primitive);
+		writeTableDetails(routineDeclaration);
+	}
 
 	private final void elaborateStdEnvironment() {
 		tableDetailsReqd = false;
@@ -733,6 +724,7 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 		elaborateStdPrimRoutine(StdEnvironment.puteolDecl, Primitive.PUTEOL);
 		elaborateStdEqRoutine(StdEnvironment.equalDecl, Primitive.EQ);
 		elaborateStdEqRoutine(StdEnvironment.unequalDecl, Primitive.NE);
+		elaborateBarPrimitiveRoutine(StdEnvironment.barDecl, Primitive.BAR);
 	}
 
 	boolean tableDetailsReqd;
