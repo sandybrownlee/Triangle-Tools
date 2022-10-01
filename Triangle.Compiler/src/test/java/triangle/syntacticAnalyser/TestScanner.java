@@ -48,6 +48,7 @@ public class TestScanner {
 	}
 	@Test
 	public void testIncrement() {
+		int a = 3;
 		compileExpectSuccess("/increment.tri");
 	}
 	

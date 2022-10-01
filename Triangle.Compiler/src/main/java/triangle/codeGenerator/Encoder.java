@@ -176,7 +176,7 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 	}
 
 	@Override
-	public Void visitRepeatCommand(RepeatCommand ast, Frame frame) {
+	public Void visitRepeatCommand(RepeatCommand ast, Frame arg) {
 		return null;
 	}
 
