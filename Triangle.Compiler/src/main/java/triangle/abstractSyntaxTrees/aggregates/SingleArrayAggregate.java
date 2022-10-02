@@ -29,5 +29,5 @@ public class SingleArrayAggregate extends ArrayAggregate {
 		return v.visitSingleArrayAggregate(this, arg);
 	}
 
-	public final Expression E;
+	public Expression E;
 }
