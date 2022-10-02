@@ -31,5 +31,5 @@ public class LetExpression extends Expression {
 	}
 
 	public final Declaration D;
-	public final Expression E;
+	public Expression E;
 }

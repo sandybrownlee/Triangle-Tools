@@ -30,5 +30,7 @@ public class IfExpression extends Expression {
 		return v.visitIfExpression(this, arg);
 	}
 
-	public final Expression E1, E2, E3;
+	public Expression E1;
+    public Expression E2;
+    public Expression E3;
 }
