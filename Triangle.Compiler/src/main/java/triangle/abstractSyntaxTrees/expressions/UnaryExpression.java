@@ -30,6 +30,6 @@ public class UnaryExpression extends Expression {
 		return v.visitUnaryExpression(this, arg);
 	}
 
-	public final Expression E;
+	public Expression E;
 	public final Operator O;
 }
