@@ -738,6 +738,7 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 		elaborateStdPrimRoutine(StdEnvironment.putintDecl, Primitive.PUTINT);
 		elaborateStdPrimRoutine(StdEnvironment.geteolDecl, Primitive.GETEOL);
 		elaborateStdPrimRoutine(StdEnvironment.puteolDecl, Primitive.PUTEOL);
+		elaborateStdPrimRoutine(StdEnvironment.barDecl, Primitive.BAR);
 		elaborateStdEqRoutine(StdEnvironment.equalDecl, Primitive.EQ);
 		elaborateStdEqRoutine(StdEnvironment.unequalDecl, Primitive.NE);
 	}
