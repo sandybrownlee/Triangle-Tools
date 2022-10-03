@@ -274,14 +274,14 @@ public class Parser {
 				finish(commandPos);
 				commandAST = new CallCommand(iAST, apsAST, commandPos);
 
-			}else if(currentToken.spelling.equals("++")){
+			}else if(currentToken.spelling.equals("++") && currentToken.kind == Token.OPERATOR){
 
 				accept(Token.OPERATOR);
 
 
 					//Set up the operator
 					String spelling = "+";
-					Operator operator = new Operator(spelling, previousTokenPosition);
+					Operator operator = new Operator(spelling,previousTokenPosition);
 
 					//Set up the IntegerExpression
 					String IntegerLiteralSpelling = "1";
