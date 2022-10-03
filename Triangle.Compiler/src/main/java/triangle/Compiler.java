@@ -18,6 +18,7 @@ import triangle.abstractSyntaxTrees.Program;
 import triangle.codeGenerator.Emitter;
 import triangle.codeGenerator.Encoder;
 import triangle.contextualAnalyzer.Checker;
+import triangle.optimiser.ConstantFolder;
 import triangle.syntacticAnalyzer.Parser;
 import triangle.syntacticAnalyzer.Scanner;
 import triangle.syntacticAnalyzer.SourceFile;
@@ -35,6 +36,7 @@ public class Compiler {
 	static String objectName = "obj.tam";
 	
 	static boolean showTree = false;
+	static boolean folding = false;
 
 	private static Scanner scanner;
 	private static Parser parser;
@@ -91,6 +93,10 @@ public class Compiler {
 			if (showingAST) {
 				drawer.draw(theAST);
 			}
+			if (folding) {
+				theAST.visit(new ConstantFolder());
+			}
+			
 			if (reporter.getNumErrors() == 0) {
 				System.out.println("Code Generation ...");
 				encoder.encodeRun(theAST, showingTable); // 3rd pass
@@ -116,7 +122,7 @@ public class Compiler {
 	public static void main(String[] args) {
 
 		if (args.length < 1) {
-			System.out.println("Usage: tc filename [-o=outputfilename] [tree]");
+			System.out.println("Usage: tc filename [-o=outputfilename] [tree] [folding]");
 			System.exit(1);
 		}
 		
@@ -138,6 +144,8 @@ public class Compiler {
 				showTree = true;
 			} else if (sl.startsWith("-o=")) {
 				objectName = s.substring(3);
+			} else if (sl.equals("folding")) {
+				folding = true;
 			}
 		}
 	}
