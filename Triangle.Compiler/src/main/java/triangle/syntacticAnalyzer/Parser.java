@@ -227,7 +227,6 @@ public class Parser {
 
 	Operator parseOperator() throws SyntaxError {
 		Operator O = null;
-
 		if (currentToken.kind == Token.OPERATOR) {
 			previousTokenPosition = currentToken.position;
 			String spelling = currentToken.spelling;
@@ -281,14 +280,24 @@ public class Parser {
 				accept(Token.RPAREN);
 				finish(commandPos);
 				commandAST = new CallCommand(iAST, apsAST, commandPos);
-
 			} else {
-
 				Vname vAST = parseRestOfVname(iAST);
-				accept(Token.BECOMES);
-				Expression eAST = parseExpression();
-				finish(commandPos);
-				commandAST = new AssignCommand(vAST, eAST, commandPos);
+				if (currentToken.spelling.equals("++")) {
+					Operator opAST = parseOperator();
+					opAST = new Operator("+", commandPos);
+					VnameExpression vExpr = new VnameExpression(vAST, commandPos);
+					IntegerLiteral litOne = new IntegerLiteral("1", commandPos);
+					Expression expOne = new IntegerExpression(litOne, commandPos);
+					Expression incOne = new BinaryExpression(vExpr, opAST, expOne, commandPos);
+					finish(commandPos);
+					commandAST = new AssignCommand(vAST, incOne, commandPos);
+				} else {
+					accept(Token.BECOMES);
+					Expression eAST = parseExpression();
+					finish(commandPos);
+					commandAST = new AssignCommand(vAST, eAST, commandPos);
+				}
+
 			}
 		}
 			break;
@@ -330,7 +339,7 @@ public class Parser {
 			commandAST = new RepeatCommand(eAST, cAST, commandPos);
 		}
 			break;
-			
+
 		case Token.WHILE: {
 			acceptIt();
 			Expression eAST = parseExpression();
@@ -358,6 +367,7 @@ public class Parser {
 		}
 
 		return commandAST;
+
 	}
 
 	///////////////////////////////////////////////////////////////////////////////
@@ -467,7 +477,6 @@ public class Parser {
 				accept(Token.RPAREN);
 				finish(expressionPos);
 				expressionAST = new CallExpression(iAST, apsAST, expressionPos);
-
 			} else {
 				Vname vAST = parseRestOfVname(iAST);
 				finish(expressionPos);

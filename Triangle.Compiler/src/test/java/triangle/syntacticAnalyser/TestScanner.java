@@ -36,6 +36,11 @@ public class TestScanner {
 		compileExpectSuccess("/bardemo.tri");
 	}
 	
+	@Test
+	public void testIncrement() {
+		compileExpectSuccess("/inc.tri");
+	}
+	
 
 	@Test
 	public void testRepeatUntil() {
