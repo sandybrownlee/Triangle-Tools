@@ -1,0 +1,11 @@
+let
+var firstInputFromUser: Integer;
+var secondInputFromUser: Integer
+in
+	begin
+	getint (var firstInputFromUser);
+	getint (var secondInputFromUser);
+	putint (firstInputFromUser + secondInputFromUser);
+	puteol();
+	putint (firstInputFromUser * secondInputFromUser);
+	end

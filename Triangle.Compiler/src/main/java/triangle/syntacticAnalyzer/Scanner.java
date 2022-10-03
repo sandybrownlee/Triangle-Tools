@@ -32,10 +32,10 @@ public final class Scanner {
 	}
 
 	// isOperator returns true iff the given character is an operator character.
-
+	// 3/10/22 '|' is a new optional character || c == '|'
 	private boolean isOperator(char c) {
 		return (c == '+' || c == '-' || c == '*' || c == '/' || c == '=' || c == '<' || c == '>' || c == '\\'
-				|| c == '&' || c == '@' || c == '%' || c == '^' || c == '?');
+				|| c == '&' || c == '@' || c == '%' || c == '^' || c == '?' || c == '|');
 	}
 
 	///////////////////////////////////////////////////////////////////////////////
@@ -63,16 +63,27 @@ public final class Scanner {
 
 	private void scanSeparator() {
 		switch (currentChar) {
-		
+
 		// comment
+		case '#':
 		case '!': {
-			takeIt();
-			while ((currentChar != SourceFile.EOL) && (currentChar != SourceFile.EOT))
 				takeIt();
-			if (currentChar == SourceFile.EOL)
-				takeIt();
+				while ((currentChar != SourceFile.EOL) && (currentChar != SourceFile.EOT))
+					takeIt();
+				if (currentChar == SourceFile.EOL)
+					takeIt();
+
+			}
+				break;
+
+			case '$': {
+					takeIt(); // We grab characters, including newlines, until we hit a $ or end of file
+					while ((currentChar != '$') && (currentChar != SourceFile.EOT))
+						takeIt();
+					if ((currentChar != '$') || (currentChar == SourceFile.EOL))
+						takeIt();
 		}
-			break;
+
 
 		// whitespace
 		case ' ':
@@ -80,7 +91,8 @@ public final class Scanner {
 		case '\r':
 		case '\t':
 			takeIt();
-			break;
+				break;
+
 		}
 	}
 
@@ -173,6 +185,7 @@ public final class Scanner {
 		case '%':
 		case '^':
 		case '?':
+		case '|':
 			takeIt();
 			while (isOperator(currentChar))
 				takeIt();
@@ -250,9 +263,9 @@ public final class Scanner {
 		int kind;
 
 		currentlyScanningToken = false;
-		// skip any whitespace or comments
+		// skip any whitespace or comments ** New **
 		while (currentChar == '!' || currentChar == ' ' || currentChar == '\n' || currentChar == '\r'
-				|| currentChar == '\t')
+				|| currentChar == '\t' || currentChar == '#' || currentChar == '$')
 			scanSeparator();
 
 		currentlyScanningToken = true;
