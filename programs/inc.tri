@@ -1,0 +1,12 @@
+let
+    var a : Integer;
+    var b : Integer;
+    var c : Integer
+
+in
+    begin
+        a := 1;
+		a++;
+		a++;
+    end
+
