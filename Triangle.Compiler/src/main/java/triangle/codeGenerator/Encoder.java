@@ -93,20 +93,7 @@ import triangle.abstractSyntaxTrees.vnames.DotVname;
 import triangle.abstractSyntaxTrees.vnames.SimpleVname;
 import triangle.abstractSyntaxTrees.vnames.SubscriptVname;
 import triangle.abstractSyntaxTrees.vnames.Vname;
-import triangle.codeGenerator.entities.AddressableEntity;
-import triangle.codeGenerator.entities.EqualityRoutine;
-import triangle.codeGenerator.entities.FetchableEntity;
-import triangle.codeGenerator.entities.Field;
-import triangle.codeGenerator.entities.KnownAddress;
-import triangle.codeGenerator.entities.KnownRoutine;
-import triangle.codeGenerator.entities.KnownValue;
-import triangle.codeGenerator.entities.PrimitiveRoutine;
-import triangle.codeGenerator.entities.RoutineEntity;
-import triangle.codeGenerator.entities.RuntimeEntity;
-import triangle.codeGenerator.entities.TypeRepresentation;
-import triangle.codeGenerator.entities.UnknownAddress;
-import triangle.codeGenerator.entities.UnknownRoutine;
-import triangle.codeGenerator.entities.UnknownValue;
+import triangle.codeGenerator.entities.*;
 
 public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 		ActualParameterSequenceVisitor<Frame, Integer>, ArrayAggregateVisitor<Frame, Integer>,
@@ -159,6 +146,12 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 
 	@Override
 	public Void visitRepeatCommand(RepeatCommand ast, Frame frame) {
+		var loopAddr = emitter.getNextInstrAddr();
+		var jumpAddr = emitter.emit(OpCode.JUMP, 0, Register.CB, 0);
+		ast.C.visit(this, frame);
+		emitter.patch(jumpAddr);
+		ast.E.visit(this, frame);
+		emitter.emit(OpCode.JUMPIF, Machine.trueRep, Register.CB, loopAddr);
 		return null;
 	}
 
@@ -733,6 +726,9 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 		elaborateStdPrimRoutine(StdEnvironment.puteolDecl, Primitive.PUTEOL);
 		elaborateStdEqRoutine(StdEnvironment.equalDecl, Primitive.EQ);
 		elaborateStdEqRoutine(StdEnvironment.unequalDecl, Primitive.NE);
+		elaborateStdPrimRoutine(StdEnvironment.barDecl, Primitive.MULT);
+
+		StdEnvironment.barDecl.entity = new BarPrimitiveRoutine();
 	}
 
 	boolean tableDetailsReqd;
