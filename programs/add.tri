@@ -1,0 +1,25 @@
+let
+ var firstNum: Integer;
+ var secondNum: Integer;
+ var sumNum: Integer
+in
+
+begin
+
+ getint(var firstNum);
+ getint(var secondNum);
+ sumNum:= firstNum + secondNum;
+ putint(sumNum);
+
+ if firstNum = secondNum
+ then 
+ begin
+  put(' ');
+  put('S');
+  put('a');
+  put('m');
+  put('e');
+  put('!');
+ end
+ else
+end
