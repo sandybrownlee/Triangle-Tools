@@ -20,4 +20,11 @@
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.eclipse.buildship.core.gradleprojectnature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>programs</name>
+			<type>2</type>
+			<location>C:/Users/tount/Desktop/uni 2022-23/CSCU9A5 Code/Triangle-Tools/Triangle-Tools/programs</location>
+		</link>
+	</linkedResources>
 </projectDescription>

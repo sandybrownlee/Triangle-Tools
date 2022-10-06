@@ -1,0 +1,29 @@
+! Get two integers, print their sum and product. If same print "Same!"
+
+let
+	var n : Integer; !Needed a ; at the first declaration
+	var m : Integer
+in
+	begin
+	getint (var n); geteol ();
+	getint (var m); geteol ();
+let 
+	var sum : Integer;
+	var product : Integer
+	in
+		begin
+		sum := n + m;
+		putint(sum); 
+		puteol();
+
+		product := n * m;
+		putint(product); 
+		puteol ();
+
+		 if n = m 
+			then begin
+			put('S'); put('a'); put('m'); put('e'); put('!'); 
+			end
+			else;
+   		end
+	end
