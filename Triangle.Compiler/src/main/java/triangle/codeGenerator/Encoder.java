@@ -38,6 +38,7 @@ import triangle.abstractSyntaxTrees.commands.CallCommand;
 import triangle.abstractSyntaxTrees.commands.EmptyCommand;
 import triangle.abstractSyntaxTrees.commands.IfCommand;
 import triangle.abstractSyntaxTrees.commands.LetCommand;
+import triangle.abstractSyntaxTrees.commands.RepeatCommand;
 import triangle.abstractSyntaxTrees.commands.SequentialCommand;
 import triangle.abstractSyntaxTrees.commands.WhileCommand;
 import triangle.abstractSyntaxTrees.declarations.BinaryOperatorDeclaration;
@@ -167,6 +168,10 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 	public Void visitSequentialCommand(SequentialCommand ast, Frame frame) {
 		ast.C1.visit(this, frame);
 		ast.C2.visit(this, frame);
+		return null;
+	}
+
+	public Void visitRepeatCommand(RepeatCommand ast, Frame arg) {
 		return null;
 	}
 
@@ -741,9 +746,10 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 	public static void writeTableDetails(AbstractSyntaxTree ast) {
 	}
 
-	// Generates code to pop the top off the stack
-	// and store the value in a named constant or variable
-	// frame the local stack frame when
+	// Generates code to fetch the value of a named constant or variable
+	// and push it on to the stack.
+	// currentLevel is the routine level where the vname occurs.
+	// frameSize is the anticipated size of the local stack frame when
 	// the constant or variable is fetched at run-time.
 	// valSize is the size of the constant or variable's value.
 

@@ -22,13 +22,13 @@ public class TestScanner {
 
 	@Test
 	public void testHiNewComment() {
-		compileExpectFailure("/hi-newcomment.tri");
+		compileExpectSuccess("/hi-newcomment.tri");
 	}
 	
 
 	@Test
 	public void testHiNewComment2() {
-		compileExpectFailure("/hi-newcomment2.tri");
+		compileExpectSuccess("/hi-newcomment2.tri");
 	}
 	
 
@@ -40,8 +40,11 @@ public class TestScanner {
 
 	@Test
 	public void testRepeatUntil() {
-		compileExpectFailure("/repeatuntil.tri");
+		compileExpectSuccess("/repeatuntil.tri");
 	}
+
+	@Test
+	public void testAddTri() { compileExpectSuccess("/add.tri"); }
 	
 	
 	

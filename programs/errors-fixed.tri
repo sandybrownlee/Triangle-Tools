@@ -10,17 +10,17 @@ let
   var silly: Rec;
 
   proc putstr (s: String) ~
-    let var i : Integer
+    let var i: Integer
     in
       begin
       s[4] := ' ';
       i := 0;
       while i do
-        begin i := i + true;
+        begin i := i+true;
               put (s[\i])
         end
       end
-
+    
 in
   begin
   me[true] := ['T','i','n','y'];

@@ -38,6 +38,7 @@ import triangle.abstractSyntaxTrees.commands.EmptyCommand;
 import triangle.abstractSyntaxTrees.commands.IfCommand;
 import triangle.abstractSyntaxTrees.commands.LetCommand;
 import triangle.abstractSyntaxTrees.commands.SequentialCommand;
+import triangle.abstractSyntaxTrees.commands.RepeatCommand;
 import triangle.abstractSyntaxTrees.commands.WhileCommand;
 import triangle.abstractSyntaxTrees.declarations.ConstDeclaration;
 import triangle.abstractSyntaxTrees.declarations.Declaration;
@@ -99,6 +100,9 @@ public class Parser {
 	// If so, fetches the next token.
 	// If not, reports a syntactic error.
 
+	// accept() and acceptIt() call the scanner (or lexer) to get the next token in the program string
+	// as needed.
+
 	void accept(int tokenExpected) throws SyntaxError {
 		if (currentToken.kind == tokenExpected) {
 			previousTokenPosition = currentToken.position;
@@ -141,6 +145,7 @@ public class Parser {
 	//
 	///////////////////////////////////////////////////////////////////////////////
 
+	// it creates an empty AST
 	public Program parseProgram() {
 
 		Program programAST = null;
@@ -149,6 +154,7 @@ public class Parser {
 		previousTokenPosition.finish = 0;
 		currentToken = lexicalAnalyser.scan();
 
+		// Check that it contains a single command or several commands
 		try {
 			Command cAST = parseCommand();
 			programAST = new Program(cAST, previousTokenPosition);
@@ -248,6 +254,11 @@ public class Parser {
 	// parseCommand parses the command, and constructs an AST
 	// to represent its phrase structure.
 
+	// looks at the current token and tries to parse it as a command, by calling
+	// parseSingleCommand(). If that works, and the next token is a semicolon, it will try parsing
+	// another command. In Triangle, similar to Java, semicolons separate multiple commands. A
+	// sequential command subtree is built up, and returned when there are no more semicolons
+
 	Command parseCommand() throws SyntaxError {
 		Command commandAST = null; // in case there's a syntactic error
 
@@ -264,9 +275,15 @@ public class Parser {
 		return commandAST;
 	}
 
+	// starts looking for more specific types of token. Depending
+	// on the kind of the current token it will create a different type of subtree.
 	Command parseSingleCommand() throws SyntaxError {
 		Command commandAST = null; // in case there's a syntactic error
 
+		// the various AST subtrees have “commandPos” attached to
+		// them – these represent line numbers in the original source code and are there to help with
+		// debugging should the parsing fail. This is how a compiler can give you a line number for an
+		// error.
 		SourcePosition commandPos = new SourcePosition();
 		start(commandPos);
 
@@ -328,6 +345,16 @@ public class Parser {
 			finish(commandPos);
 			commandAST = new WhileCommand(eAST, cAST, commandPos);
 		}
+		break;
+
+			case Token.REPEAT: {
+				acceptIt();
+				Command cAST = parseSingleCommand();
+				accept(Token.UNTIL);
+				Expression eAST = parseExpression();
+				finish(commandPos);
+				commandAST = new RepeatCommand(eAST, cAST, commandPos);
+				}
 			break;
 
 		case Token.SEMICOLON:

@@ -35,7 +35,7 @@ public final class Scanner {
 
 	private boolean isOperator(char c) {
 		return (c == '+' || c == '-' || c == '*' || c == '/' || c == '=' || c == '<' || c == '>' || c == '\\'
-				|| c == '&' || c == '@' || c == '%' || c == '^' || c == '?');
+				|| c == '&' || c == '@' || c == '%' || c == '^' || c == '?' || c == '|');
 	}
 
 	///////////////////////////////////////////////////////////////////////////////
@@ -65,14 +65,30 @@ public final class Scanner {
 		switch (currentChar) {
 		
 		// comment
-		case '!': {
+		case '!':
+			case '#': {
 			takeIt();
+			// keep calling takeIt() until we reach the end of the line or the end of the file. It causes the comment to be skipped.
+				// EOL = End of line and EOT = End of Token
 			while ((currentChar != SourceFile.EOL) && (currentChar != SourceFile.EOT))
 				takeIt();
 			if (currentChar == SourceFile.EOL)
 				takeIt();
 		}
 			break;
+
+			// long comment
+			case '$': {
+				takeIt(); // now we grab characters, including newlines, until we hit a $ or end of file
+				while ((currentChar != '$') && (currentChar != SourceFile.EOT))
+					takeIt();
+				if ((currentChar != '$') || (currentChar == SourceFile.EOL ))
+					takeIt();
+			}
+			case '|':
+				takeIt();
+				while (isOperator(currentChar))
+					takeIt();
 
 		// whitespace
 		case ' ':
@@ -84,6 +100,7 @@ public final class Scanner {
 		}
 	}
 
+	// if they have a “kind” then that’s selected, otherwise Token.ERROR is returned.
 	private int scanToken() {
 
 		switch (currentChar) {
@@ -251,8 +268,8 @@ public final class Scanner {
 
 		currentlyScanningToken = false;
 		// skip any whitespace or comments
-		while (currentChar == '!' || currentChar == ' ' || currentChar == '\n' || currentChar == '\r'
-				|| currentChar == '\t')
+		while (currentChar == '$' || currentChar == '!' || currentChar == ' ' || currentChar == '\n' || currentChar == '\r'
+				|| currentChar == '\t' || currentChar == '#' )
 			scanSeparator();
 
 		currentlyScanningToken = true;
