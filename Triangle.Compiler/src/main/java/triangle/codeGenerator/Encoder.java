@@ -38,6 +38,7 @@ import triangle.abstractSyntaxTrees.commands.CallCommand;
 import triangle.abstractSyntaxTrees.commands.EmptyCommand;
 import triangle.abstractSyntaxTrees.commands.IfCommand;
 import triangle.abstractSyntaxTrees.commands.LetCommand;
+import triangle.abstractSyntaxTrees.commands.RepeatCommand;
 import triangle.abstractSyntaxTrees.commands.SequentialCommand;
 import triangle.abstractSyntaxTrees.commands.WhileCommand;
 import triangle.abstractSyntaxTrees.declarations.BinaryOperatorDeclaration;
@@ -100,6 +101,7 @@ import triangle.abstractSyntaxTrees.vnames.SimpleVname;
 import triangle.abstractSyntaxTrees.vnames.SubscriptVname;
 import triangle.abstractSyntaxTrees.vnames.Vname;
 import triangle.codeGenerator.entities.AddressableEntity;
+import triangle.codeGenerator.entities.BarPrimitiveRoutine;
 import triangle.codeGenerator.entities.EqualityRoutine;
 import triangle.codeGenerator.entities.FetchableEntity;
 import triangle.codeGenerator.entities.Field;
@@ -177,6 +179,18 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 		ast.C.visit(this, frame);
 		emitter.patch(jumpAddr);
 		ast.E.visit(this, frame);
+		emitter.emit(OpCode.JUMPIF, Machine.trueRep, Register.CB, loopAddr);
+		return null;
+	}
+	@Override
+	public Void visitRepeatCommand(RepeatCommand ast, Frame frame) {
+		//needs rearranging
+		//var jumpAddr = emitter.emit(OpCode.JUMP, 0, Register.CB, 0);
+		var loopAddr = emitter.getNextInstrAddr();
+		ast.E.visit(this, frame);
+		ast.C.visit(this, frame);
+		//emitter.patch(jumpAddr);
+		
 		emitter.emit(OpCode.JUMPIF, Machine.trueRep, Register.CB, loopAddr);
 		return null;
 	}
@@ -688,15 +702,22 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 
 	// Decides run-time representation of a standard constant.
 	private final void elaborateStdConst(ConstDeclaration constDeclaration, int value) {
-
+		 
 		var typeSize = constDeclaration.E.type.visit(this);
 		constDeclaration.entity = new KnownValue(typeSize, value);
 		writeTableDetails(constDeclaration);
 	}
 
 	// Decides run-time representation of a standard routine.
-	private final void elaborateStdPrimRoutine(Declaration routineDeclaration, Primitive primitive) {
+	private final void elaborateStdPrimRoutine(Declaration routineDeclaration, Primitive primitive) {	
 		routineDeclaration.entity = new PrimitiveRoutine(Machine.closureSize, primitive);
+		writeTableDetails(routineDeclaration);
+	}
+	
+	private final void elaborateBarPrimRoutine(Declaration routineDeclaration) {
+		//entity is telling how to write the low level code for this variable
+		//we need to make an object of BarPrimitiveRoutine
+		routineDeclaration.entity = new BarPrimitiveRoutine();
 		writeTableDetails(routineDeclaration);
 	}
 
@@ -734,6 +755,7 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 		elaborateStdPrimRoutine(StdEnvironment.puteolDecl, Primitive.PUTEOL);
 		elaborateStdEqRoutine(StdEnvironment.equalDecl, Primitive.EQ);
 		elaborateStdEqRoutine(StdEnvironment.unequalDecl, Primitive.NE);
+		elaborateBarPrimRoutine(StdEnvironment.barDecl);
 	}
 
 	boolean tableDetailsReqd;
