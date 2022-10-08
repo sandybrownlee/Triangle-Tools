@@ -31,6 +31,6 @@ public class IfCommand extends Command {
 		return v.visitIfCommand(this, arg);
 	}
 
-	public final Expression E;
+	public Expression E;
 	public final Command C1, C2;
 }

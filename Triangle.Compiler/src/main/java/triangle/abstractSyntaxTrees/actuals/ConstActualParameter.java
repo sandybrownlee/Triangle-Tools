@@ -29,5 +29,5 @@ public class ConstActualParameter extends ActualParameter {
 		return v.visitConstActualParameter(this, arg);
 	}
 
-	public final Expression E;
+	public Expression E;
 }

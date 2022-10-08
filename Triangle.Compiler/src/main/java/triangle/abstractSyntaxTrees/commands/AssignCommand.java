@@ -32,5 +32,5 @@ public class AssignCommand extends Command {
 	}
 
 	public final Vname V;
-	public final Expression E;
+	public Expression E;
 }
