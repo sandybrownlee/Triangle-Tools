@@ -15,7 +15,7 @@
 package triangle.abstractSyntaxTrees.commands;
 
 import triangle.abstractSyntaxTrees.visitors.CommandVisitor;
-import triangle.syntacticAnalyzer.SourcePosition;
+import triangle.abstractSyntaxTrees.syntacticAnalyzer.SourcePosition;
 
 public class EmptyCommand extends Command {
 

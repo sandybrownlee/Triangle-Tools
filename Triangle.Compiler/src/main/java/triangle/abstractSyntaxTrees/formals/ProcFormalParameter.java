@@ -17,7 +17,7 @@ package triangle.abstractSyntaxTrees.formals;
 import triangle.abstractSyntaxTrees.declarations.ProcedureDeclaration;
 import triangle.abstractSyntaxTrees.terminals.Identifier;
 import triangle.abstractSyntaxTrees.visitors.DeclarationVisitor;
-import triangle.syntacticAnalyzer.SourcePosition;
+import triangle.abstractSyntaxTrees.syntacticAnalyzer.SourcePosition;
 
 public class ProcFormalParameter extends FormalParameter implements ProcedureDeclaration {
 

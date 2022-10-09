@@ -16,7 +16,7 @@ package triangle.abstractSyntaxTrees.aggregates;
 
 import triangle.abstractSyntaxTrees.expressions.Expression;
 import triangle.abstractSyntaxTrees.visitors.ArrayAggregateVisitor;
-import triangle.syntacticAnalyzer.SourcePosition;
+import triangle.abstractSyntaxTrees.syntacticAnalyzer.SourcePosition;
 
 public class MultipleArrayAggregate extends ArrayAggregate {
 

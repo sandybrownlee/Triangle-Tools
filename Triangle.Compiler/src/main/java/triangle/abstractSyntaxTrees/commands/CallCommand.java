@@ -17,7 +17,7 @@ package triangle.abstractSyntaxTrees.commands;
 import triangle.abstractSyntaxTrees.actuals.ActualParameterSequence;
 import triangle.abstractSyntaxTrees.terminals.Identifier;
 import triangle.abstractSyntaxTrees.visitors.CommandVisitor;
-import triangle.syntacticAnalyzer.SourcePosition;
+import triangle.abstractSyntaxTrees.syntacticAnalyzer.SourcePosition;
 
 public class CallCommand extends Command {
 

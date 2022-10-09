@@ -17,7 +17,7 @@ package triangle.abstractSyntaxTrees.declarations;
 import triangle.abstractSyntaxTrees.terminals.Operator;
 import triangle.abstractSyntaxTrees.types.TypeDenoter;
 import triangle.abstractSyntaxTrees.visitors.DeclarationVisitor;
-import triangle.syntacticAnalyzer.SourcePosition;
+import triangle.abstractSyntaxTrees.syntacticAnalyzer.SourcePosition;
 
 public class BinaryOperatorDeclaration extends Declaration {
 

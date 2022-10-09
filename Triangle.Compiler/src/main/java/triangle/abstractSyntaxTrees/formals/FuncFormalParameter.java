@@ -18,7 +18,7 @@ import triangle.abstractSyntaxTrees.declarations.FunctionDeclaration;
 import triangle.abstractSyntaxTrees.terminals.Identifier;
 import triangle.abstractSyntaxTrees.types.TypeDenoter;
 import triangle.abstractSyntaxTrees.visitors.DeclarationVisitor;
-import triangle.syntacticAnalyzer.SourcePosition;
+import triangle.abstractSyntaxTrees.syntacticAnalyzer.SourcePosition;
 
 public class FuncFormalParameter extends FormalParameter implements FunctionDeclaration {
 

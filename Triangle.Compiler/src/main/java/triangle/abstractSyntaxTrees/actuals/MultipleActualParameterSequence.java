@@ -15,7 +15,7 @@
 package triangle.abstractSyntaxTrees.actuals;
 
 import triangle.abstractSyntaxTrees.visitors.ActualParameterSequenceVisitor;
-import triangle.syntacticAnalyzer.SourcePosition;
+import triangle.abstractSyntaxTrees.syntacticAnalyzer.SourcePosition;
 
 public class MultipleActualParameterSequence extends ActualParameterSequence {
 

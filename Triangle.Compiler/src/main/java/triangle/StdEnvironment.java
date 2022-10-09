@@ -14,6 +14,7 @@
 
 package triangle;
 
+import triangle.abstractSyntaxTrees.AbstractSyntaxTree;
 import triangle.abstractSyntaxTrees.declarations.BinaryOperatorDeclaration;
 import triangle.abstractSyntaxTrees.declarations.ConstDeclaration;
 import triangle.abstractSyntaxTrees.declarations.FuncDeclaration;
@@ -34,9 +35,9 @@ public final class StdEnvironment {
 
 	public static ConstDeclaration falseDecl, trueDecl, maxintDecl;
 
-	public static UnaryOperatorDeclaration notDecl, multiplyDecl;
+	public static UnaryOperatorDeclaration notDecl, multiplyDecl, barDecl;
 
-	public static BinaryOperatorDeclaration andDecl, orDecl, addDecl, subtractDecl, multiplyByOnehundredDecl, divideDecl,
+	public static BinaryOperatorDeclaration andDecl, orDecl, addDecl, subtractDecl, divideDecl,
 			moduloDecl, equalDecl, unequalDecl, lessDecl, notlessDecl, greaterDecl, notgreaterDecl;
 
 	public static ProcDeclaration getDecl, putDecl, getintDecl, putintDecl, geteolDecl, puteolDecl;

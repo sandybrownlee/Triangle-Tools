@@ -16,7 +16,7 @@ package triangle.abstractSyntaxTrees.formals;
 
 import triangle.abstractSyntaxTrees.declarations.Declaration;
 import triangle.abstractSyntaxTrees.visitors.DeclarationVisitor;
-import triangle.syntacticAnalyzer.SourcePosition;
+import triangle.abstractSyntaxTrees.syntacticAnalyzer.SourcePosition;
 
 public abstract class FormalParameter extends Declaration {
 

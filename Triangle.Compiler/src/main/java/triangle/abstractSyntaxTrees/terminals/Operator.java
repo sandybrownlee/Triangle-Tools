@@ -16,7 +16,7 @@ package triangle.abstractSyntaxTrees.terminals;
 
 import triangle.abstractSyntaxTrees.declarations.Declaration;
 import triangle.abstractSyntaxTrees.visitors.OperatorVisitor;
-import triangle.syntacticAnalyzer.SourcePosition;
+import triangle.abstractSyntaxTrees.syntacticAnalyzer.SourcePosition;
 
 public class Operator extends Terminal {
 

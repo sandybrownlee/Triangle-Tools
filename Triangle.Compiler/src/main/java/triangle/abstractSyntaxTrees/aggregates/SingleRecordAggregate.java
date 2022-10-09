@@ -17,7 +17,7 @@ package triangle.abstractSyntaxTrees.aggregates;
 import triangle.abstractSyntaxTrees.expressions.Expression;
 import triangle.abstractSyntaxTrees.terminals.Identifier;
 import triangle.abstractSyntaxTrees.visitors.RecordAggregateVisitor;
-import triangle.syntacticAnalyzer.SourcePosition;
+import triangle.abstractSyntaxTrees.syntacticAnalyzer.SourcePosition;
 
 public class SingleRecordAggregate extends RecordAggregate {
 

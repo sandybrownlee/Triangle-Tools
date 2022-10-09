@@ -16,7 +16,7 @@ package triangle.abstractSyntaxTrees.expressions;
 
 import triangle.abstractSyntaxTrees.visitors.ExpressionVisitor;
 import triangle.abstractSyntaxTrees.vnames.Vname;
-import triangle.syntacticAnalyzer.SourcePosition;
+import triangle.abstractSyntaxTrees.syntacticAnalyzer.SourcePosition;
 
 public class VnameExpression extends Expression {
 

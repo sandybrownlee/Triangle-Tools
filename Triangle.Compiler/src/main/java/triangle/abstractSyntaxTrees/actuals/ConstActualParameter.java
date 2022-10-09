@@ -16,7 +16,7 @@ package triangle.abstractSyntaxTrees.actuals;
 
 import triangle.abstractSyntaxTrees.expressions.Expression;
 import triangle.abstractSyntaxTrees.visitors.ActualParameterVisitor;
-import triangle.syntacticAnalyzer.SourcePosition;
+import triangle.abstractSyntaxTrees.syntacticAnalyzer.SourcePosition;
 
 public class ConstActualParameter extends ActualParameter {
 

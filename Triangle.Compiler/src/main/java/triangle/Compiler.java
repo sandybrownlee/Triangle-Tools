@@ -19,9 +19,9 @@ import triangle.codeGenerator.Emitter;
 import triangle.codeGenerator.Encoder;
 import triangle.contextualAnalyzer.Checker;
 import triangle.optimiser.ConstantFolder;
-import triangle.syntacticAnalyzer.Parser;
-import triangle.syntacticAnalyzer.Scanner;
-import triangle.syntacticAnalyzer.SourceFile;
+import triangle.abstractSyntaxTrees.syntacticAnalyzer.Parser;
+import triangle.abstractSyntaxTrees.syntacticAnalyzer.Scanner;
+import triangle.abstractSyntaxTrees.syntacticAnalyzer.SourceFile;
 import triangle.treeDrawer.Drawer;
 
 /**

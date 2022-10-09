@@ -16,7 +16,7 @@ package triangle.abstractSyntaxTrees.commands;
 
 import triangle.abstractSyntaxTrees.AbstractSyntaxTree;
 import triangle.abstractSyntaxTrees.visitors.CommandVisitor;
-import triangle.syntacticAnalyzer.SourcePosition;
+import triangle.abstractSyntaxTrees.syntacticAnalyzer.SourcePosition;
 
 public abstract class Command extends AbstractSyntaxTree {
 

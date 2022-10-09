@@ -8,9 +8,9 @@ import org.junit.Test;
 import org.junit.function.ThrowingRunnable;
 
 import triangle.ErrorReporter;
-import triangle.syntacticAnalyzer.Parser;
-import triangle.syntacticAnalyzer.Scanner;
-import triangle.syntacticAnalyzer.SourceFile;
+import triangle.abstractSyntaxTrees.syntacticAnalyzer.Parser;
+import triangle.abstractSyntaxTrees.syntacticAnalyzer.Scanner;
+import triangle.abstractSyntaxTrees.syntacticAnalyzer.SourceFile;
 
 public class TestScanner {
 
@@ -39,7 +39,7 @@ public class TestScanner {
 
 	@Test
 	public void testBarDemo() {
-		compileExpectFailure("/bardemo.tri");
+		compileExpectSuccess("/bardemo.tri");
 	}
 
 

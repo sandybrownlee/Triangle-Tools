@@ -15,7 +15,7 @@
 package triangle.abstractSyntaxTrees.declarations;
 
 import triangle.abstractSyntaxTrees.visitors.DeclarationVisitor;
-import triangle.syntacticAnalyzer.SourcePosition;
+import triangle.abstractSyntaxTrees.syntacticAnalyzer.SourcePosition;
 
 public class SequentialDeclaration extends Declaration {
 

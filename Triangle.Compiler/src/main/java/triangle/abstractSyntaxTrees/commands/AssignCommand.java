@@ -17,7 +17,7 @@ package triangle.abstractSyntaxTrees.commands;
 import triangle.abstractSyntaxTrees.expressions.Expression;
 import triangle.abstractSyntaxTrees.visitors.CommandVisitor;
 import triangle.abstractSyntaxTrees.vnames.Vname;
-import triangle.syntacticAnalyzer.SourcePosition;
+import triangle.abstractSyntaxTrees.syntacticAnalyzer.SourcePosition;
 
 public class AssignCommand extends Command {
 

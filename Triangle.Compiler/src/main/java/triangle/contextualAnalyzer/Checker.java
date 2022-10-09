@@ -97,7 +97,7 @@ import triangle.abstractSyntaxTrees.visitors.VnameVisitor;
 import triangle.abstractSyntaxTrees.vnames.DotVname;
 import triangle.abstractSyntaxTrees.vnames.SimpleVname;
 import triangle.abstractSyntaxTrees.vnames.SubscriptVname;
-import triangle.syntacticAnalyzer.SourcePosition;
+import triangle.abstractSyntaxTrees.syntacticAnalyzer.SourcePosition;
 
 public final class Checker implements ActualParameterVisitor<FormalParameter, Void>,
 		ActualParameterSequenceVisitor<FormalParameterSequence, Void>, ArrayAggregateVisitor<Void, TypeDenoter>,
@@ -933,8 +933,7 @@ public final class Checker implements ActualParameterVisitor<FormalParameter, Vo
 		StdEnvironment.subtractDecl = declareStdBinaryOp("-", StdEnvironment.integerType, StdEnvironment.integerType,
 				StdEnvironment.integerType);
 		StdEnvironment.multiplyDecl = declareStdUnaryOp("*", StdEnvironment.integerType, StdEnvironment.integerType);
-		StdEnvironment.multiplyByOnehundredDecl = declareStdBinaryOp("|", StdEnvironment.integerType, StdEnvironment.integerType,
-				StdEnvironment.integerType);
+		StdEnvironment.barDecl = declareStdUnaryOp("|", StdEnvironment.integerType, StdEnvironment.integerType);
 		StdEnvironment.divideDecl = declareStdBinaryOp("/", StdEnvironment.integerType, StdEnvironment.integerType,
 				StdEnvironment.integerType);
 		StdEnvironment.moduloDecl = declareStdBinaryOp("//", StdEnvironment.integerType, StdEnvironment.integerType,

@@ -16,7 +16,7 @@ package triangle.abstractSyntaxTrees.expressions;
 
 import triangle.abstractSyntaxTrees.terminals.CharacterLiteral;
 import triangle.abstractSyntaxTrees.visitors.ExpressionVisitor;
-import triangle.syntacticAnalyzer.SourcePosition;
+import triangle.abstractSyntaxTrees.syntacticAnalyzer.SourcePosition;
 
 public class CharacterExpression extends Expression {
 

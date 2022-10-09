@@ -14,7 +14,7 @@
 
 package triangle.abstractSyntaxTrees.types;
 
-import triangle.syntacticAnalyzer.SourcePosition;
+import triangle.abstractSyntaxTrees.syntacticAnalyzer.SourcePosition;
 
 public abstract class FieldTypeDenoter extends TypeDenoter {
 

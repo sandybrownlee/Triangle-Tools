@@ -14,7 +14,7 @@
 
 package triangle;
 
-import triangle.syntacticAnalyzer.SourcePosition;
+import triangle.abstractSyntaxTrees.syntacticAnalyzer.SourcePosition;
 
 public class ErrorReporter {
 

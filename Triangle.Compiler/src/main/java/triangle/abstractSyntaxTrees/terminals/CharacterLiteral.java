@@ -15,7 +15,7 @@
 package triangle.abstractSyntaxTrees.terminals;
 
 import triangle.abstractSyntaxTrees.visitors.LiteralVisitor;
-import triangle.syntacticAnalyzer.SourcePosition;
+import triangle.abstractSyntaxTrees.syntacticAnalyzer.SourcePosition;
 
 public class CharacterLiteral extends Terminal {
 

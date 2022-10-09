@@ -15,7 +15,7 @@
 package triangle.abstractSyntaxTrees;
 
 import triangle.codeGenerator.entities.RuntimeEntity;
-import triangle.syntacticAnalyzer.SourcePosition;
+import triangle.abstractSyntaxTrees.syntacticAnalyzer.SourcePosition;
 
 public abstract class AbstractSyntaxTree {
 

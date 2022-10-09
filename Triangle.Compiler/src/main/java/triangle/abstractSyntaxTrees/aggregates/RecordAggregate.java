@@ -17,7 +17,7 @@ package triangle.abstractSyntaxTrees.aggregates;
 import triangle.abstractSyntaxTrees.AbstractSyntaxTree;
 import triangle.abstractSyntaxTrees.types.FieldTypeDenoter;
 import triangle.abstractSyntaxTrees.visitors.RecordAggregateVisitor;
-import triangle.syntacticAnalyzer.SourcePosition;
+import triangle.abstractSyntaxTrees.syntacticAnalyzer.SourcePosition;
 
 public abstract class RecordAggregate extends AbstractSyntaxTree {
 

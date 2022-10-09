@@ -16,7 +16,7 @@ package triangle.abstractSyntaxTrees.types;
 
 import triangle.abstractSyntaxTrees.terminals.Identifier;
 import triangle.abstractSyntaxTrees.visitors.TypeDenoterVisitor;
-import triangle.syntacticAnalyzer.SourcePosition;
+import triangle.abstractSyntaxTrees.syntacticAnalyzer.SourcePosition;
 
 public class SimpleTypeDenoter extends TypeDenoter {
 

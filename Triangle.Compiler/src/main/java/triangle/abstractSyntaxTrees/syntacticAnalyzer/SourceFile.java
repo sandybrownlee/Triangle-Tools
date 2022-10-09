@@ -12,9 +12,7 @@
  * of the authors.
  */
 
-package triangle.syntacticAnalyzer;
-
-import java.net.URL;
+package triangle.abstractSyntaxTrees.syntacticAnalyzer;
 
 public class SourceFile {
 

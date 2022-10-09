@@ -16,7 +16,7 @@ package triangle.abstractSyntaxTrees.actuals;
 
 import triangle.abstractSyntaxTrees.visitors.ActualParameterVisitor;
 import triangle.abstractSyntaxTrees.vnames.Vname;
-import triangle.syntacticAnalyzer.SourcePosition;
+import triangle.abstractSyntaxTrees.syntacticAnalyzer.SourcePosition;
 
 public class VarActualParameter extends ActualParameter {
 

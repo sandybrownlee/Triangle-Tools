@@ -12,7 +12,7 @@
  * of the authors.
  */
 
-package triangle.syntacticAnalyzer;
+package triangle.abstractSyntaxTrees.syntacticAnalyzer;
 
 public final class Scanner {
 

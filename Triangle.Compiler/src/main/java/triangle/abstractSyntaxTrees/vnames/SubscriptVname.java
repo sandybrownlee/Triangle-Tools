@@ -16,7 +16,7 @@ package triangle.abstractSyntaxTrees.vnames;
 
 import triangle.abstractSyntaxTrees.expressions.Expression;
 import triangle.abstractSyntaxTrees.visitors.VnameVisitor;
-import triangle.syntacticAnalyzer.SourcePosition;
+import triangle.abstractSyntaxTrees.syntacticAnalyzer.SourcePosition;
 
 public class SubscriptVname extends Vname {
 

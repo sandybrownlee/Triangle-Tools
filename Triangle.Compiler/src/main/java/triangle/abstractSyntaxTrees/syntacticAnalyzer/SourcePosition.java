@@ -1,5 +1,5 @@
 /*
- * @(#)SyntaxError.java                        2.1 2003/10/07
+ * @(#)SourcePosition.java                        2.1 2003/10/07
  *
  * Copyright (C) 1999, 2003 D.A. Watt and D.F. Brown
  * Dept. of Computing Science, University of Glasgow, Glasgow G12 8QQ Scotland
@@ -12,18 +12,24 @@
  * of the authors.
  */
 
-package triangle.syntacticAnalyzer;
+package triangle.abstractSyntaxTrees.syntacticAnalyzer;
 
-class SyntaxError extends Exception {
+public class SourcePosition {
 
-	private static final long serialVersionUID = -5280306336102766860L;
+	public int start, finish;
 
-	SyntaxError() {
-		super();
+	public SourcePosition() {
+		start = 0;
+		finish = 0;
 	}
 
-	SyntaxError(String s) {
-		super(s);
+	public SourcePosition(int s, int f) {
+		start = s;
+		finish = f;
 	}
 
+	@Override
+	public String toString() {
+		return "(" + start + ", " + finish + ")";
+	}
 }

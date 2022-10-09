@@ -17,7 +17,7 @@ package triangle.abstractSyntaxTrees.terminals;
 import triangle.abstractSyntaxTrees.AbstractSyntaxTree;
 import triangle.abstractSyntaxTrees.types.TypeDenoter;
 import triangle.abstractSyntaxTrees.visitors.IdentifierVisitor;
-import triangle.syntacticAnalyzer.SourcePosition;
+import triangle.abstractSyntaxTrees.syntacticAnalyzer.SourcePosition;
 
 public class Identifier extends Terminal {
 

@@ -16,7 +16,7 @@ package triangle.abstractSyntaxTrees;
 
 import triangle.abstractSyntaxTrees.commands.Command;
 import triangle.abstractSyntaxTrees.visitors.ProgramVisitor;
-import triangle.syntacticAnalyzer.SourcePosition;
+import triangle.abstractSyntaxTrees.syntacticAnalyzer.SourcePosition;
 
 public class Program extends AbstractSyntaxTree {
 

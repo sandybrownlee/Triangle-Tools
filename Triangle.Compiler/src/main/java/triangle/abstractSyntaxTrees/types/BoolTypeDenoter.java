@@ -16,7 +16,7 @@ package triangle.abstractSyntaxTrees.types;
 
 import triangle.abstractMachine.Machine;
 import triangle.abstractSyntaxTrees.visitors.TypeDenoterVisitor;
-import triangle.syntacticAnalyzer.SourcePosition;
+import triangle.abstractSyntaxTrees.syntacticAnalyzer.SourcePosition;
 
 public class BoolTypeDenoter extends TypeDenoter {
 

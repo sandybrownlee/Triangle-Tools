@@ -17,7 +17,7 @@ package triangle.abstractSyntaxTrees.expressions;
 import triangle.abstractSyntaxTrees.actuals.ActualParameterSequence;
 import triangle.abstractSyntaxTrees.terminals.Identifier;
 import triangle.abstractSyntaxTrees.visitors.ExpressionVisitor;
-import triangle.syntacticAnalyzer.SourcePosition;
+import triangle.abstractSyntaxTrees.syntacticAnalyzer.SourcePosition;
 
 public class CallExpression extends Expression {
 

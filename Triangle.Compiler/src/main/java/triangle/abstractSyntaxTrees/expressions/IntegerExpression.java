@@ -16,7 +16,7 @@ package triangle.abstractSyntaxTrees.expressions;
 
 import triangle.abstractSyntaxTrees.terminals.IntegerLiteral;
 import triangle.abstractSyntaxTrees.visitors.ExpressionVisitor;
-import triangle.syntacticAnalyzer.SourcePosition;
+import triangle.abstractSyntaxTrees.syntacticAnalyzer.SourcePosition;
 
 public class IntegerExpression extends Expression {
 
