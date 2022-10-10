@@ -741,10 +741,9 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 	public static void writeTableDetails(AbstractSyntaxTree ast) {
 	}
 
-	// Generates code to fetch the value of a named constant or variable
-	// and push it on to the stack.
-	// currentLevel is the routine level where the vname occurs.
-	// frameSize is the anticipated size of the local stack frame when
+	// Generates code to pop the top off the stack
+	// and store the value in a named constant or variable
+	// frame the local stack frame when
 	// the constant or variable is fetched at run-time.
 	// valSize is the size of the constant or variable's value.
 

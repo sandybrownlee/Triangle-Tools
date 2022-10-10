@@ -32,5 +32,5 @@ public class SingleRecordAggregate extends RecordAggregate {
 	}
 
 	public final Identifier I;
-	public final Expression E;
+	public Expression E;
 }

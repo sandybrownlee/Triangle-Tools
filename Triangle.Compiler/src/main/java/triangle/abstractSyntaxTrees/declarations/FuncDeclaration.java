@@ -49,5 +49,5 @@ public class FuncDeclaration extends Declaration implements FunctionDeclaration 
 	public final Identifier I;
 	public final FormalParameterSequence FPS;
 	public TypeDenoter T;
-	public final Expression E;
+	public Expression E;
 }
