@@ -33,6 +33,6 @@ public class MultipleRecordAggregate extends RecordAggregate {
 	}
 
 	public final Identifier I;
-	public final Expression E;
+	public Expression E;
 	public final RecordAggregate RA;
 }
