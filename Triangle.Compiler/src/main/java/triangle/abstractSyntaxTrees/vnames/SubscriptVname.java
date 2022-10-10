@@ -30,6 +30,6 @@ public class SubscriptVname extends Vname {
 		return v.visitSubscriptVname(this, arg);
 	}
 
-	public final Expression E;
+	public Expression E;
 	public final Vname V;
 }
