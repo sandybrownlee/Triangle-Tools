@@ -21,6 +21,8 @@ import java.io.IOException;
 
 public class Interpreter {
 
+	static long startTimeNanos = 0;
+	
 	static String objectName;
 
 	// DATA STORE
@@ -183,6 +185,7 @@ public class Interpreter {
 			break;
 		case halted:
 			System.out.println("Program has halted normally.");
+			System.out.println("Total execution time (ns): " + (System.nanoTime() - startTimeNanos));
 			break;
 		case failedDataStoreFull:
 			System.out.println("Program has failed due to exhaustion of Data Store.");
@@ -634,6 +637,7 @@ public class Interpreter {
 
 		loadObjectProgram(objectName);
 		if (CT != CB) {
+			startTimeNanos = System.nanoTime();
 			interpretProgram();
 			showStatus();
 		}
