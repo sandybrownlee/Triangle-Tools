@@ -121,6 +121,11 @@ public final class Checker implements ActualParameterVisitor<FormalParameter, Vo
 	// Always returns null. Does not use the given object.
 	@Override
 	public Void visitRepeatCommand(RepeatCommand ast, Void arg) {
+		var eType = ast.E.visit(this);
+
+		checkAndReportError(eType.equals(StdEnvironment.booleanType), "Boolean expression expected here", ast.E);
+		ast.C.visit(this);
+
 		return null;
 	}
 	
@@ -924,7 +929,7 @@ public final class Checker implements ActualParameterVisitor<FormalParameter, Vo
 		StdEnvironment.charType = new CharTypeDenoter(dummyPos);
 		StdEnvironment.anyType = new AnyTypeDenoter(dummyPos);
 		StdEnvironment.errorType = new ErrorTypeDenoter(dummyPos);
-
+		
 		StdEnvironment.booleanDecl = declareStdType("Boolean", StdEnvironment.booleanType);
 		StdEnvironment.falseDecl = declareStdConst("false", StdEnvironment.booleanType);
 		StdEnvironment.trueDecl = declareStdConst("true", StdEnvironment.booleanType);
@@ -954,6 +959,7 @@ public final class Checker implements ActualParameterVisitor<FormalParameter, Vo
 				StdEnvironment.booleanType);
 		StdEnvironment.notlessDecl = declareStdBinaryOp(">=", StdEnvironment.integerType, StdEnvironment.integerType,
 				StdEnvironment.booleanType);
+		StdEnvironment.barDecl = declareStdUnaryOp("|", StdEnvironment.integerType, StdEnvironment.integerType);
 
 		StdEnvironment.charDecl = declareStdType("Char", StdEnvironment.charType);
 		StdEnvironment.chrDecl = declareStdFunc("chr",

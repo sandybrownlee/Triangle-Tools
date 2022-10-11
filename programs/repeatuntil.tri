@@ -10,5 +10,5 @@ begin
     put('a');
     a := a + 1;
   end
-  until a < 5
+  until a > 5
 end
