@@ -19,7 +19,6 @@ import triangle.abstractSyntaxTrees.commands.CallCommand;
 import triangle.abstractSyntaxTrees.commands.EmptyCommand;
 import triangle.abstractSyntaxTrees.commands.IfCommand;
 import triangle.abstractSyntaxTrees.commands.LetCommand;
-import triangle.abstractSyntaxTrees.commands.RepeatCommand;
 import triangle.abstractSyntaxTrees.commands.SequentialCommand;
 import triangle.abstractSyntaxTrees.commands.WhileCommand;
 import triangle.abstractSyntaxTrees.declarations.BinaryOperatorDeclaration;
@@ -80,7 +79,6 @@ import triangle.abstractSyntaxTrees.visitors.VnameVisitor;
 import triangle.abstractSyntaxTrees.vnames.DotVname;
 import triangle.abstractSyntaxTrees.vnames.SimpleVname;
 import triangle.abstractSyntaxTrees.vnames.SubscriptVname;
-import triangle.codeGenerator.entities.RuntimeEntity;
 
 public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSyntaxTree>,
 		ActualParameterSequenceVisitor<Void, AbstractSyntaxTree>, ArrayAggregateVisitor<Void, AbstractSyntaxTree>,
@@ -89,7 +87,7 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 		IdentifierVisitor<Void, AbstractSyntaxTree>, LiteralVisitor<Void, AbstractSyntaxTree>,
 		OperatorVisitor<Void, AbstractSyntaxTree>, ProgramVisitor<Void, AbstractSyntaxTree>,
 		RecordAggregateVisitor<Void, AbstractSyntaxTree>, TypeDenoterVisitor<Void, AbstractSyntaxTree>,
-		VnameVisitor<Void, RuntimeEntity> {
+		VnameVisitor<Void, AbstractSyntaxTree> {
 	{
 
 	}
@@ -138,20 +136,20 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 	}
 
 	@Override
-	public RuntimeEntity visitDotVname(DotVname ast, Void arg) {
+	public AbstractSyntaxTree visitDotVname(DotVname ast, Void arg) {
 		ast.I.visit(this);
 		ast.V.visit(this);
 		return null;
 	}
 
 	@Override
-	public RuntimeEntity visitSimpleVname(SimpleVname ast, Void arg) {
+	public AbstractSyntaxTree visitSimpleVname(SimpleVname ast, Void arg) {
 		ast.I.visit(this);
 		return null;
 	}
 
 	@Override
-	public RuntimeEntity visitSubscriptVname(SubscriptVname ast, Void arg) {
+	public AbstractSyntaxTree visitSubscriptVname(SubscriptVname ast, Void arg) {
 		AbstractSyntaxTree replacement = ast.E.visit(this);
 		if (replacement != null) {
 			ast.E = (Expression) replacement;
