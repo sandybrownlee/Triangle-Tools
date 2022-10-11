@@ -30,6 +30,6 @@ public class WhileCommand extends Command {
 		return v.visitWhileCommand(this, arg);
 	}
 
-	public final Expression E;
+	public Expression E;
 	public final Command C;
 }
