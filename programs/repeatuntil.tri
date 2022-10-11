@@ -4,7 +4,7 @@ let
   var a : Integer
 in
 begin
-  a := 9;
+  a := 1;
   repeat
   begin
     put('a');

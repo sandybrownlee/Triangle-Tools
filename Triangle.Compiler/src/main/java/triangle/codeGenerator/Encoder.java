@@ -167,7 +167,7 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 		var loopAddr = emitter.getNextInstrAddr();
 		ast.C.visit(this, frame);
 		ast.E.visit(this, frame);
-		emitter.emit(OpCode.JUMPIF, Machine.trueRep, Register.CB, loopAddr);
+		emitter.emit(OpCode.JUMPIF, Machine.falseRep, Register.CB, loopAddr);
 		return null;
 	}
 
