@@ -1,10 +1,9 @@
 let
-    var nice : Integer;
+    var n : Integer;
     var c : Char
 in
 
 	begin
 		c := '&';
-		nice := nice + 4;
-		nice++
+		n := n + 1
 	end

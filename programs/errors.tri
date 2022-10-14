@@ -6,25 +6,25 @@ let
   type Rec ~ record x: Integer, x: Integer end;
 
   var me: Name;
-  var silly: Rec;  
+  var silly : maxint;
+  var silly: Rec;
 
   proc putstr (s: String) ~
-    let 
-	var i: Integer
+    let var i: Integer
     in
-      begin 
+      begin
+      s[4] := ' ';
       i := 0;
-      while i < 4 do  
-        begin 
-              put (s[i]);     
-			  i := i + 1      
+      while i do
+        begin i := i+true;
+              put (s[\i])
         end
       end
     
 in
   begin
-  me[2] := ['T','i','n','y']; 
-  me[2][2] := '0'; 
-  put(me[1][1]); put(me[2][4]); put(' '); 
-  putstr(me[2]); puteol() 
+  me[true] := ['T','i','n','y'];
+  me[2][2] := 0;
+  put (me[1]); put (4); put ();
+  putstr (initials (me)); puteol ()
   end

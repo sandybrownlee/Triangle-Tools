@@ -14,7 +14,13 @@ import triangle.abstractSyntaxTrees.aggregates.MultipleArrayAggregate;
 import triangle.abstractSyntaxTrees.aggregates.MultipleRecordAggregate;
 import triangle.abstractSyntaxTrees.aggregates.SingleArrayAggregate;
 import triangle.abstractSyntaxTrees.aggregates.SingleRecordAggregate;
-import triangle.abstractSyntaxTrees.commands.*;
+import triangle.abstractSyntaxTrees.commands.AssignCommand;
+import triangle.abstractSyntaxTrees.commands.CallCommand;
+import triangle.abstractSyntaxTrees.commands.EmptyCommand;
+import triangle.abstractSyntaxTrees.commands.IfCommand;
+import triangle.abstractSyntaxTrees.commands.LetCommand;
+import triangle.abstractSyntaxTrees.commands.SequentialCommand;
+import triangle.abstractSyntaxTrees.commands.WhileCommand;
 import triangle.abstractSyntaxTrees.declarations.BinaryOperatorDeclaration;
 import triangle.abstractSyntaxTrees.declarations.ConstDeclaration;
 import triangle.abstractSyntaxTrees.declarations.FuncDeclaration;
@@ -73,7 +79,6 @@ import triangle.abstractSyntaxTrees.visitors.VnameVisitor;
 import triangle.abstractSyntaxTrees.vnames.DotVname;
 import triangle.abstractSyntaxTrees.vnames.SimpleVname;
 import triangle.abstractSyntaxTrees.vnames.SubscriptVname;
-import triangle.codeGenerator.entities.RuntimeEntity;
 
 public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSyntaxTree>,
 		ActualParameterSequenceVisitor<Void, AbstractSyntaxTree>, ArrayAggregateVisitor<Void, AbstractSyntaxTree>,
@@ -82,7 +87,7 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 		IdentifierVisitor<Void, AbstractSyntaxTree>, LiteralVisitor<Void, AbstractSyntaxTree>,
 		OperatorVisitor<Void, AbstractSyntaxTree>, ProgramVisitor<Void, AbstractSyntaxTree>,
 		RecordAggregateVisitor<Void, AbstractSyntaxTree>, TypeDenoterVisitor<Void, AbstractSyntaxTree>,
-		VnameVisitor<Void, RuntimeEntity> {
+		VnameVisitor<Void, AbstractSyntaxTree> {
 	{
 
 	}
@@ -131,20 +136,20 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 	}
 
 	@Override
-	public RuntimeEntity visitDotVname(DotVname ast, Void arg) {
+	public AbstractSyntaxTree visitDotVname(DotVname ast, Void arg) {
 		ast.I.visit(this);
 		ast.V.visit(this);
 		return null;
 	}
 
 	@Override
-	public RuntimeEntity visitSimpleVname(SimpleVname ast, Void arg) {
+	public AbstractSyntaxTree visitSimpleVname(SimpleVname ast, Void arg) {
 		ast.I.visit(this);
 		return null;
 	}
 
 	@Override
-	public RuntimeEntity visitSubscriptVname(SubscriptVname ast, Void arg) {
+	public AbstractSyntaxTree visitSubscriptVname(SubscriptVname ast, Void arg) {
 		AbstractSyntaxTree replacement = ast.E.visit(this);
 		if (replacement != null) {
 			ast.E = (Expression) replacement;
@@ -491,16 +496,16 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 		return null;
 	}
 
-
-	@Override
-	public AbstractSyntaxTree visitRepeatCommand(RepeatCommand ast, Void arg) {
-		ast.C.visit(this);
-		AbstractSyntaxTree replacement = ast.E.visit(this);
-		if (replacement != null) {
-			ast.E = (Expression) replacement;
-		}
-		return null;
-	}
+	// TODO uncomment if you've implemented the repeat command
+//	@Override
+//	public AbstractSyntaxTree visitRepeatCommand(RepeatCommand ast, Void arg) {
+//		ast.C.visit(this);
+//		AbstractSyntaxTree replacement = ast.E.visit(this);
+//		if (replacement != null) {
+//			ast.E = (Expression) replacement;
+//		}
+//		return null;
+//	}
 
 	@Override
 	public AbstractSyntaxTree visitMultipleArrayAggregate(MultipleArrayAggregate ast, Void arg) {
@@ -575,22 +580,6 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 			
 			if (o.decl == StdEnvironment.addDecl) {
 				foldedValue = int1 + int2;
-			}
-
-			if (o.decl == StdEnvironment.subtractDecl) {
-				foldedValue = int1 - int2;
-			}
-
-			if (o.decl == StdEnvironment.divideDecl) {
-				foldedValue = int1 / int2;
-			}
-
-			if (o.decl == StdEnvironment.multiplyDecl) {
-				foldedValue = int1 * int2;
-			}
-
-			if (o.decl == StdEnvironment.moduloDecl) {
-				foldedValue = int1 % int2;
 			}
 
 			if (foldedValue instanceof Integer) {

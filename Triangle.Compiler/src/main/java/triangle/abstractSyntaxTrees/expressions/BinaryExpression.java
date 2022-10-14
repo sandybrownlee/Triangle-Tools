@@ -32,6 +32,6 @@ public class BinaryExpression extends Expression {
 	}
 
 	public Expression E1;
-    public Expression E2;
+	public Expression E2;
 	public final Operator O;
 }

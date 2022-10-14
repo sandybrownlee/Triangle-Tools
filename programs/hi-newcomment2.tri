@@ -4,11 +4,8 @@
 
 $
 another new comment
-EEEEEEEEEEEEEEEEEEEEEEEEEEE
-EEEEEEEEEEEEEEEEEEEEEEEEEEEAAAAAAA
-AAAAAAAAAAAAAAAAAA 
 $
 
 begin
- put('H'); put('i'); put('E')
+ put('H'); put('i'); put('!')
 end

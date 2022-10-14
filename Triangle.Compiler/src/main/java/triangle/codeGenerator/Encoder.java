@@ -33,7 +33,13 @@ import triangle.abstractSyntaxTrees.aggregates.MultipleArrayAggregate;
 import triangle.abstractSyntaxTrees.aggregates.MultipleRecordAggregate;
 import triangle.abstractSyntaxTrees.aggregates.SingleArrayAggregate;
 import triangle.abstractSyntaxTrees.aggregates.SingleRecordAggregate;
-import triangle.abstractSyntaxTrees.commands.*;
+import triangle.abstractSyntaxTrees.commands.AssignCommand;
+import triangle.abstractSyntaxTrees.commands.CallCommand;
+import triangle.abstractSyntaxTrees.commands.EmptyCommand;
+import triangle.abstractSyntaxTrees.commands.IfCommand;
+import triangle.abstractSyntaxTrees.commands.LetCommand;
+import triangle.abstractSyntaxTrees.commands.SequentialCommand;
+import triangle.abstractSyntaxTrees.commands.WhileCommand;
 import triangle.abstractSyntaxTrees.declarations.BinaryOperatorDeclaration;
 import triangle.abstractSyntaxTrees.declarations.ConstDeclaration;
 import triangle.abstractSyntaxTrees.declarations.Declaration;
@@ -93,7 +99,20 @@ import triangle.abstractSyntaxTrees.vnames.DotVname;
 import triangle.abstractSyntaxTrees.vnames.SimpleVname;
 import triangle.abstractSyntaxTrees.vnames.SubscriptVname;
 import triangle.abstractSyntaxTrees.vnames.Vname;
-import triangle.codeGenerator.entities.*;
+import triangle.codeGenerator.entities.AddressableEntity;
+import triangle.codeGenerator.entities.EqualityRoutine;
+import triangle.codeGenerator.entities.FetchableEntity;
+import triangle.codeGenerator.entities.Field;
+import triangle.codeGenerator.entities.KnownAddress;
+import triangle.codeGenerator.entities.KnownRoutine;
+import triangle.codeGenerator.entities.KnownValue;
+import triangle.codeGenerator.entities.PrimitiveRoutine;
+import triangle.codeGenerator.entities.RoutineEntity;
+import triangle.codeGenerator.entities.RuntimeEntity;
+import triangle.codeGenerator.entities.TypeRepresentation;
+import triangle.codeGenerator.entities.UnknownAddress;
+import triangle.codeGenerator.entities.UnknownRoutine;
+import triangle.codeGenerator.entities.UnknownValue;
 
 public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 		ActualParameterSequenceVisitor<Frame, Integer>, ArrayAggregateVisitor<Frame, Integer>,
@@ -159,15 +178,6 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 		emitter.patch(jumpAddr);
 		ast.E.visit(this, frame);
 		emitter.emit(OpCode.JUMPIF, Machine.trueRep, Register.CB, loopAddr);
-		return null;
-	}
-
-	@Override
-	public Void visitRepeatCommand(RepeatCommand ast, Frame frame) {
-		var loopAddr = emitter.getNextInstrAddr();
-		ast.C.visit(this, frame);
-		ast.E.visit(this, frame);
-		emitter.emit(OpCode.JUMPIF, Machine.falseRep, Register.CB, loopAddr);
 		return null;
 	}
 
@@ -694,10 +704,6 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 		routineDeclaration.entity = new EqualityRoutine(Machine.closureSize, primitive);
 		writeTableDetails(routineDeclaration);
 	}
-	private final void elaborateBarPrimitiveRoutine(Declaration routineDeclaration, Primitive primitive) {
-		routineDeclaration.entity = new BarPrimitiveRoutine(primitive);
-		writeTableDetails(routineDeclaration);
-	}
 
 	private final void elaborateStdEnvironment() {
 		tableDetailsReqd = false;
@@ -728,7 +734,6 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 		elaborateStdPrimRoutine(StdEnvironment.puteolDecl, Primitive.PUTEOL);
 		elaborateStdEqRoutine(StdEnvironment.equalDecl, Primitive.EQ);
 		elaborateStdEqRoutine(StdEnvironment.unequalDecl, Primitive.NE);
-		elaborateBarPrimitiveRoutine(StdEnvironment.barDecl, Primitive.BAR);
 	}
 
 	boolean tableDetailsReqd;
@@ -736,10 +741,9 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 	public static void writeTableDetails(AbstractSyntaxTree ast) {
 	}
 
-	// Generates code to fetch the value of a named constant or variable
-	// and push it on to the stack.
-	// currentLevel is the routine level where the vname occurs.
-	// frameSize is the anticipated size of the local stack frame when
+	// Generates code to pop the top off the stack
+	// and store the value in a named constant or variable
+	// frame the local stack frame when
 	// the constant or variable is fetched at run-time.
 	// valSize is the size of the constant or variable's value.
 
