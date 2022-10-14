@@ -101,6 +101,7 @@ import triangle.abstractSyntaxTrees.vnames.SimpleVname;
 import triangle.abstractSyntaxTrees.vnames.SubscriptVname;
 import triangle.abstractSyntaxTrees.vnames.Vname;
 import triangle.codeGenerator.entities.AddressableEntity;
+import triangle.codeGenerator.entities.BarPrimitiveRoutine;
 import triangle.codeGenerator.entities.EqualityRoutine;
 import triangle.codeGenerator.entities.FetchableEntity;
 import triangle.codeGenerator.entities.Field;
@@ -183,7 +184,12 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 	}
 
 	@Override
-	public Void visitRepeatCommand(RepeatCommand ast, Frame arg){
+	public Void visitRepeatCommand(RepeatCommand ast, Frame frame){
+
+		var loopAddr = emitter.getNextInstrAddr();
+		 ast.C.visit(this, frame);
+		 ast.E.visit(this, frame);
+		 emitter.emit(OpCode.JUMPIF, Machine.falseRep, Register.CB, loopAddr);
 			return null;
 }
 
@@ -565,7 +571,7 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 		if (frame == null) { // in this case, we're just using the frame to wrap up the size
 			frame = Frame.Initial;
 		}
-		
+
 		var offset = frame.getSize();
 		int fieldSize;
 		if (ast.entity == null) {
@@ -740,6 +746,7 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 		elaborateStdPrimRoutine(StdEnvironment.puteolDecl, Primitive.PUTEOL);
 		elaborateStdEqRoutine(StdEnvironment.equalDecl, Primitive.EQ);
 		elaborateStdEqRoutine(StdEnvironment.unequalDecl, Primitive.NE);
+		StdEnvironment.barDecl.entity = new BarPrimitiveRoutine();
 	}
 
 	boolean tableDetailsReqd;
