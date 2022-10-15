@@ -280,6 +280,13 @@ public class Parser {
 				accept(Token.RPAREN);
 				finish(commandPos);
 				commandAST = new CallCommand(iAST, apsAST, commandPos);
+			}
+            else if(currentToken.spelling.equals("--") && currentToken.kind == Token.OPERATOR){
+
+					accept(Token.OPERATOR);
+					Vname vAST = parseRestOfVname(iAST);
+
+					commandAST =  decrementCommand(vAST, previousTokenPosition);
 
 			} else {
 
@@ -345,6 +352,28 @@ public class Parser {
 			break;
 
 		}
+
+		return commandAST;
+	}
+
+	Command decrementCommand(Vname variableName,SourcePosition previousTokenPosition) throws SyntaxError {
+		Command commandAST = null; // in case there's a syntactic error
+
+		//Set up the operator
+		String spelling = "-";
+		Operator operator = new Operator(spelling,previousTokenPosition);
+
+		//Set up the IntegerExpression
+		String IntegerLiteralSpelling = "1";
+		IntegerLiteral integerLiteral = new IntegerLiteral(IntegerLiteralSpelling, previousTokenPosition);
+		IntegerExpression iEXP = new IntegerExpression(integerLiteral, previousTokenPosition);
+
+		//Set up the variable name expression
+		VnameExpression vnameExpression = new VnameExpression(variableName, previousTokenPosition);
+
+		//Set up the binary expression
+		BinaryExpression binaryExpression = new BinaryExpression(vnameExpression, operator, iEXP, previousTokenPosition);
+		commandAST = new AssignCommand(variableName, binaryExpression, previousTokenPosition);
 
 		return commandAST;
 	}
