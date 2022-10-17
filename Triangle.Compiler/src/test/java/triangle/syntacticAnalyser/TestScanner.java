@@ -15,9 +15,7 @@ import triangle.abstractSyntaxTrees.syntacticAnalyzer.SourceFile;
 public class TestScanner {
 
 	@Test
-	public void testAdd() {
-		compileExpectSuccess("/add.tri");
-	}
+	public void testAdd() {	compileExpectSuccess("/add.tri");	}
 
 	@Test
 	public void testHi() {
