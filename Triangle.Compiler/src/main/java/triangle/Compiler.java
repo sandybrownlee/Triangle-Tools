@@ -138,9 +138,6 @@ public class Compiler {
 	}
 	
 	private static void parseArgs(String[] args) {
-		@Argument(alias = "m", description = "Statistic to compute for the values", required = false)
-		protected String statistic = "mean";
-
 		for (String s : args) {
 			var sl = s.toLowerCase();
 			if (sl.equals("tree")) {
