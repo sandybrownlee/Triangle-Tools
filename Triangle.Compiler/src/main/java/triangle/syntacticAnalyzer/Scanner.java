@@ -35,7 +35,7 @@ public final class Scanner {
 
 	private boolean isOperator(char c) {
 		return (c == '+' || c == '-' || c == '*' || c == '/' || c == '=' || c == '<' || c == '>' || c == '\\'
-				|| c == '&' || c == '@' || c == '%' || c == '^' || c == '?');
+				|| c == '&' || c == '@' || c == '%' || c == '^' || c == '?' || c == '|');
 	}
 
 	///////////////////////////////////////////////////////////////////////////////
@@ -50,28 +50,39 @@ public final class Scanner {
 		debug = true;
 	}
 
-	// takeIt appends the current character to the current token, and gets
-	// the next character from the source program.
-
+	//TakeIt() reads the next character from the sourceFile. If we are currently in the middle of scanning a token,
+	// the current character is also added to the spelling of the current token.
 	private void takeIt() {
 		if (currentlyScanningToken)
 			currentSpelling.append(currentChar);
 		currentChar = sourceFile.getSource();
 	}
 
-	// scanSeparator skips a single separator.
+	// ScanSeparator() looks at the currentChar. If it’s a !, that is, the beginning of a comment,
+	// it will then keep calling takeIt() until we reach the end of the line or the end of the file.
 
 	private void scanSeparator() {
 		switch (currentChar) {
 		
 		// comment
-		case '!': {
+		case '!':
+			case '#' : {
 			takeIt();
+			//EOL = End Of Line, EOT = End Of File
 			while ((currentChar != SourceFile.EOL) && (currentChar != SourceFile.EOT))
 				takeIt();
 			if (currentChar == SourceFile.EOL)
 				takeIt();
 		}
+			break;
+
+			case '$' : {
+				takeIt();
+				while ((currentChar != '$') && (currentChar != SourceFile.EOT))
+					takeIt();
+				if (currentChar == '$')
+					takeIt();
+			}
 			break;
 
 		// whitespace
@@ -84,6 +95,7 @@ public final class Scanner {
 		}
 	}
 
+	//scanToken() looks at the first character of the token and
 	private int scanToken() {
 
 		switch (currentChar) {
@@ -140,6 +152,8 @@ public final class Scanner {
 		case 'X':
 		case 'Y':
 		case 'Z':
+			//if it’s a letter, this is deemed to be an identifier it calls takeIt() recursively to get the
+			// next letter. This will stop if it hits a non-letter or non-digit.
 			takeIt();
 			while (isLetter(currentChar) || isDigit(currentChar))
 				takeIt();
@@ -156,6 +170,8 @@ public final class Scanner {
 		case '8':
 		case '9':
 			takeIt();
+			//If it’s a digit, this is deemed to be an integer literal, so it calls takeIt() to get the rest of
+			//the number in question. This will stop if it hits a non-digit.
 			while (isDigit(currentChar))
 				takeIt();
 			return Token.INTLITERAL;
@@ -173,6 +189,9 @@ public final class Scanner {
 		case '%':
 		case '^':
 		case '?':
+			case '|':
+				//If it’s a +, - etc., it’s deemed to be an operator, so it calls takeIt() to get the rest of the
+				//operator in question.
 			takeIt();
 			while (isOperator(currentChar))
 				takeIt();
@@ -187,6 +206,8 @@ public final class Scanner {
 			} else
 				return Token.ERROR;
 
+			//Any other characters are deemed to be single characters; if they have a “kind” then that’s
+			//selected, otherwise Token.ERROR is returned.
 		case '.':
 			takeIt();
 			return Token.DOT;
@@ -244,6 +265,10 @@ public final class Scanner {
 		}
 	}
 
+	//scan() starts the process of reading a token. It looks at the current character,
+	// which should be the first one of a new token.
+	// If it’s a whitespace or a ! then it calls scanSeparator() to skip forwards until we reach something more interesting.
+	// Otherwise, it decides that we’re reading a token, and calls scanToken to decide what to do.
 	public Token scan() {
 		Token tok;
 		SourcePosition pos;
@@ -252,7 +277,7 @@ public final class Scanner {
 		currentlyScanningToken = false;
 		// skip any whitespace or comments
 		while (currentChar == '!' || currentChar == ' ' || currentChar == '\n' || currentChar == '\r'
-				|| currentChar == '\t')
+				|| currentChar == '\t' || currentChar == '#' || currentChar == '$')
 			scanSeparator();
 
 		currentlyScanningToken = true;

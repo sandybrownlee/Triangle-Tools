@@ -75,6 +75,9 @@ public class Emitter {
 	 * @param operand  the operand field
 	 * @return the code address of the new instruction
 	 **/
+	//The visitor methods will call this emit method to generate the program, one instruction at a time.
+	//This emit method adds a specific machine code instruction to an array that makes up the low level program.
+	//Each instruction comprises an operation code (the low level command itself), the length, register and operand
 	public int emit(OpCode op, int length, Register register, int operand) {
 
 		if (length > 255) {
@@ -88,7 +91,7 @@ public class Emitter {
 		if (nextInstrAddr == Machine.PB) {
 			errorReporter.reportRestriction("too many instructions for code segment");
 		} else {
-			Machine.code[nextInstrAddr++] = nextInstr;
+			Machine.code[nextInstrAddr++] = nextInstr;//At the end, the contents of this Machine.code array is written to a file, which is the dot-tam file you get when you run the compiler
 		}
 		return currentInstrAddr;
 

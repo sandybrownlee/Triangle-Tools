@@ -24,16 +24,17 @@ public class KnownValue extends RuntimeEntity implements FetchableEntity {
 	private final int value;
 
 	public KnownValue(int size, int value) {
-		super(size);
-		this.value = value;
+		super(size); // size is the amount of memory taken up by this value
+		this.value = value; // the value itself
 	}
 
 	public final int getValue() {
 		return value;
 	}
 
+	//is used to generate the machine code that’s used whenever this value is needed
 	public void encodeFetch(Emitter emitter, Frame frame, int size, Vname vname) {
 		// presumably offset = 0 and indexed = false
-		emitter.emit(OpCode.LOADL, 0, value);
+		emitter.emit(OpCode.LOADL, 0, value); // It simply calls LOADL to load the literal value onto the stack.
 	}
 }

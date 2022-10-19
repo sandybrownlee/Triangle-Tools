@@ -12,6 +12,11 @@
  * of the authors.
  */
 
+// The Program class, the IfCommand class, and indeed all classes we might use for AST nodes, must implement the “visit” method.
+// In each case, the visit method will call an appropriate method in the Visitor.
+// The Visitor class (LayoutVisitor) implements all the logic needed to draw the tree,
+// divided into “visit” methods for every type of node present in the AST.
+
 package triangle.treeDrawer;
 
 import java.awt.FontMetrics;
@@ -28,13 +33,7 @@ import triangle.abstractSyntaxTrees.aggregates.MultipleArrayAggregate;
 import triangle.abstractSyntaxTrees.aggregates.MultipleRecordAggregate;
 import triangle.abstractSyntaxTrees.aggregates.SingleArrayAggregate;
 import triangle.abstractSyntaxTrees.aggregates.SingleRecordAggregate;
-import triangle.abstractSyntaxTrees.commands.AssignCommand;
-import triangle.abstractSyntaxTrees.commands.CallCommand;
-import triangle.abstractSyntaxTrees.commands.EmptyCommand;
-import triangle.abstractSyntaxTrees.commands.IfCommand;
-import triangle.abstractSyntaxTrees.commands.LetCommand;
-import triangle.abstractSyntaxTrees.commands.SequentialCommand;
-import triangle.abstractSyntaxTrees.commands.WhileCommand;
+import triangle.abstractSyntaxTrees.commands.*;
 import triangle.abstractSyntaxTrees.declarations.BinaryOperatorDeclaration;
 import triangle.abstractSyntaxTrees.declarations.ConstDeclaration;
 import triangle.abstractSyntaxTrees.declarations.FuncDeclaration;
@@ -132,9 +131,9 @@ public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
 
 	@Override
 	public DrawingTree visitIfCommand(IfCommand ast, Void obj) {
-		var d1 = ast.E.visit(this);
-		var d2 = ast.C1.visit(this);
-		var d3 = ast.C2.visit(this);
+		var d1 = ast.E.visit(this); //draws the subtree for the expression, so it calls visit on the “expression” child node of the IfCommand which can be a BinaryExpression object.
+		var d2 = ast.C1.visit(this); //draws the subtree for then command
+		var d3 = ast.C2.visit(this); //draws the subtree for else command
 		return layoutTernary("IfCom.", d1, d2, d3);
 	}
 
@@ -159,6 +158,13 @@ public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
 		return layoutBinary("WhileCom.", d1, d2);
 	}
 
+	@Override
+	public DrawingTree visitRepeatCommand(RepeatCommand repeatCommand, Void unused) {
+		var d1 = repeatCommand.E.visit(this);
+		var d2 = repeatCommand.C.visit(this);
+		return layoutBinary("RepeatCom.", d2, d1);
+	}
+
 	// Expressions
 	@Override
 	public DrawingTree visitArrayExpression(ArrayExpression ast, Void obj) {
@@ -166,11 +172,12 @@ public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
 		return layoutUnary("ArrayExpr.", d1);
 	}
 
+
 	@Override
 	public DrawingTree visitBinaryExpression(BinaryExpression ast, Void obj) {
-		var d1 = ast.E1.visit(this);
-		var d2 = ast.O.visit(this);
-		var d3 = ast.E2.visit(this);
+		var d1 = ast.E1.visit(this); //visit left child node first
+		var d2 = ast.O.visit(this); //visit operator
+		var d3 = ast.E2.visit(this);//visit right child node after
 		return layoutTernary("Bin.Expr.", d1, d2, d3);
 	}
 

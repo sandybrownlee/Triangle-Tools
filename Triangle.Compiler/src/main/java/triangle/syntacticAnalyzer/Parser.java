@@ -31,14 +31,7 @@ import triangle.abstractSyntaxTrees.aggregates.MultipleRecordAggregate;
 import triangle.abstractSyntaxTrees.aggregates.RecordAggregate;
 import triangle.abstractSyntaxTrees.aggregates.SingleArrayAggregate;
 import triangle.abstractSyntaxTrees.aggregates.SingleRecordAggregate;
-import triangle.abstractSyntaxTrees.commands.AssignCommand;
-import triangle.abstractSyntaxTrees.commands.CallCommand;
-import triangle.abstractSyntaxTrees.commands.Command;
-import triangle.abstractSyntaxTrees.commands.EmptyCommand;
-import triangle.abstractSyntaxTrees.commands.IfCommand;
-import triangle.abstractSyntaxTrees.commands.LetCommand;
-import triangle.abstractSyntaxTrees.commands.SequentialCommand;
-import triangle.abstractSyntaxTrees.commands.WhileCommand;
+import triangle.abstractSyntaxTrees.commands.*;
 import triangle.abstractSyntaxTrees.declarations.ConstDeclaration;
 import triangle.abstractSyntaxTrees.declarations.Declaration;
 import triangle.abstractSyntaxTrees.declarations.FuncDeclaration;
@@ -98,19 +91,19 @@ public class Parser {
 	// accept checks whether the current token matches tokenExpected.
 	// If so, fetches the next token.
 	// If not, reports a syntactic error.
-
 	void accept(int tokenExpected) throws SyntaxError {
 		if (currentToken.kind == tokenExpected) {
 			previousTokenPosition = currentToken.position;
-			currentToken = lexicalAnalyser.scan();
+			currentToken = lexicalAnalyser.scan(); //call the scanner (or lexer) to get the next token in the program string as needed.
 		} else {
 			syntacticError("\"%\" expected here", Token.spell(tokenExpected));
 		}
 	}
 
+	//call the scanner (or lexer) to get the next token in the program string as needed.
 	void acceptIt() {
 		previousTokenPosition = currentToken.position;
-		currentToken = lexicalAnalyser.scan();
+		currentToken = lexicalAnalyser.scan(); //call the scanner (or lexer) to get the next token in the program string as needed.
 	}
 
 	// start records the position of the start of a phrase.
@@ -141,6 +134,10 @@ public class Parser {
 	//
 	///////////////////////////////////////////////////////////////////////////////
 
+	//parseProgram() is where we start: it creates an empty AST.
+	// The production rule for “program” is simply that is contains a command (which might literally be a single command,
+	// or might be a sequence of single commands).
+	// So we call parseCommand() to try parsing a command from the program string.
 	public Program parseProgram() {
 
 		Program programAST = null;
@@ -149,6 +146,7 @@ public class Parser {
 		previousTokenPosition.finish = 0;
 		currentToken = lexicalAnalyser.scan();
 
+		//check that it contains a single or a sequence of commands
 		try {
 			Command cAST = parseCommand();
 			programAST = new Program(cAST, previousTokenPosition);
@@ -248,22 +246,33 @@ public class Parser {
 	// parseCommand parses the command, and constructs an AST
 	// to represent its phrase structure.
 
+	//parseCommand() looks at the current token and tries to parse it as a command, by calling parseSingleCommand().
+	// If that works, and the next token is a semicolon, it will try parsing another command.
+	// In Triangle, semicolons separate multiple commands.
+	// A sequential command subtree is built up, and returned when there are no more semicolons
 	Command parseCommand() throws SyntaxError {
 		Command commandAST = null; // in case there's a syntactic error
 
 		SourcePosition commandPos = new SourcePosition();
 
 		start(commandPos);
-		commandAST = parseSingleCommand();
+		commandAST = parseSingleCommand(); //looks at the current token and tries to parse it as a command, by calling parseSingleCommand()
 		while (currentToken.kind == Token.SEMICOLON) {
 			acceptIt();
-			Command c2AST = parseSingleCommand();
+			Command c2AST = parseSingleCommand(); // If that works, and the next token is a semicolon, it will try parsing another command.
 			finish(commandPos);
-			commandAST = new SequentialCommand(commandAST, c2AST, commandPos);
+			commandAST = new SequentialCommand(commandAST, c2AST, commandPos); // A sequential command subtree is built up
 		}
-		return commandAST;
+		return commandAST; // A sequential command is returned when there are no more semicolons
 	}
 
+	//parseSingleCommand() actually starts looking for more specific types of token.
+	// Depending on the kind of the current token it will create a different type of subtree.
+	// For example, if we find an “if” token, then we’ll try to parse the expression,
+	// then the “then” and “else” commands, before constructing the subtree for return.
+
+	//commandPos represent line numbers in the original source code and is there to help with debugging
+	// This is how a compiler can give you a line number for an error.
 	Command parseSingleCommand() throws SyntaxError {
 		Command commandAST = null; // in case there's a syntactic error
 
@@ -278,7 +287,7 @@ public class Parser {
 				acceptIt();
 				ActualParameterSequence apsAST = parseActualParameterSequence();
 				accept(Token.RPAREN);
-				finish(commandPos);
+				finish(commandPos); //commandPos represent line numbers in the original source code
 				commandAST = new CallCommand(iAST, apsAST, commandPos);
 
 			} else {
@@ -328,6 +337,16 @@ public class Parser {
 			finish(commandPos);
 			commandAST = new WhileCommand(eAST, cAST, commandPos);
 		}
+			break;
+
+			case Token.REPEAT: {
+				acceptIt();
+				Command cAST = parseCommand();
+				accept(Token.UNTIL);
+				Expression eAST = parseExpression();
+				finish(commandPos);
+				commandAST = new RepeatCommand(eAST, cAST, commandPos);
+			}
 			break;
 
 		case Token.SEMICOLON:

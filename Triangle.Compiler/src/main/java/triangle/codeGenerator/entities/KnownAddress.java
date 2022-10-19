@@ -53,6 +53,7 @@ public class KnownAddress extends AddressableEntity {
 		}
 	}
 
+	// specifies the code to write to the address
 	public void encodeFetchAddress(Emitter emitter, Frame frame, Vname vname) {
 		emitter.emit(OpCode.LOADA, 0, frame.getDisplayRegister(address), address.getDisplacement() + vname.offset);
 		if (vname.indexed) {

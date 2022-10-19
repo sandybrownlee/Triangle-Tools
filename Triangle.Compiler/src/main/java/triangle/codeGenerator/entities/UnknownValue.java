@@ -23,15 +23,18 @@ import triangle.codeGenerator.Frame;
 
 public class UnknownValue extends RuntimeEntity implements FetchableEntity {
 
-	private final ObjectAddress address;
+	private final ObjectAddress address; // The unknown value is represented by an address, made up of two parts
 
 	public UnknownValue(int size, int level, int displacement) {
 		super(size);
+		// Level is how nested the routine that contains this declaration is
+		// Displacement is where the entity is located relative to the base of the frame (so how many "words" from the starting routine the unknown value is)
 		address = new ObjectAddress(level, displacement);
 	}
 
+	// Frame object gets the current routine level
 	public UnknownValue(int size, Frame frame) {
-		this(size, frame.getLevel(), frame.getSize());
+		this(size, frame.getLevel(), frame.getSize()); // size of the frame is the displacement, because that’s the top of the stack.
 	}
 
 	public final ObjectAddress getAddress() {
@@ -44,7 +47,7 @@ public class UnknownValue extends RuntimeEntity implements FetchableEntity {
 			emitter.emit(OpCode.CALL, Register.PB, Primitive.ADD);
 			emitter.emit(OpCode.LOADI, size, 0);
 		} else {
-			emitter.emit(OpCode.LOAD, size, frame.getDisplayRegister(address),
+			emitter.emit(OpCode.LOAD, size, frame.getDisplayRegister(address), //LOAD instruction to load the value from the relevant part of the stack.
 					address.getDisplacement() + vname.offset);
 		}
 	}
