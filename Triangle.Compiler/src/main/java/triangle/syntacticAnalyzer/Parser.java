@@ -356,7 +356,7 @@ public class Parser {
 		return commandAST;
 	}
 
-	Command decrementCommand(Vname variableName,SourcePosition previousTokenPosition) throws SyntaxError {
+	 Command decrementCommand(Vname variableName,SourcePosition previousTokenPosition) throws SyntaxError {
 		Command commandAST = null; // in case there's a syntactic error
 
 		//Set up the operator
@@ -570,7 +570,7 @@ public class Parser {
 		return vnameAST;
 	}
 
-	Vname parseRestOfVname(Identifier identifierAST) throws SyntaxError {
+	 Vname parseRestOfVname(Identifier identifierAST) throws SyntaxError {
 		SourcePosition vnamePos = new SourcePosition();
 		vnamePos = identifierAST.getPosition();
 		Vname vAST = new SimpleVname(identifierAST, vnamePos);

@@ -113,6 +113,7 @@ import triangle.codeGenerator.entities.TypeRepresentation;
 import triangle.codeGenerator.entities.UnknownAddress;
 import triangle.codeGenerator.entities.UnknownRoutine;
 import triangle.codeGenerator.entities.UnknownValue;
+import triangle.codeGenerator.entities.BarPrimitiveRoutine;
 
 public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 		ActualParameterSequenceVisitor<Frame, Integer>, ArrayAggregateVisitor<Frame, Integer>,
@@ -705,6 +706,11 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 		writeTableDetails(routineDeclaration);
 	}
 
+	private final void elaborateBarPrimitiveRoutine(Declaration routineDeclaration, Primitive primitive) {
+		routineDeclaration.entity = new BarPrimitiveRoutine(primitive);
+		writeTableDetails(routineDeclaration);
+	}
+
 	private final void elaborateStdEnvironment() {
 		tableDetailsReqd = false;
 		elaborateStdConst(StdEnvironment.falseDecl, Machine.falseRep);
@@ -734,6 +740,7 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 		elaborateStdPrimRoutine(StdEnvironment.puteolDecl, Primitive.PUTEOL);
 		elaborateStdEqRoutine(StdEnvironment.equalDecl, Primitive.EQ);
 		elaborateStdEqRoutine(StdEnvironment.unequalDecl, Primitive.NE);
+		elaborateBarPrimitiveRoutine(StdEnvironment.barDecl, Primitive.BAR);
 	}
 
 	boolean tableDetailsReqd;

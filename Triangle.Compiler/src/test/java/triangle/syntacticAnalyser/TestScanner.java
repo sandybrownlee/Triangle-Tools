@@ -12,6 +12,7 @@ import triangle.syntacticAnalyzer.Parser;
 import triangle.syntacticAnalyzer.Scanner;
 import triangle.syntacticAnalyzer.SourceFile;
 
+
 public class TestScanner {
 
 	@Test
@@ -34,7 +35,7 @@ public class TestScanner {
 
 	@Test
 	public void testBarDemo() {
-		compileExpectFailure("/bardemo.tri");
+		compileExpectSuccess("/bardemo.tri");
 	}
 	
 
@@ -42,8 +43,11 @@ public class TestScanner {
 	public void testRepeatUntil() {
 		compileExpectFailure("/repeatuntil.tri");
 	}
-	
-	
+
+	@Test
+	public void testDecrement() {
+		compileExpectSuccess("/decrement.tri");
+	}
 	
 	private void compileExpectSuccess(String filename) {
 		// build.gradle has a line sourceSets.test.resources.srcDir file("$rootDir/programs")

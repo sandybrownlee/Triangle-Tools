@@ -5,8 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f505e3df-4d61-4844-84b1-893c6601edd9" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/codeGenerator/entities/BarPrimitiveRoutine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Triangle.AbstractMachine/src/main/java/triangle/abstractMachine/Primitive.java" beforeDir="false" afterPath="$PROJECT_DIR$/Triangle.AbstractMachine/src/main/java/triangle/abstractMachine/Primitive.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Triangle.Compiler/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/Triangle.Compiler/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/Compiler.java" beforeDir="false" afterPath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/Compiler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/StdEnvironment.java" beforeDir="false" afterPath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/StdEnvironment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/codeGenerator/Encoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/codeGenerator/Encoder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/contextualAnalyzer/Checker.java" beforeDir="false" afterPath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/contextualAnalyzer/Checker.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/optimiser/ConstantFolder.java" beforeDir="false" afterPath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/optimiser/ConstantFolder.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/syntacticAnalyzer/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/syntacticAnalyzer/Parser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/treeDrawer/LayoutVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/treeDrawer/LayoutVisitor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/syntacticAnalyzer/Scanner.java" beforeDir="false" afterPath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/syntacticAnalyzer/Scanner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Triangle.Compiler/src/test/java/triangle/syntacticAnalyser/TestScanner.java" beforeDir="false" afterPath="$PROJECT_DIR$/Triangle.Compiler/src/test/java/triangle/syntacticAnalyser/TestScanner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/libs/Triangle-Tools.jar" beforeDir="false" afterPath="$PROJECT_DIR$/build/libs/Triangle-Tools.jar" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -39,20 +50,12 @@
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="preferences.general" />
   </component>
-  <component name="RunManager" selected="Gradle.TestScanner (1)">
-    <configuration name="Compiler" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="triangle.Compiler" />
-      <module name="Triangle-Tools.Triangle.Compiler.main" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="triangle.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\dimko\Desktop\Things\Programming Things\GITHUB THINGS\Triangle-Tools\Triangle.Compiler\src\main\java\triangle\codeGenerator\entities" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Gradle.TestScanner.testBarDemo">
     <configuration name="TestScanner (1)" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -67,6 +70,75 @@
             <option value=":Triangle.Compiler:test" />
             <option value="--tests" />
             <option value="&quot;triangle.syntacticAnalyser.TestScanner&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="TestScanner.testBarDemo" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":Triangle.Compiler:test" />
+            <option value="--tests" />
+            <option value="&quot;triangle.syntacticAnalyser.TestScanner.testBarDemo&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="TestScanner.testDecrement" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":Triangle.Compiler:test" />
+            <option value="--tests" />
+            <option value="&quot;triangle.syntacticAnalyser.TestScanner.testDecrement&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="TestScanner.testHi" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":Triangle.Compiler:test" />
+            <option value="--tests" />
+            <option value="&quot;triangle.syntacticAnalyser.TestScanner.testHi&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -99,33 +171,13 @@
       <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
-    <configuration name="Triangle-Tools [dependencies]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value="dependencies" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <method v="2" />
-    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.TestScanner.testBarDemo" />
         <item itemvalue="Gradle.TestScanner (1)" />
+        <item itemvalue="Gradle.TestScanner.testHi" />
+        <item itemvalue="Gradle.TestScanner.testDecrement" />
         <item itemvalue="Gradle.TestScanner.testIfDemo" />
-        <item itemvalue="Gradle.Triangle-Tools [dependencies]" />
-        <item itemvalue="Application.Compiler" />
       </list>
     </recent_temporary>
   </component>

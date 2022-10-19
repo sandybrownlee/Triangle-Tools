@@ -23,6 +23,8 @@ import triangle.syntacticAnalyzer.Parser;
 import triangle.syntacticAnalyzer.Scanner;
 import triangle.syntacticAnalyzer.SourceFile;
 import triangle.treeDrawer.Drawer;
+import com.sampullara.cli.Argument;
+import com.sampullara.cli.Args;
 
 /**
  * The main driver class for the Triangle compiler.
@@ -33,10 +35,17 @@ import triangle.treeDrawer.Drawer;
 public class Compiler {
 
 	/** The filename for the object program, normally obj.tam. */
+	@Argument(alias = "o", description = "The name of the file for the .tam output file", required = false)
 	static String objectName = "obj.tam";
-	
+
+	@Argument(alias = "t", description = " Show the Abstract Syntax Tree ", required = false)
 	static boolean showTree = false;
+
+	@Argument(alias = "f", description = "The choice of whether to fold the program by visiting the constant folder", required = false)
 	static boolean folding = false;
+
+	@Argument(alias = "s", description = "The choice of whether to show the Abstract Syntax Tree after folding is complete ", required = false)
+	static boolean showTreeAfterFolding = false;
 
 	private static Scanner scanner;
 	private static Parser parser;
@@ -90,10 +99,15 @@ public class Compiler {
 			// }
 			System.out.println("Contextual Analysis ...");
 			checker.check(theAST); // 2nd pass
-			if (showingAST) {
+
+			if(showTreeAfterFolding & showingAST & folding){ //New pattern to fold the program before the tree is shown
+				theAST.visit(new ConstantFolder());
 				drawer.draw(theAST);
-			}
-			if (folding) {
+
+			} else if (showingAST) {
+				drawer.draw(theAST);
+
+			} else if (folding) {
 				theAST.visit(new ConstantFolder());
 			}
 			
@@ -121,11 +135,10 @@ public class Compiler {
 	 */
 	public static void main(String[] args) {
 
-		if (args.length < 1) {
-			System.out.println("Usage: tc filename [-o=outputfilename] [tree] [folding]");
-			System.exit(1);
-		}
-		
+     Compiler compiler = new Compiler();
+
+		Args.parseOrExit(compiler,args);
+
 		parseArgs(args);
 
 		String sourceName = args[0];
@@ -146,6 +159,8 @@ public class Compiler {
 				objectName = s.substring(3);
 			} else if (sl.equals("folding")) {
 				folding = true;
+			} else if (sl.equals("showfolding")){ //Added a new case to check whether to show the tree after folding
+				showTreeAfterFolding = true;
 			}
 		}
 	}
