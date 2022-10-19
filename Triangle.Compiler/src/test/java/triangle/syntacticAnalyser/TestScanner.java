@@ -45,6 +45,9 @@ public class TestScanner {
 	
 	@Test
 	public void testAdd() { compileExpectSuccess("/add.tri"); }
+
+	@Test
+	public void testDecrement() { compileExpectSuccess("/decrement.tri"); }
 	
 	private void compileExpectSuccess(String filename) {
 		// build.gradle has a line sourceSets.test.resources.srcDir file("$rootDir/programs")

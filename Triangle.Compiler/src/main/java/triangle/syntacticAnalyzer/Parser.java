@@ -75,6 +75,8 @@ import triangle.abstractSyntaxTrees.vnames.SimpleVname;
 import triangle.abstractSyntaxTrees.vnames.SubscriptVname;
 import triangle.abstractSyntaxTrees.vnames.Vname;
 
+import java.util.Arrays;
+
 public class Parser {
 
 	private Scanner lexicalAnalyser;
@@ -275,12 +277,14 @@ public class Parser {
 					commandAST = new CallCommand(iAST, apsAST, commandPos);
 				} else {
 					Vname vAST = parseRestOfVname(iAST);
-					if (currentToken.kind == Token.OPERATOR && currentToken.spelling.equals("++")) {
+					if (currentToken.kind == Token.OPERATOR &&
+							(currentToken.spelling.equals("++") || currentToken.spelling.equals("--"))
+					) {
 						acceptIt();
 						IntegerLiteral il = new IntegerLiteral("1", commandPos);
 						IntegerExpression ie = new IntegerExpression(il, commandPos);
 						VnameExpression vne = new VnameExpression(vAST, commandPos);
-						Operator op = new Operator("+", commandPos);
+						Operator op = new Operator(currentToken.spelling.equals("++") ? "+" : "-", commandPos);
 						Expression eAST = new BinaryExpression(vne, op, ie, commandPos);
 						finish(commandPos);
 						commandAST = new AssignCommand(vAST, eAST, commandPos);
