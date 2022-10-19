@@ -265,88 +265,96 @@ public class Parser {
 
 		switch (currentToken.kind) {
 
-		case Token.IDENTIFIER: {
-			Identifier iAST = parseIdentifier();
-			if (currentToken.kind == Token.LPAREN) {
+			case Token.IDENTIFIER: {
+				Identifier iAST = parseIdentifier();
+				if (currentToken.kind == Token.LPAREN) {
+					acceptIt();
+					ActualParameterSequence apsAST = parseActualParameterSequence();
+					accept(Token.RPAREN);
+					finish(commandPos);
+					commandAST = new CallCommand(iAST, apsAST, commandPos);
+				} else {
+					Vname vAST = parseRestOfVname(iAST);
+					if (currentToken.kind == Token.OPERATOR && currentToken.spelling.equals("++")) {
+						acceptIt();
+						IntegerLiteral il = new IntegerLiteral("1", commandPos);
+						IntegerExpression ie = new IntegerExpression(il, commandPos);
+						VnameExpression vne = new VnameExpression(vAST, commandPos);
+						Operator op = new Operator("+", commandPos);
+						Expression eAST = new BinaryExpression(vne, op, ie, commandPos);
+						finish(commandPos);
+						commandAST = new AssignCommand(vAST, eAST, commandPos);
+					} else {
+						accept(Token.BECOMES);
+						Expression eAST = parseExpression();
+						finish(commandPos);
+						commandAST = new AssignCommand(vAST, eAST, commandPos);
+					}
+				}
+			}
+				break;
+
+			case Token.BEGIN:
 				acceptIt();
-				ActualParameterSequence apsAST = parseActualParameterSequence();
-				accept(Token.RPAREN);
+				commandAST = parseCommand();
+				accept(Token.END);
+				break;
+
+			case Token.LET: {
+				acceptIt();
+				Declaration dAST = parseDeclaration();
+				accept(Token.IN);
+				Command cAST = parseSingleCommand();
 				finish(commandPos);
-				commandAST = new CallCommand(iAST, apsAST, commandPos);
+				commandAST = new LetCommand(dAST, cAST, commandPos);
+			}
+				break;
 
-			} else {
+			case Token.IF: {
+				acceptIt();
+				Expression eAST = parseExpression();
+				accept(Token.THEN);
+				Command c1AST = parseSingleCommand();
+				accept(Token.ELSE);
+				Command c2AST = parseSingleCommand();
+				finish(commandPos);
+				commandAST = new IfCommand(eAST, c1AST, c2AST, commandPos);
+			}
+				break;
 
-				Vname vAST = parseRestOfVname(iAST);
-				accept(Token.BECOMES);
+			case Token.REPEAT: {
+				acceptIt();
+				Command cAST = parseSingleCommand();
+				accept(Token.UNTIL);
 				Expression eAST = parseExpression();
 				finish(commandPos);
-				commandAST = new AssignCommand(vAST, eAST, commandPos);
+				commandAST = new RepeatCommand(eAST, cAST, commandPos);
 			}
-		}
-			break;
+				break;
 
-		case Token.BEGIN:
-			acceptIt();
-			commandAST = parseCommand();
-			accept(Token.END);
-			break;
+			case Token.WHILE: {
+				acceptIt();
+				Expression eAST = parseExpression();
+				accept(Token.DO);
+				Command cAST = parseSingleCommand();
+				finish(commandPos);
+				commandAST = new WhileCommand(eAST, cAST, commandPos);
+			}
+				break;
 
-		case Token.LET: {
-			acceptIt();
-			Declaration dAST = parseDeclaration();
-			accept(Token.IN);
-			Command cAST = parseSingleCommand();
-			finish(commandPos);
-			commandAST = new LetCommand(dAST, cAST, commandPos);
-		}
-			break;
+			case Token.SEMICOLON:
+			case Token.END:
+			case Token.ELSE:
+			case Token.IN:
+			case Token.EOT:
 
-		case Token.IF: {
-			acceptIt();
-			Expression eAST = parseExpression();
-			accept(Token.THEN);
-			Command c1AST = parseSingleCommand();
-			accept(Token.ELSE);
-			Command c2AST = parseSingleCommand();
-			finish(commandPos);
-			commandAST = new IfCommand(eAST, c1AST, c2AST, commandPos);
-		}
-			break;
+				finish(commandPos);
+				commandAST = new EmptyCommand(commandPos);
+				break;
 
-		case Token.REPEAT: {
-			acceptIt();
-			Command cAST = parseSingleCommand();
-			accept(Token.UNTIL);
-			Expression eAST = parseExpression();
-			finish(commandPos);
-			commandAST = new RepeatCommand(eAST, cAST, commandPos);
-		}
-			break;
-
-		case Token.WHILE: {
-			acceptIt();
-			Expression eAST = parseExpression();
-			accept(Token.DO);
-			Command cAST = parseSingleCommand();
-			finish(commandPos);
-			commandAST = new WhileCommand(eAST, cAST, commandPos);
-		}
-			break;
-
-		case Token.SEMICOLON:
-		case Token.END:
-		case Token.ELSE:
-		case Token.IN:
-		case Token.EOT:
-
-			finish(commandPos);
-			commandAST = new EmptyCommand(commandPos);
-			break;
-
-		default:
-			syntacticError("\"%\" cannot start a command", currentToken.spelling);
-			break;
-
+			default:
+				syntacticError("\"%\" cannot start a command", currentToken.spelling);
+				break;
 		}
 
 		return commandAST;

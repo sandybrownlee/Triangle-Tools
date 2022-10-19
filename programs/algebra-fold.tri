@@ -1,0 +1,25 @@
+let
+    var b: Integer
+in
+begin
+    b := 1 + 3;
+    
+    putint(b);
+    puteol();
+
+    b := 1 - 3;
+    
+    putint(b);
+    puteol();
+    
+    b := 2 / 1;
+    
+	putint(b);
+    puteol();
+        
+    b := 2 * 1;
+    
+	putint(b);
+    puteol();
+    
+end

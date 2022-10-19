@@ -14,6 +14,8 @@
 
 package triangle;
 
+import com.sampullara.cli.Args;
+import com.sampullara.cli.Argument;
 import triangle.abstractSyntaxTrees.Program;
 import triangle.codeGenerator.Emitter;
 import triangle.codeGenerator.Encoder;
@@ -33,10 +35,20 @@ import triangle.treeDrawer.Drawer;
 public class Compiler {
 
 	/** The filename for the object program, normally obj.tam. */
+	@Argument(alias = "object", description="The filename for the object program, normally obj.tam.")
 	static String objectName = "obj.tam";
 	
+	@Argument(alias = "tree", description = "Display the Abstract Syntax Tree.")
 	static boolean showTree = false;
+
+	@Argument(alias = "folded-tree", description = "Only display the Abstract Syntax Tree after folding is complete. Ignored if passed without '-showTree/-tree' and '-folding/-fold'.")
+	static boolean showAfterFolding = false;
+
+	@Argument(alias = "fold", description = "Perform folding optimisations on compiled code.")
 	static boolean folding = false;
+
+	@Argument(alias = "source", description = "The filename", required = true)
+	static String sourceName = "";
 
 	private static Scanner scanner;
 	private static Parser parser;
@@ -62,7 +74,8 @@ public class Compiler {
 	 * @return true iff the source program is free of compile-time errors, otherwise
 	 *         false.
 	 */
-	static boolean compileProgram(String sourceName, String objectName, boolean showingAST, boolean showingTable) {
+	static boolean compileProgram(String sourceName, String objectName, boolean showingAST, boolean showAfterFolding,
+								  boolean showingTable) {
 
 		System.out.println("********** " + "Triangle Compiler (Java Version 2.1)" + " **********");
 
@@ -85,16 +98,18 @@ public class Compiler {
 		// scanner.enableDebugging();
 		theAST = parser.parseProgram(); // 1st pass
 		if (reporter.getNumErrors() == 0) {
-			// if (showingAST) {
-			// drawer.draw(theAST);
-			// }
+
 			System.out.println("Contextual Analysis ...");
 			checker.check(theAST); // 2nd pass
-			if (showingAST) {
+
+			if (showingAST && !showAfterFolding) {
 				drawer.draw(theAST);
 			}
 			if (folding) {
 				theAST.visit(new ConstantFolder());
+				if (showingAST && showAfterFolding) {
+					drawer.draw(theAST);
+				}
 			}
 			
 			if (reporter.getNumErrors() == 0) {
@@ -121,32 +136,12 @@ public class Compiler {
 	 */
 	public static void main(String[] args) {
 
-		if (args.length < 1) {
-			System.out.println("Usage: tc filename [-o=outputfilename] [tree] [folding]");
-			System.exit(1);
-		}
+		Args.parseOrExit(Compiler.class, args);
 		
-		parseArgs(args);
-
-		String sourceName = args[0];
-		
-		var compiledOK = compileProgram(sourceName, objectName, showTree, false);
+		var compiledOK = compileProgram(sourceName, objectName, showTree, showAfterFolding, false);
 
 		if (!showTree) {
 			System.exit(compiledOK ? 0 : 1);
-		}
-	}
-	
-	private static void parseArgs(String[] args) {
-		for (String s : args) {
-			var sl = s.toLowerCase();
-			if (sl.equals("tree")) {
-				showTree = true;
-			} else if (sl.startsWith("-o=")) {
-				objectName = s.substring(3);
-			} else if (sl.equals("folding")) {
-				folding = true;
-			}
 		}
 	}
 }
