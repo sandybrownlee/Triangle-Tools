@@ -140,6 +140,14 @@ public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
 	}
 
 	@Override
+	public DrawingTree visitLoopWhileCommand(LoopWhileCommand ast, Void obj) {
+		var d1 = ast.C1.visit(this);
+		var d2 = ast.E.visit(this);
+		var d3 = ast.C2.visit(this);
+		return layoutTernary("LoopCom.", d1, d2, d3);
+	}
+
+	@Override
 	public DrawingTree visitRepeatCommand(RepeatCommand ast, Void obj) {
 		var d1 = ast.C.visit(this);
 		var d2 = ast.E.visit(this);

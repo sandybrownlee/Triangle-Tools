@@ -75,8 +75,6 @@ import triangle.abstractSyntaxTrees.vnames.SimpleVname;
 import triangle.abstractSyntaxTrees.vnames.SubscriptVname;
 import triangle.abstractSyntaxTrees.vnames.Vname;
 
-import java.util.Arrays;
-
 public class Parser {
 
 	private Scanner lexicalAnalyser;
@@ -339,6 +337,18 @@ public class Parser {
 				Expression eAST = parseExpression();
 				finish(commandPos);
 				commandAST = new RepeatCommand(eAST, cAST, commandPos);
+			}
+				break;
+
+			case Token.LOOP: {
+				acceptIt();
+				Command c1AST = parseSingleCommand();
+				accept(Token.WHILE);
+				Expression eAST = parseExpression();
+				accept(Token.DO);
+				Command c2AST = parseSingleCommand();
+				finish(commandPos);
+				commandAST = new LoopWhileCommand(c1AST, eAST, c2AST, commandPos);
 			}
 				break;
 
