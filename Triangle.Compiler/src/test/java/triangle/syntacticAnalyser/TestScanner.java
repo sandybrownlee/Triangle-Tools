@@ -12,6 +12,9 @@ import triangle.syntacticAnalyzer.Parser;
 import triangle.syntacticAnalyzer.Scanner;
 import triangle.syntacticAnalyzer.SourceFile;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
 
 public class TestScanner {
 
@@ -89,4 +92,12 @@ public class TestScanner {
 		assertNotEquals("Problem compiling " + filename, 0, reporter.getNumErrors());
 	}
 
+	private void readFileOutput(String filename){
+
+		final PrintStream standardOut = System.out;
+		final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
+		System.setOut(new PrintStream(outputStreamCaptor)); //Read the system.out output
+
+		assertEquals("Expected String", outputStreamCaptor.toString().trim());
+	}
 }

@@ -285,7 +285,6 @@ public class Parser {
 
 					accept(Token.OPERATOR);
 					Vname vAST = parseRestOfVname(iAST);
-
 					commandAST =  decrementCommand(vAST, previousTokenPosition);
 
 			} else {
@@ -348,7 +347,7 @@ public class Parser {
 		case Token.ELSE:
 		case Token.IN:
 		case Token.EOT:
-			case Token.RCURLY: //New "}" case for finishing the command
+			case Token.RCURLY: //New "}" case for finishing the command list
 			finish(commandPos);
 			commandAST = new EmptyCommand(commandPos);
 			break;

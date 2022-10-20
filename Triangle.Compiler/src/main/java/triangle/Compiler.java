@@ -100,17 +100,18 @@ public class Compiler {
 			System.out.println("Contextual Analysis ...");
 			checker.check(theAST); // 2nd pass
 
-			if(showTreeAfterFolding & showingAST & folding){ //New pattern to fold the program before the tree is shown
+			if (showTreeAfterFolding & showingAST & folding) { //New pattern to fold the program before the tree is shown
 				theAST.visit(new ConstantFolder());
 				drawer.draw(theAST);
 
-			} else if (showingAST) {
+			} else {
+				if (showingAST) {
 				drawer.draw(theAST);
-
-			} else if (folding) {
+			}
+				if (folding) {
 				theAST.visit(new ConstantFolder());
 			}
-			
+		}
 			if (reporter.getNumErrors() == 0) {
 				System.out.println("Code Generation ...");
 				encoder.encodeRun(theAST, showingTable); // 3rd pass

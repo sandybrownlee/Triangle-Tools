@@ -21,9 +21,8 @@ application {
 jar {
 	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
-	from {
-		configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-	}
+	from {configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+
 	from subprojects.sourceSets.main.output
 }
 // allow access to programs for unit tests
