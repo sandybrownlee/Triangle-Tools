@@ -21,6 +21,7 @@ import triangle.codeGenerator.Emitter;
 import triangle.codeGenerator.Encoder;
 import triangle.contextualAnalyzer.Checker;
 import triangle.optimiser.ConstantFolder;
+import triangle.statisticsGenerator.StatisticsGenerator;
 import triangle.syntacticAnalyzer.Parser;
 import triangle.syntacticAnalyzer.Scanner;
 import triangle.syntacticAnalyzer.SourceFile;
@@ -46,7 +47,10 @@ public class Compiler {
 
 	@Argument(alias = "fold", description = "Perform folding optimisations on compiled code.")
 	static boolean folding = false;
-
+	
+	@Argument(alias = "stats", description = "Generate statistics as to the number of Binary Expressions, If Commands and While Commands.")
+	static boolean statistics = false;
+	
 	@Argument(alias = "source", description = "The filename", required = true)
 	static String sourceName = "";
 
@@ -57,6 +61,7 @@ public class Compiler {
 	private static Emitter emitter;
 	private static ErrorReporter reporter;
 	private static Drawer drawer;
+	private static StatisticsGenerator statsCounter;
 
 	/** The AST representing the source program. */
 	private static Program theAST;
@@ -94,6 +99,7 @@ public class Compiler {
 		emitter = new Emitter(reporter);
 		encoder = new Encoder(emitter, reporter);
 		drawer = new Drawer();
+		statsCounter = new StatisticsGenerator();
 
 		// scanner.enableDebugging();
 		theAST = parser.parseProgram(); // 1st pass
@@ -110,6 +116,11 @@ public class Compiler {
 				if (showingAST && showAfterFolding) {
 					drawer.draw(theAST);
 				}
+			}
+			if (statistics) {
+				System.out.println("Generating Statistics ...");
+				theAST.visit(statsCounter);
+				System.out.println(statsCounter.toString());
 			}
 			
 			if (reporter.getNumErrors() == 0) {
