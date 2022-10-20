@@ -305,6 +305,12 @@ public class Parser {
 			accept(Token.END);
 			break;
 
+			case Token.LCURLY: //An identical case for the BEGIN-END case but with {-}
+				acceptIt();
+				commandAST = parseCommand();
+				accept(Token.RCURLY);
+				break;
+
 		case Token.LET: {
 			acceptIt();
 			Declaration dAST = parseDeclaration();
@@ -342,7 +348,7 @@ public class Parser {
 		case Token.ELSE:
 		case Token.IN:
 		case Token.EOT:
-
+			case Token.RCURLY: //New "}" case for finishing the command
 			finish(commandPos);
 			commandAST = new EmptyCommand(commandPos);
 			break;

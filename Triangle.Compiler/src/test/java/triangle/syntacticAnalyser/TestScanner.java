@@ -19,7 +19,11 @@ public class TestScanner {
 	public void testHi() {
 		compileExpectSuccess("/hi.tri");
 	}
-	
+
+	@Test
+	public void testWhileCurly() {
+		compileExpectSuccess("/while-curly.tri");
+	}
 
 	@Test
 	public void testHiNewComment() {
