@@ -1,0 +1,11 @@
+let
+	var a : Boolean;
+	var b : Integer
+in
+begin
+    b := 4;
+	a := true;
+	if a
+	then putint(b)
+	else puteol()
+end

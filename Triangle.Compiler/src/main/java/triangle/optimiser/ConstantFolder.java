@@ -45,17 +45,7 @@ import triangle.abstractSyntaxTrees.terminals.CharacterLiteral;
 import triangle.abstractSyntaxTrees.terminals.Identifier;
 import triangle.abstractSyntaxTrees.terminals.IntegerLiteral;
 import triangle.abstractSyntaxTrees.terminals.Operator;
-import triangle.abstractSyntaxTrees.types.AnyTypeDenoter;
-import triangle.abstractSyntaxTrees.types.ArrayTypeDenoter;
-import triangle.abstractSyntaxTrees.types.BoolTypeDenoter;
-import triangle.abstractSyntaxTrees.types.CharTypeDenoter;
-import triangle.abstractSyntaxTrees.types.ErrorTypeDenoter;
-import triangle.abstractSyntaxTrees.types.IntTypeDenoter;
-import triangle.abstractSyntaxTrees.types.MultipleFieldTypeDenoter;
-import triangle.abstractSyntaxTrees.types.RecordTypeDenoter;
-import triangle.abstractSyntaxTrees.types.SimpleTypeDenoter;
-import triangle.abstractSyntaxTrees.types.SingleFieldTypeDenoter;
-import triangle.abstractSyntaxTrees.types.TypeDeclaration;
+import triangle.abstractSyntaxTrees.types.*;
 import triangle.abstractSyntaxTrees.visitors.ActualParameterSequenceVisitor;
 import triangle.abstractSyntaxTrees.visitors.ActualParameterVisitor;
 import triangle.abstractSyntaxTrees.visitors.ArrayAggregateVisitor;
@@ -73,6 +63,7 @@ import triangle.abstractSyntaxTrees.visitors.VnameVisitor;
 import triangle.abstractSyntaxTrees.vnames.DotVname;
 import triangle.abstractSyntaxTrees.vnames.SimpleVname;
 import triangle.abstractSyntaxTrees.vnames.SubscriptVname;
+import triangle.codeGenerator.entities.KnownValue;
 
 public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSyntaxTree>,
 		ActualParameterSequenceVisitor<Void, AbstractSyntaxTree>, ArrayAggregateVisitor<Void, AbstractSyntaxTree>,
@@ -581,8 +572,8 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 			int int1 = (Integer.parseInt(((IntegerExpression) node1).IL.spelling));
 			int int2 = (Integer.parseInt(((IntegerExpression) node2).IL.spelling));
 			Object foldedValue = null;
-			
-			if (o.decl == StdEnvironment.addDecl) {
+
+			if (o.decl == StdEnvironment.addDecl) {              // Integer operators
 				foldedValue = int1 + int2;
 			} else if (o.decl == StdEnvironment.divideDecl) {
 				foldedValue = int1 / int2;
@@ -592,6 +583,18 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 				foldedValue = int1 * int2;
 			} else if (o.decl == StdEnvironment.subtractDecl) {
 				foldedValue = int1 - int2;
+			} else if (o.decl == StdEnvironment.equalDecl) {     // Boolean operators
+				foldedValue = (int1 == int2);
+			} else if (o.decl == StdEnvironment.unequalDecl) {
+				foldedValue = (int1 != int2);
+			} else if (o.decl == StdEnvironment.greaterDecl) {
+				foldedValue = (int1 > int2);
+			} else if (o.decl == StdEnvironment.notgreaterDecl) {
+				foldedValue = (int1 <= int2);
+			} else if (o.decl == StdEnvironment.lessDecl) {
+				foldedValue = (int1 < int2);
+			} else if (o.decl == StdEnvironment.notlessDecl) {
+				foldedValue = (int1 >= int2);
 			}
 
 			if (foldedValue instanceof Integer) {
@@ -600,7 +603,17 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 				ie.type = StdEnvironment.integerType;
 				return ie;
 			} else if (foldedValue instanceof Boolean) {
-				/* currently not handled! */
+				// The type denoter is given a known value of 1 or 0, representing true or false
+				BoolTypeDenoter btd = new BoolTypeDenoter(node1.getPosition());
+				btd.entity = new KnownValue(1, (Boolean)foldedValue ? 1 : 0);
+				Identifier i = new Identifier(foldedValue.toString(), node1.getPosition());
+				i.decl = btd;
+				i.type = StdEnvironment.booleanType;
+				SimpleVname sm = new SimpleVname(i, node1.getPosition());
+				sm.type = StdEnvironment.booleanType;
+				VnameExpression ve = new VnameExpression(sm, node1.getPosition());
+				ve.type = StdEnvironment.booleanType;
+				return ve;
 			}
 		}
 

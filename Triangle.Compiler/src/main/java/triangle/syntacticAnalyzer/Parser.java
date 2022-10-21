@@ -278,7 +278,6 @@ public class Parser {
 					if (currentToken.kind == Token.OPERATOR &&
 							(currentToken.spelling.equals("++") || currentToken.spelling.equals("--"))
 					) {
-						acceptIt();
 						IntegerLiteral il = new IntegerLiteral("1", commandPos);
 						IntegerExpression ie = new IntegerExpression(il, commandPos);
 						VnameExpression vne = new VnameExpression(vAST, commandPos);
@@ -286,6 +285,8 @@ public class Parser {
 						Expression eAST = new BinaryExpression(vne, op, ie, commandPos);
 						finish(commandPos);
 						commandAST = new AssignCommand(vAST, eAST, commandPos);
+						acceptIt(); // Placing this at the end allows the spelling of the operator to be queried again,
+									// as above
 					} else {
 						accept(Token.BECOMES);
 						Expression eAST = parseExpression();
