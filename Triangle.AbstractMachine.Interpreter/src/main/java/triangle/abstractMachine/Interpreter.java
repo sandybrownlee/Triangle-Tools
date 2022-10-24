@@ -642,4 +642,10 @@ public class Interpreter {
 			showStatus();
 		}
 	}
+
+	public void interpretProgram(String tamObject){
+		loadObjectProgram(objectName);
+		interpretProgram();
+		showStatus();
+	}
 }

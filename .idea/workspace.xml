@@ -6,12 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="f505e3df-4d61-4844-84b1-893c6601edd9" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/abstractSyntaxTrees/visitors/CommandVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/abstractSyntaxTrees/visitors/CommandVisitor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Triangle.AbstractMachine.Interpreter/src/main/java/triangle/abstractMachine/Interpreter.java" beforeDir="false" afterPath="$PROJECT_DIR$/Triangle.AbstractMachine.Interpreter/src/main/java/triangle/abstractMachine/Interpreter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/abstractSyntaxTrees/commands/loopWhileCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/abstractSyntaxTrees/commands/loopWhileCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/codeGenerator/Encoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/codeGenerator/Encoder.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/contextualAnalyzer/Checker.java" beforeDir="false" afterPath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/contextualAnalyzer/Checker.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/optimiser/ConstantFolder.java" beforeDir="false" afterPath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/optimiser/ConstantFolder.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/syntacticAnalyzer/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/syntacticAnalyzer/Parser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/syntacticAnalyzer/Token.java" beforeDir="false" afterPath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/syntacticAnalyzer/Token.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/treeDrawer/LayoutVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/treeDrawer/LayoutVisitor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Triangle.Compiler/src/test/java/triangle/syntacticAnalyser/TestScanner.java" beforeDir="false" afterPath="$PROJECT_DIR$/Triangle.Compiler/src/test/java/triangle/syntacticAnalyser/TestScanner.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj.tam" beforeDir="false" afterPath="$PROJECT_DIR$/obj.tam" afterDir="false" />
@@ -64,7 +63,7 @@
       <recent name="triangle.abstractSyntaxTrees.commands" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.TestScanner.testLoopWhile">
+  <component name="RunManager" selected="Gradle.TestScanner (1)">
     <configuration name="TestScanner (1)" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -182,8 +181,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.TestScanner.testLoopWhile" />
         <item itemvalue="Gradle.TestScanner (1)" />
+        <item itemvalue="Gradle.TestScanner.testLoopWhile" />
         <item itemvalue="Gradle.TestScanner.testWhileCurly" />
         <item itemvalue="Gradle.TestScanner.testBarDemo" />
         <item itemvalue="Gradle.TestScanner.testHi" />

@@ -11,7 +11,6 @@ import triangle.ErrorReporter;
 import triangle.syntacticAnalyzer.Parser;
 import triangle.syntacticAnalyzer.Scanner;
 import triangle.syntacticAnalyzer.SourceFile;
-
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
@@ -101,6 +100,7 @@ public class TestScanner {
 
 		final PrintStream standardOut = System.out;
 		final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
+
 		System.setOut(new PrintStream(outputStreamCaptor)); //Read the system.out output
 
 		assertEquals("Expected String", outputStreamCaptor.toString().trim());

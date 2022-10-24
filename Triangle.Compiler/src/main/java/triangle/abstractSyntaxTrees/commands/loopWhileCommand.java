@@ -20,11 +20,11 @@ import triangle.syntacticAnalyzer.SourcePosition;
 
 public class loopWhileCommand extends Command {
 
-	public loopWhileCommand(Expression eAST, Command cAST,Command cAST2 ,SourcePosition position) {
+	public loopWhileCommand(Expression eAST, Command cAST2, Command cAST1,SourcePosition position) {
 		super(position);
 		E = eAST;
-		C = cAST;
 		C2 = cAST2;
+		C1 = cAST1;
 	}
 
 	public <TArg, TResult> TResult visit(CommandVisitor<TArg, TResult> v, TArg arg) {
@@ -32,6 +32,6 @@ public class loopWhileCommand extends Command {
 	}
 
 	public Expression E;
-	public final Command C,C2;
+	public final Command C1,C2;
 
 }

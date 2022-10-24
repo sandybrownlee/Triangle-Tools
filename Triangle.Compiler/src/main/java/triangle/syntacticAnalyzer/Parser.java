@@ -337,13 +337,13 @@ public class Parser {
 
 			case Token.LOOP: {
 				acceptIt();
-				 Command cAST = parseSingleCommand();
+				Command cAST1 = parseSingleCommand();
 				 accept(Token.WHILE);
 				 Expression eAST = parseExpression();
-				accept(Token.DO);
+				 accept(Token.DO);
 				 Command cAST2 = parseSingleCommand();
 				 finish(commandPos);
-				 commandAST = new loopWhileCommand(eAST, cAST, cAST2,commandPos);
+				 commandAST = new loopWhileCommand(eAST, cAST1, cAST2,commandPos);
 			}
 			break;
 
