@@ -1,0 +1,9 @@
+let
+    var b : Boolean
+
+in
+    begin
+        b := \true;
+
+    end
+

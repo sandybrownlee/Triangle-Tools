@@ -1,0 +1,9 @@
+let
+    var a : Integer
+
+in
+    begin
+        a := 1+1;
+
+    end
+
