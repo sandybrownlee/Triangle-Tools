@@ -222,9 +222,10 @@ public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
 
 	@Override
 	public DrawingTree visitUnaryExpression(UnaryExpression ast, Void obj) {
-		var d1 = ast.O.visit(this);
-		var d2 = ast.E.visit(this);
-		return layoutBinary("UnaryExpr.", d1, d2);
+		var d1 = ast.E.visit(this);
+		var d2 = ast.O.spelling;
+		String name = "UnaryExpr. ("+d2+")";
+		return layoutUnary(name, d1);
 	}
 
 	@Override
@@ -286,6 +287,7 @@ public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
 		var d1 = ast.O.visit(this);
 		var d2 = ast.ARG.visit(this);
 		var d3 = ast.RES.visit(this);
+		
 		return layoutTernary("UnaryOp.Decl.", d1, d2, d3);
 	}
 
