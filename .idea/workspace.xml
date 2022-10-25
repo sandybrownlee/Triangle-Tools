@@ -6,13 +6,15 @@
   <component name="ChangeListManager">
     <list default="true" id="f505e3df-4d61-4844-84b1-893c6601edd9" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Triangle.AbstractMachine.Interpreter/src/main/java/triangle/abstractMachine/Interpreter.java" beforeDir="false" afterPath="$PROJECT_DIR$/Triangle.AbstractMachine.Interpreter/src/main/java/triangle/abstractMachine/Interpreter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/abstractSyntaxTrees/commands/loopWhileCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/abstractSyntaxTrees/commands/loopWhileCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/codeGenerator/Encoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/codeGenerator/Encoder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/contextualAnalyzer/Checker.java" beforeDir="false" afterPath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/contextualAnalyzer/Checker.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/syntacticAnalyzer/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/syntacticAnalyzer/Parser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/optimiser/ConstantFolder.java" beforeDir="false" afterPath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/optimiser/ConstantFolder.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/treeDrawer/LayoutVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/treeDrawer/LayoutVisitor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Triangle.Compiler/src/test/java/triangle/syntacticAnalyser/TestScanner.java" beforeDir="false" afterPath="$PROJECT_DIR$/Triangle.Compiler/src/test/java/triangle/syntacticAnalyser/TestScanner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/libs/Triangle-Tools.jar" beforeDir="false" afterPath="$PROJECT_DIR$/build/libs/Triangle-Tools.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/loopwhiletest.tam" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/loopwhiletest2.tam" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/loopwhiletestfinal.tam" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/obj.tam" beforeDir="false" afterPath="$PROJECT_DIR$/obj.tam" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

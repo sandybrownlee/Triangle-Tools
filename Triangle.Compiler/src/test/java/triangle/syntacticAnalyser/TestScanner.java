@@ -96,6 +96,9 @@ public class TestScanner {
 		assertNotEquals("Problem compiling " + filename, 0, reporter.getNumErrors());
 	}
 
+	/*
+	 * Experimental method
+	 */
 	private void readFileOutput(String filename){
 
 		final PrintStream standardOut = System.out;
