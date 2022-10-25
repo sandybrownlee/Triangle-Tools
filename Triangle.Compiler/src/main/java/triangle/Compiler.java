@@ -24,6 +24,9 @@ import triangle.syntacticAnalyzer.Scanner;
 import triangle.syntacticAnalyzer.SourceFile;
 import triangle.treeDrawer.Drawer;
 
+import com.sampullara.cli.Args;
+import com.sampullara.cli.Argument;
+
 /**
  * The main driver class for the Triangle compiler.
  *
@@ -31,12 +34,13 @@ import triangle.treeDrawer.Drawer;
  * @author Deryck F. Brown
  */
 public class Compiler {
+	@Argument(alias = "s",description = "The source name.",required = true) static String sourceName;
+	@Argument(alias = "o",description = "The filename for the object program, normally obj.tam",required = false) static String objectName = "obj.tam";
+	@Argument(alias = "t",description = "Show the AST of the compiled program.",required = false) static boolean showTree = false;
+	@Argument(alias = "f",description = "Fold the program",required = false) static boolean folding = false;
 
-	/** The filename for the object program, normally obj.tam. */
-	static String objectName = "obj.tam";
-	
-	static boolean showTree = false;
-	static boolean folding = false;
+	/**True if the tree is going to be shown after the fold is complete */
+	@Argument(alias = "ft",description = "Show tree after folding",required = false) static boolean foldingTree = false;
 
 	private static Scanner scanner;
 	private static Parser parser;
@@ -95,6 +99,10 @@ public class Compiler {
 			}
 			if (folding) {
 				theAST.visit(new ConstantFolder());
+				if(foldingTree){
+					System.out.println("Show Tree");
+					drawer.draw(theAST);
+				}
 			}
 			
 			if (reporter.getNumErrors() == 0) {
@@ -120,16 +128,16 @@ public class Compiler {
 	 *             source filename.
 	 */
 	public static void main(String[] args) {
+		Compiler compiler = new Compiler();
 
 		if (args.length < 1) {
-			System.out.println("Usage: tc filename [-o=outputfilename] [tree] [folding]");
+			System.out.println("Usage: tc -s filename [-o 'outputfilename'] [-t 'show tree?'] [-f 'fold?'] [-ft 'show folding tree?'");
 			System.exit(1);
 		}
-		
-		parseArgs(args);
 
-		String sourceName = args[0];
-		
+		//Parse the arguments or exit and print required arguments
+		Args.parseOrExit(compiler,args);
+
 		var compiledOK = compileProgram(sourceName, objectName, showTree, false);
 
 		if (!showTree) {
