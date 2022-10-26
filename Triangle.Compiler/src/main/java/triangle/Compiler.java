@@ -47,6 +47,9 @@ public class Compiler {
 	@Argument(alias = "s", description = "The choice of whether to show the Abstract Syntax Tree after folding is complete ", required = false)
 	static boolean showTreeAfterFolding = false;
 
+	@Argument(alias = "p", description = "The choice of whether to show rudimentary statistics about the numbers of times some command types were visited ", required = false)
+	static boolean printStatistics = false;
+
 	private static Scanner scanner;
 	private static Parser parser;
 	private static Checker checker;
@@ -104,13 +107,21 @@ public class Compiler {
 				theAST.visit(new ConstantFolder());
 				drawer.draw(theAST);
 
+			}else if (showTreeAfterFolding & showingAST & folding & printStatistics){ //New pattern to fold , print statistics and draw the AST
+				theAST.visit(new ConstantFolder());
+				theAST.visit(new VisitStatistics());
+				drawer.draw(theAST);
 			} else {
 				if (showingAST) {
 				drawer.draw(theAST);
 			}
 				if (folding) {
+					System.out.println("Folding ...");
 				theAST.visit(new ConstantFolder());
 			}
+				if (printStatistics) {
+					theAST.visit(new VisitStatistics()); //Visit the VisitStatistics class to print summary statistics
+				}
 		}
 			if (reporter.getNumErrors() == 0) {
 				System.out.println("Code Generation ...");
@@ -138,7 +149,7 @@ public class Compiler {
 
      Compiler compiler = new Compiler();
 
-		Args.parseOrExit(compiler,args);
+		Args.parseOrExit(compiler,args); //Parse the arguments or exit the required arguments are not present
 
 		parseArgs(args);
 
@@ -162,7 +173,10 @@ public class Compiler {
 				folding = true;
 			} else if (sl.equals("showfolding")){ //Added a new case to check whether to show the tree after folding
 				showTreeAfterFolding = true;
+			} else if (sl.equals("stats")){ //Added a new case to check whether to show summary statistics about the program
+				printStatistics = true;
 			}
+
 		}
 	}
 }
