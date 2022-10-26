@@ -32,9 +32,9 @@ import triangle.treeDrawer.Drawer;
  */
 public class Compiler {
 
+
 	/** The filename for the object program, normally obj.tam. */
 	static String objectName = "obj.tam";
-	
 	static boolean showTree = false;
 	static boolean folding = false;
 
@@ -64,6 +64,7 @@ public class Compiler {
 	 */
 	static boolean compileProgram(String sourceName, String objectName, boolean showingAST, boolean showingTable) {
 
+		
 		System.out.println("********** " + "Triangle Compiler (Java Version 2.1)" + " **********");
 
 		System.out.println("Syntactic Analysis ...");
