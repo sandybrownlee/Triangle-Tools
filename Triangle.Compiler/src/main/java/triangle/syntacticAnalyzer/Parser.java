@@ -285,10 +285,47 @@ public class Parser {
 				} else {
 
 					Vname vAST = parseRestOfVname(iAST);
-					accept(Token.BECOMES);
-					Expression eAST = parseExpression();
-					finish(commandPos);
-					commandAST = new AssignCommand(vAST, eAST, commandPos);
+
+					if (currentToken.kind == Token.OPERATOR && currentToken.spelling.equals("++")) {
+						acceptIt();
+	
+						//first, we need to make the integerLiteral for the 1
+						IntegerLiteral il = new IntegerLiteral("1", commandPos);
+						//This gets wrapped in an integerExpression
+						IntegerExpression ie = new IntegerExpression(il, commandPos);
+						//the variable name gets wrapped in a VnameExpression
+						VnameExpression vne = new VnameExpression(vAST, commandPos);
+						// the operator will be a + (each operator is just defined by its spelling)
+						Operator op = new Operator("+", commandPos);
+						//now we assemble the expressions into a BinaryExpression for the a + 1
+						Expression eAST = new BinaryExpression(vne, op, ie, commandPos);
+						//this sets the last line of the command for debugging purposes
+						finish(commandPos);
+						//we need to make an assignment, with a binary expression on the right side
+						commandAST = new AssignCommand(vAST, eAST, commandPos);
+					} else if (currentToken.kind == Token.OPERATOR && currentToken.spelling.equals("--")) {
+						acceptIt();
+
+						//first, we need to make the integerLiteral for the 1
+						IntegerLiteral il = new IntegerLiteral("1", commandPos);
+						//This gets wrapped in an integerExpression
+						IntegerExpression ie = new IntegerExpression(il, commandPos);
+						//the variable name gets wrapped in a VnameExpression
+						VnameExpression vne = new VnameExpression(vAST, commandPos);
+						// the operator will be a - (each operator is just defined by its spelling)
+						Operator op = new Operator("-", commandPos);
+						//now we assemble the expressions into a BinaryExpression for the a - 1
+						Expression eAST = new BinaryExpression(vne, op, ie, commandPos);
+						//this sets the last line of the command for debugging purposes
+						finish(commandPos);
+						//we need to make an assignment, with a binary expression on the right side
+						commandAST = new AssignCommand(vAST, eAST, commandPos);
+					}	else {
+						accept(Token.BECOMES);
+						Expression eAST = parseExpression();
+						finish(commandPos);
+						commandAST = new AssignCommand(vAST, eAST, commandPos);
+					}
 				}
 			}
 				break;
