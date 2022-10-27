@@ -73,6 +73,7 @@ import triangle.abstractSyntaxTrees.visitors.VnameVisitor;
 import triangle.abstractSyntaxTrees.vnames.DotVname;
 import triangle.abstractSyntaxTrees.vnames.SimpleVname;
 import triangle.abstractSyntaxTrees.vnames.SubscriptVname;
+import triangle.abstractSyntaxTrees.vnames.Vname;
 
 public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSyntaxTree>,
 		ActualParameterSequenceVisitor<Void, AbstractSyntaxTree>, ArrayAggregateVisitor<Void, AbstractSyntaxTree>,
@@ -583,6 +584,7 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 			int int2 = (Integer.parseInt(((IntegerExpression) node2).IL.spelling));
 			Object foldedValue = null;
 
+			//For integer operations
 			if (o.decl == StdEnvironment.addDecl) {
 				foldedValue = int1 + int2;
 			} else if (o.decl == StdEnvironment.divideDecl) {
@@ -594,16 +596,52 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 			 } else if (o.decl == StdEnvironment.subtractDecl) {
 			 foldedValue = int1 - int2;
 		}
+			//For boolean operations
+		if (o.decl == StdEnvironment.greaterDecl){
+			foldedValue = int1 > int2;
+		} else if (o.decl == StdEnvironment.lessDecl){
+			foldedValue = int1 < int2;
+		} else if (o.decl == StdEnvironment.equalDecl){
+			foldedValue = int1 = int2;
+		} else if (o.decl == StdEnvironment.notgreaterDecl) {
+			foldedValue = int1 <= int2;
+		} else if (o.decl == StdEnvironment.notlessDecl) {
+			foldedValue = int1 >= int2;
+		} else if (o.decl == StdEnvironment.unequalDecl) {
+			foldedValue = int1 != int2;
+		}
 
 
-		if (foldedValue instanceof Integer) {
+		if (foldedValue instanceof Integer) { //If the folded value is integer
 				IntegerLiteral il = new IntegerLiteral(foldedValue.toString(), node1.getPosition());
 				IntegerExpression ie = new IntegerExpression(il, node1.getPosition());
 				ie.type = StdEnvironment.integerType;
 				return ie;
-			} else if (foldedValue instanceof Boolean) {
-				/* currently not handled! */
-			}
+
+			} else if (foldedValue instanceof Boolean) { //If the folded value is boolean
+
+			 String booleanValue = foldedValue.toString();
+			 Identifier identifier;
+
+			 if(booleanValue.equals("true")){ //Initialize the identifier depending on the boolean value
+                 identifier = new Identifier("true",node1.getPosition());
+				 identifier.decl = StdEnvironment.trueDecl;
+			 } else {
+				 identifier = new Identifier("false",node1.getPosition());
+				 identifier.decl = StdEnvironment.falseDecl;
+			 }
+
+			 //Create a variable name and pass it to a variable name expression
+             Vname vName = new SimpleVname(identifier,node1.getPosition());
+			 VnameExpression vne = new VnameExpression(vName,node1.getPosition());
+
+			 //Set the type of variable name expression to boolean
+			 vne.type = StdEnvironment.booleanType;
+
+			 return vne;
+
+		}
+
 		}
 
 		// any unhandled situation (i.e., not foldable) is ignored

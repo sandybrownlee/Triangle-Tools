@@ -103,13 +103,15 @@ public class Compiler {
 			System.out.println("Contextual Analysis ...");
 			checker.check(theAST); // 2nd pass
 
-			if (showTreeAfterFolding & showingAST & folding) { //New pattern to fold the program before the tree is shown
-				theAST.visit(new ConstantFolder());
-				drawer.draw(theAST);
-
-			}else if (showTreeAfterFolding & showingAST & folding & printStatistics){ //New pattern to fold , print statistics and draw the AST
+			if (showTreeAfterFolding & showingAST & folding & printStatistics) { //New pattern to fold the program before the tree is shown
+				System.out.println("Folding ...");
 				theAST.visit(new ConstantFolder());
 				theAST.visit(new VisitStatistics());
+				drawer.draw(theAST);
+
+			}else if (showTreeAfterFolding & showingAST & folding){ //New pattern to fold , print statistics and draw the AST
+				System.out.println("Folding ...");
+				theAST.visit(new ConstantFolder());
 				drawer.draw(theAST);
 			} else {
 				if (showingAST) {

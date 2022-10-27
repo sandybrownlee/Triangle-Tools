@@ -5,9 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f505e3df-4d61-4844-84b1-893c6601edd9" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/VisitStatistics.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/Compiler.java" beforeDir="false" afterPath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/Compiler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/optimiser/ConstantFolder.java" beforeDir="false" afterPath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/optimiser/ConstantFolder.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/libs/Triangle-Tools.jar" beforeDir="false" afterPath="$PROJECT_DIR$/build/libs/Triangle-Tools.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj.tam" beforeDir="false" afterPath="$PROJECT_DIR$/obj.tam" afterDir="false" />
     </list>
