@@ -41,8 +41,18 @@ public class TestScanner {
 	public void testRepeatUntil() {
 		compileExpectSuccess("/repeatuntil.tri");
 	}
+
+	//Test for the decrement command
+	@Test
+	public void testDecrement() {
+		compileExpectSuccess("/decrement.tri");
+	}
 	
-	
+	//Test for the curly brackets
+	@Test
+	public void testCurlyBrackets() {
+		compileExpectSuccess("/while-curly.tri");
+	}
 	
 	private void compileExpectSuccess(String filename) {
 		// build.gradle has a line sourceSets.test.resources.srcDir file("$rootDir/programs")

@@ -277,10 +277,59 @@ public class Parser {
 			} else {
 
 				Vname vAST = parseRestOfVname(iAST);
-				accept(Token.BECOMES);
-				Expression eAST = parseExpression();
-				finish(commandPos);
-				commandAST = new AssignCommand(vAST, eAST, commandPos);
+
+				//Increment
+				if(currentToken.kind == Token.OPERATOR && currentToken.spelling.equals("++")){
+					acceptIt();
+					IntegerLiteral il = new IntegerLiteral("1", commandPos);
+
+					IntegerExpression ie = new IntegerExpression(il, commandPos);
+
+					VnameExpression vne = new VnameExpression(vAST, commandPos);
+
+					Operator op = new Operator("+", commandPos);
+
+					Expression eAST = new BinaryExpression(vne, op, ie, commandPos);
+
+					finish(commandPos);
+
+					commandAST = new AssignCommand(vAST, eAST, commandPos);
+				} else {
+
+					//Decrement
+					//Check if the current token is the "--" operator
+					if(currentToken.kind == Token.OPERATOR && currentToken.spelling.equals("--")){
+
+						acceptIt();
+
+						// create the literal integer for the 1
+						IntegerLiteral il = new IntegerLiteral("1", commandPos);
+
+						// wrapped in an IntegerExpression
+						IntegerExpression ie = new IntegerExpression(il, commandPos);
+
+						// the variable name gets wrapped in a VnameExpression
+						VnameExpression vne = new VnameExpression(vAST, commandPos);
+
+						// create an operator for the -
+						Operator op = new Operator("-", commandPos);
+
+						// assemble the expressions into a BinaryExpression
+						Expression eAST = new BinaryExpression(vne, op, ie, commandPos);
+
+						// sets the last line of the command
+						finish(commandPos);
+
+						// create an assignment
+						commandAST = new AssignCommand(vAST, eAST, commandPos);
+					} else {
+
+						accept(Token.BECOMES);
+						Expression eAST = parseExpression();
+						finish(commandPos);
+						commandAST = new AssignCommand(vAST, eAST, commandPos);
+					}
+				}
 			}
 		}
 			break;
@@ -289,6 +338,13 @@ public class Parser {
 			acceptIt();
 			commandAST = parseCommand();
 			accept(Token.END);
+			break;
+
+		//Curly brackets
+		case Token.LCURLY:
+			acceptIt();
+			commandAST = parseCommand();
+			accept(Token.RCURLY);
 			break;
 
 		case Token.LET: {
@@ -335,6 +391,7 @@ public class Parser {
 
 		case Token.SEMICOLON:
 		case Token.END:
+		case Token.RCURLY:	//Left curly to mark the end of the command
 		case Token.ELSE:
 		case Token.IN:
 		case Token.EOT:

@@ -16,6 +16,7 @@ package triangle.abstractSyntaxTrees.expressions;
 
 import triangle.abstractSyntaxTrees.terminals.Operator;
 import triangle.abstractSyntaxTrees.visitors.ExpressionVisitor;
+import triangle.optimiser.SummaryStatistics;
 import triangle.syntacticAnalyzer.SourcePosition;
 
 public class BinaryExpression extends Expression {
@@ -25,6 +26,7 @@ public class BinaryExpression extends Expression {
 		O = oAST;
 		E1 = e1AST;
 		E2 = e2AST;
+		SummaryStatistics.increaseBinaryExpressionStat(); //Increase the number of the binaryExpressions stats
 	}
 
 	public <TArg, TResult> TResult visit(ExpressionVisitor<TArg, TResult> v, TArg arg) {

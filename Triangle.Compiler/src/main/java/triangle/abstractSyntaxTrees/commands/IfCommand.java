@@ -16,6 +16,7 @@ package triangle.abstractSyntaxTrees.commands;
 
 import triangle.abstractSyntaxTrees.expressions.Expression;
 import triangle.abstractSyntaxTrees.visitors.CommandVisitor;
+import triangle.optimiser.SummaryStatistics;
 import triangle.syntacticAnalyzer.SourcePosition;
 
 public class IfCommand extends Command {
@@ -25,6 +26,7 @@ public class IfCommand extends Command {
 		E = eAST;
 		C1 = c1AST;
 		C2 = c2AST;
+		SummaryStatistics.increaseIfCommandStat();  //Increase the number of the ifCommands stats
 	}
 
 	public <TArg, TResult> TResult visit(CommandVisitor<TArg, TResult> v, TArg arg) {

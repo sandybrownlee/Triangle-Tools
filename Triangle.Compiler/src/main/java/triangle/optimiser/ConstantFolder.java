@@ -294,7 +294,6 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 		} else if (replacement2 != null) {
 			ast.E2 = (Expression) replacement2;
 		}
-
 		// if we get here, we can't fold any higher than this level
 		return null;
 	}
@@ -598,13 +597,51 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 				foldedValue = int1 - int2;
 			}
 
+			//Boolean operators
+			if(o.decl == StdEnvironment.equalDecl){
+				foldedValue = int1 == int2;
+			}
+
+			if(o.decl == StdEnvironment.lessDecl){
+				foldedValue = int1 < int2;
+			}
+
+			if(o.decl == StdEnvironment.notgreaterDecl){
+				foldedValue = int1 <= int2;
+			}
+
+			if(o.decl == StdEnvironment.greaterDecl){
+				foldedValue = int1 > int2;
+			}
+
+			if(o.decl == StdEnvironment.notlessDecl){
+				foldedValue = int1 >= int2;
+			}
+
+			if(o.decl == StdEnvironment.unequalDecl){
+				foldedValue = int1 != int2;
+			}
+
 			if (foldedValue instanceof Integer) {
 				IntegerLiteral il = new IntegerLiteral(foldedValue.toString(), node1.getPosition());
 				IntegerExpression ie = new IntegerExpression(il, node1.getPosition());
 				ie.type = StdEnvironment.integerType;
 				return ie;
 			} else if (foldedValue instanceof Boolean) {
-				/* currently not handled! */
+				Identifier boolId = new Identifier(foldedValue.toString(),node1.getPosition());
+
+				//Assign the identifier decl based of the foldedValue boolean
+				if(((Boolean) foldedValue)){
+					boolId.decl = StdEnvironment.trueDecl;
+				} else{
+					boolId.decl = StdEnvironment.falseDecl;
+				}
+
+				SimpleVname boolSimpleVName = new SimpleVname(boolId,node1.getPosition());
+				VnameExpression boolVnameExpression = new VnameExpression(boolSimpleVName,node1.getPosition());
+
+				boolVnameExpression.type = StdEnvironment.booleanType;
+				return boolVnameExpression;
 			}
 		}
 

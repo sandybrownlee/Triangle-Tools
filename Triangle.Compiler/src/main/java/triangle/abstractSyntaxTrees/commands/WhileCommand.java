@@ -16,6 +16,7 @@ package triangle.abstractSyntaxTrees.commands;
 
 import triangle.abstractSyntaxTrees.expressions.Expression;
 import triangle.abstractSyntaxTrees.visitors.CommandVisitor;
+import triangle.optimiser.SummaryStatistics;
 import triangle.syntacticAnalyzer.SourcePosition;
 
 public class WhileCommand extends Command {
@@ -24,6 +25,7 @@ public class WhileCommand extends Command {
 		super(position);
 		E = eAST;
 		C = cAST;
+		SummaryStatistics.increaseWhileCommandsStats(); //Increase the number of the whileCommands stats
 	}
 
 	public <TArg, TResult> TResult visit(CommandVisitor<TArg, TResult> v, TArg arg) {
