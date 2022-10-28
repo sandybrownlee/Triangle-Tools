@@ -67,17 +67,17 @@ final class Token extends Object {
 			PROC = 15, RECORD = 16, REPEAT = 17, THEN = 18, TYPE = 19, UNTIL = 20,  VAR = 21, WHILE = 22,
 
 			// punctuation...
-			DOT = 23, COLON = 24, SEMICOLON = 25, COMMA = 26, BECOMES = 27, IS = 28, INCREMENT = 29,
+			DOT = 23, COLON = 24, SEMICOLON = 25, COMMA = 26, BECOMES = 27, IS = 28,
 
 			// brackets...
-			LPAREN = 30, RPAREN = 31, LBRACKET = 32, RBRACKET = 33, LCURLY = 34, RCURLY = 35,
+			LPAREN = 29, RPAREN = 30, LBRACKET = 31, RBRACKET = 32, LCURLY = 33, RCURLY = 34,
 
 			// special tokens...
-			EOT = 36, ERROR = 37;
+			EOT = 35, ERROR = 36;
 
 	private static String[] tokenTable = new String[] { "<int>", "<char>", "<identifier>", "<operator>", "array",
 			"begin", "const", "do", "else", "end", "func", "if", "in", "let", "of", "proc", "record", "repeat", "then", "type", "until",
-			"var", "while", ".", ":", ";", ",", ":=", "~", "++", "(", ")", "[", "]", "{", "}", "", "<error>" };
+			"var", "while", ".", ":", ";", ",", ":=", "~", "(", ")", "[", "]", "{", "}", "", "<error>" };
 
 	private final static int firstReservedWord = Token.ARRAY, lastReservedWord = Token.WHILE;
 

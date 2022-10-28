@@ -52,6 +52,11 @@ public class TestScanner {
 	public void testPostDecrement() {
 		compileExpectSuccess("/postdec.tri");
 	}
+
+	@Test
+	public void testCurlyBrackets() {
+		compileExpectSuccess("/while-curly.tri");
+	}
 	
 	
 	

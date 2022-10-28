@@ -924,6 +924,8 @@ public final class Checker implements ActualParameterVisitor<FormalParameter, Vo
 	private void establishStdEnvironment() {
 
 		// idTable.startIdentification();
+
+		//TODO: reimplement ++ and -- this way rather than directly copying practical 3
 		StdEnvironment.booleanType = new BoolTypeDenoter(dummyPos);
 		StdEnvironment.integerType = new IntTypeDenoter(dummyPos);
 		StdEnvironment.charType = new CharTypeDenoter(dummyPos);
