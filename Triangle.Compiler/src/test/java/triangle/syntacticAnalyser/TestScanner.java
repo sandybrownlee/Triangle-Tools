@@ -42,6 +42,21 @@ public class TestScanner {
 	public void testRepeatUntil() {
 		compileExpectFailure("/repeatuntil.tri");
 	}
+
+	@Test
+	public void testWhile() {
+		compileExpectSuccess("/while.tri");
+	}
+
+	@Test
+	public void testWhileCurly() {
+		compileExpectSuccess("/while-curly.tri");
+	}
+
+	@Test
+	public void testWhileBeginCurly() {
+		compileExpectFailure("/while-begin-curly.tri");
+	}
 	
 	
 	
