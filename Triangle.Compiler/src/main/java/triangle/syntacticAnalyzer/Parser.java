@@ -34,6 +34,7 @@ import triangle.abstractSyntaxTrees.aggregates.SingleRecordAggregate;
 import triangle.abstractSyntaxTrees.commands.AssignCommand;
 import triangle.abstractSyntaxTrees.commands.CallCommand;
 import triangle.abstractSyntaxTrees.commands.Command;
+import triangle.abstractSyntaxTrees.commands.UnaryCommand;
 import triangle.abstractSyntaxTrees.commands.EmptyCommand;
 import triangle.abstractSyntaxTrees.commands.IfCommand;
 import triangle.abstractSyntaxTrees.commands.LetCommand;
@@ -282,12 +283,17 @@ public class Parser {
 					commandAST = new CallCommand(iAST, apsAST, commandPos);
 
 				} else {
-
 					Vname vAST = parseRestOfVname(iAST);
-					accept(Token.BECOMES);
-					Expression eAST = parseExpression();
-					finish(commandPos);
-					commandAST = new AssignCommand(vAST, eAST, commandPos);
+					if (currentToken.kind == Token.OPERATOR) {
+						Operator opAST = parseOperator();
+						finish(commandPos);
+						commandAST = new UnaryCommand(vAST, opAST, commandPos);
+					} else {
+						accept(Token.BECOMES);
+						Expression eAST = parseExpression();
+						finish(commandPos);
+						commandAST = new AssignCommand(vAST, eAST, commandPos);
+					}
 				}
 			}
 				break;
@@ -297,7 +303,7 @@ public class Parser {
 				commandAST = parseCommand();
 				accept(Token.END);
 				break;
-				
+
 			case Token.LCURLY:
 				acceptIt();
 				commandAST = parseCommand();

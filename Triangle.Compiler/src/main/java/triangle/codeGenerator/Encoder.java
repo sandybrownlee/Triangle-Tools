@@ -39,6 +39,7 @@ import triangle.abstractSyntaxTrees.commands.EmptyCommand;
 import triangle.abstractSyntaxTrees.commands.IfCommand;
 import triangle.abstractSyntaxTrees.commands.LetCommand;
 import triangle.abstractSyntaxTrees.commands.SequentialCommand;
+import triangle.abstractSyntaxTrees.commands.UnaryCommand;
 import triangle.abstractSyntaxTrees.commands.WhileCommand;
 import triangle.abstractSyntaxTrees.declarations.BinaryOperatorDeclaration;
 import triangle.abstractSyntaxTrees.declarations.ConstDeclaration;
@@ -167,6 +168,15 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 	public Void visitSequentialCommand(SequentialCommand ast, Frame frame) {
 		ast.C1.visit(this, frame);
 		ast.C2.visit(this, frame);
+		return null;
+	}
+
+	@Override
+	public Void visitUnaryCommand(UnaryCommand ast, Frame frame) {
+		var valSize = ast.V.type.visit(this, frame);
+		encodeFetch(ast.V, frame, valSize);
+		ast.O.visit(this);
+		encodeStore(ast.V, frame, valSize);
 		return null;
 	}
 
@@ -718,6 +728,7 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 		elaborateStdPrimRoutine(StdEnvironment.multiplyDecl, Primitive.MULT);
 		elaborateStdPrimRoutine(StdEnvironment.divideDecl, Primitive.DIV);
 		elaborateStdPrimRoutine(StdEnvironment.moduloDecl, Primitive.MOD);
+		elaborateStdPrimRoutine(StdEnvironment.decrementDecl, Primitive.PRED);
 		elaborateStdPrimRoutine(StdEnvironment.lessDecl, Primitive.LT);
 		elaborateStdPrimRoutine(StdEnvironment.notgreaterDecl, Primitive.LE);
 		elaborateStdPrimRoutine(StdEnvironment.greaterDecl, Primitive.GT);

@@ -31,6 +31,7 @@ import triangle.abstractSyntaxTrees.aggregates.SingleArrayAggregate;
 import triangle.abstractSyntaxTrees.aggregates.SingleRecordAggregate;
 import triangle.abstractSyntaxTrees.commands.AssignCommand;
 import triangle.abstractSyntaxTrees.commands.CallCommand;
+import triangle.abstractSyntaxTrees.commands.UnaryCommand;
 import triangle.abstractSyntaxTrees.commands.EmptyCommand;
 import triangle.abstractSyntaxTrees.commands.IfCommand;
 import triangle.abstractSyntaxTrees.commands.LetCommand;
@@ -133,7 +134,7 @@ public final class Checker implements ActualParameterVisitor<FormalParameter, Vo
 		var binding = ast.I.visit(this);
 
 		if (binding instanceof ProcedureDeclaration) {
-			ProcedureDeclaration procedure = (ProcedureDeclaration)binding;
+			ProcedureDeclaration procedure = (ProcedureDeclaration) binding;
 			ast.APS.visit(this, procedure.getFormals());
 		} else {
 			reportUndeclaredOrError(binding, ast.I, "\"%\" is not a procedure identifier");
@@ -176,6 +177,19 @@ public final class Checker implements ActualParameterVisitor<FormalParameter, Vo
 	}
 
 	@Override
+	public Void visitUnaryCommand(UnaryCommand ast, Void arg) {
+		var vType = ast.V.visit(this);
+		var binding = ast.O.visit(this);
+		if (binding instanceof UnaryOperatorDeclaration) {
+			UnaryOperatorDeclaration ubinding = (UnaryOperatorDeclaration) binding;
+			checkAndReportError(vType.equals(ubinding.ARG), "wrong argument type for \"%\"", ast.O);
+			return null;
+		}
+		reportUndeclaredOrError(binding, ast.O, "\"%\" is not a unary operator");
+		return null;
+	}
+
+	@Override
 	public Void visitWhileCommand(WhileCommand ast, Void arg) {
 		var eType = ast.E.visit(this);
 
@@ -205,7 +219,7 @@ public final class Checker implements ActualParameterVisitor<FormalParameter, Vo
 		var binding = ast.O.visit(this);
 
 		if (binding instanceof BinaryOperatorDeclaration) {
-			BinaryOperatorDeclaration bbinding = (BinaryOperatorDeclaration)binding;
+			BinaryOperatorDeclaration bbinding = (BinaryOperatorDeclaration) binding;
 			if (bbinding.ARG1 == StdEnvironment.anyType) {
 				// this operator must be "=" or "\="
 				checkAndReportError(e1Type.equals(e2Type), "incompatible argument types for \"%\"", ast.O, ast);
@@ -225,7 +239,7 @@ public final class Checker implements ActualParameterVisitor<FormalParameter, Vo
 		var binding = ast.I.visit(this);
 
 		if (binding instanceof FunctionDeclaration) {
-			FunctionDeclaration function = (FunctionDeclaration)binding;
+			FunctionDeclaration function = (FunctionDeclaration) binding;
 			ast.APS.visit(this, function.getFormals());
 			return ast.type = function.getType();
 		}
@@ -281,7 +295,7 @@ public final class Checker implements ActualParameterVisitor<FormalParameter, Vo
 		var binding = ast.O.visit(this);
 
 		if (binding instanceof UnaryOperatorDeclaration) {
-			UnaryOperatorDeclaration ubinding = (UnaryOperatorDeclaration)binding;
+			UnaryOperatorDeclaration ubinding = (UnaryOperatorDeclaration) binding;
 			checkAndReportError(eType.equals(ubinding.ARG), "wrong argument type for \"%\"", ast.O);
 			return ast.type = ubinding.RES;
 		}
@@ -477,8 +491,8 @@ public final class Checker implements ActualParameterVisitor<FormalParameter, Vo
 	public Void visitConstActualParameter(ConstActualParameter ast, FormalParameter arg) {
 		var eType = ast.E.visit(this);
 		if (arg instanceof ConstFormalParameter) {
-			ConstFormalParameter param = (ConstFormalParameter)arg;
-			checkAndReportError(eType.equals(((ConstFormalParameter)arg).T), "wrong type for const actual parameter", ast.E);
+			ConstFormalParameter param = (ConstFormalParameter) arg;
+			checkAndReportError(eType.equals(param.T), "wrong type for const actual parameter", ast.E);
 		} else {
 			reportError("const actual parameter not expected here", ast);
 		}
@@ -489,11 +503,11 @@ public final class Checker implements ActualParameterVisitor<FormalParameter, Vo
 	public Void visitFuncActualParameter(FuncActualParameter ast, FormalParameter arg) {
 		var binding = ast.I.visit(this);
 		if (binding instanceof FunctionDeclaration) {
-			FunctionDeclaration function = (FunctionDeclaration)binding;
+			FunctionDeclaration function = (FunctionDeclaration) binding;
 			var formals = function.getFormals();
 			var functionType = function.getType();
 			if (arg instanceof FuncFormalParameter) {
-				FuncFormalParameter param = (FuncFormalParameter)arg;
+				FuncFormalParameter param = (FuncFormalParameter) arg;
 				if (!formals.equals(param.getFormals())) {
 					reportError("wrong signature for function \"%\"", ast.I);
 				} else if (!functionType.equals(param.T)) {
@@ -512,10 +526,10 @@ public final class Checker implements ActualParameterVisitor<FormalParameter, Vo
 	public Void visitProcActualParameter(ProcActualParameter ast, FormalParameter arg) {
 		var binding = ast.I.visit(this);
 		if (binding instanceof ProcedureDeclaration) {
-			ProcedureDeclaration procedure = (ProcedureDeclaration)binding;
+			ProcedureDeclaration procedure = (ProcedureDeclaration) binding;
 			var formals = procedure.getFormals();
 			if (arg instanceof ProcFormalParameter) {
-				ProcFormalParameter param = (ProcFormalParameter)arg;
+				ProcFormalParameter param = (ProcFormalParameter) arg;
 				checkAndReportError(formals.equals(param.getFormals()), "wrong signature for procedure \"%\"", ast.I);
 			} else {
 				reportError("proc actual parameter not expected here", ast);
@@ -532,7 +546,7 @@ public final class Checker implements ActualParameterVisitor<FormalParameter, Vo
 		if (!ast.V.variable) {
 			reportError("actual parameter is not a variable", ast.V);
 		} else if (arg instanceof VarFormalParameter) {
-			VarFormalParameter parameter = (VarFormalParameter)arg;
+			VarFormalParameter parameter = (VarFormalParameter) arg;
 			checkAndReportError(vType.equals(parameter.T), "wrong type for var actual parameter", ast.V);
 		} else {
 			reportError("var actual parameter not expected here", ast.V);
@@ -549,7 +563,7 @@ public final class Checker implements ActualParameterVisitor<FormalParameter, Vo
 	@Override
 	public Void visitMultipleActualParameterSequence(MultipleActualParameterSequence ast, FormalParameterSequence arg) {
 		if (arg instanceof MultipleFormalParameterSequence) {
-			MultipleFormalParameterSequence formals = (MultipleFormalParameterSequence)arg;
+			MultipleFormalParameterSequence formals = (MultipleFormalParameterSequence) arg;
 			ast.AP.visit(this, formals.FP);
 			ast.APS.visit(this, formals.FPS);
 		} else {
@@ -561,7 +575,7 @@ public final class Checker implements ActualParameterVisitor<FormalParameter, Vo
 	@Override
 	public Void visitSingleActualParameterSequence(SingleActualParameterSequence ast, FormalParameterSequence arg) {
 		if (arg instanceof SingleFormalParameterSequence) {
-			SingleFormalParameterSequence formal = (SingleFormalParameterSequence)arg;
+			SingleFormalParameterSequence formal = (SingleFormalParameterSequence) arg;
 			ast.AP.visit(this, formal.FP);
 		} else {
 			reportError("incorrect number of actual parameters", ast);
@@ -605,7 +619,7 @@ public final class Checker implements ActualParameterVisitor<FormalParameter, Vo
 	public TypeDenoter visitSimpleTypeDenoter(SimpleTypeDenoter ast, Void arg) {
 		var binding = ast.I.visit(this);
 		if (binding instanceof TypeDeclaration) {
-			TypeDeclaration decl = (TypeDeclaration)binding;
+			TypeDeclaration decl = (TypeDeclaration) binding;
 			return decl.T;
 		}
 
@@ -693,7 +707,7 @@ public final class Checker implements ActualParameterVisitor<FormalParameter, Vo
 		var vType = ast.V.visit(this);
 		ast.variable = ast.V.variable;
 		if (vType instanceof RecordTypeDenoter) {
-			RecordTypeDenoter record = (RecordTypeDenoter)vType;
+			RecordTypeDenoter record = (RecordTypeDenoter) vType;
 			ast.type = checkFieldIdentifier(record.FT, ast.I);
 			checkAndReportError(ast.type != StdEnvironment.errorType, "no field \"%\" in this record type",
 					ast.I);
@@ -710,11 +724,11 @@ public final class Checker implements ActualParameterVisitor<FormalParameter, Vo
 
 		var binding = ast.I.visit(this);
 		if (binding instanceof ConstantDeclaration) {
-			ConstantDeclaration constant = (ConstantDeclaration)binding;
+			ConstantDeclaration constant = (ConstantDeclaration) binding;
 			ast.variable = false;
 			return ast.type = constant.getType();
 		} else if (binding instanceof VariableDeclaration) {
-			VariableDeclaration variable = (VariableDeclaration)binding;
+			VariableDeclaration variable = (VariableDeclaration) binding;
 			ast.variable = true;
 			return ast.type = variable.getType();
 		}
@@ -731,7 +745,7 @@ public final class Checker implements ActualParameterVisitor<FormalParameter, Vo
 		var eType = ast.E.visit(this);
 		if (vType != StdEnvironment.errorType) {
 			if (vType instanceof ArrayTypeDenoter) {
-				ArrayTypeDenoter arrayType = (ArrayTypeDenoter)vType;
+				ArrayTypeDenoter arrayType = (ArrayTypeDenoter) vType;
 				checkAndReportError(eType.equals(StdEnvironment.integerType), "Integer expression expected here",
 						ast.E);
 				ast.type = arrayType.T;
@@ -817,7 +831,7 @@ public final class Checker implements ActualParameterVisitor<FormalParameter, Vo
 
 	private static TypeDenoter checkFieldIdentifier(FieldTypeDenoter ast, Identifier I) {
 		if (ast instanceof MultipleFieldTypeDenoter) {
-			MultipleFieldTypeDenoter ft = (MultipleFieldTypeDenoter)ast;
+			MultipleFieldTypeDenoter ft = (MultipleFieldTypeDenoter) ast;
 			if (ft.I.spelling.compareTo(I.spelling) == 0) {
 				I.decl = ast;
 				return ft.T;
@@ -825,7 +839,7 @@ public final class Checker implements ActualParameterVisitor<FormalParameter, Vo
 				return checkFieldIdentifier(ft.FT, I);
 			}
 		} else if (ast instanceof SingleFieldTypeDenoter) {
-			SingleFieldTypeDenoter ft = (SingleFieldTypeDenoter)ast;
+			SingleFieldTypeDenoter ft = (SingleFieldTypeDenoter) ast;
 			if (ft.I.spelling.compareTo(I.spelling) == 0) {
 				I.decl = ast;
 				return ft.T;
@@ -921,6 +935,7 @@ public final class Checker implements ActualParameterVisitor<FormalParameter, Vo
 		StdEnvironment.booleanDecl = declareStdType("Boolean", StdEnvironment.booleanType);
 		StdEnvironment.falseDecl = declareStdConst("false", StdEnvironment.booleanType);
 		StdEnvironment.trueDecl = declareStdConst("true", StdEnvironment.booleanType);
+		StdEnvironment.decrementDecl = declareStdUnaryOp("--", StdEnvironment.integerType, StdEnvironment.integerType);
 		StdEnvironment.notDecl = declareStdUnaryOp("\\", StdEnvironment.booleanType, StdEnvironment.booleanType);
 		StdEnvironment.andDecl = declareStdBinaryOp("/\\", StdEnvironment.booleanType, StdEnvironment.booleanType,
 				StdEnvironment.booleanType);
