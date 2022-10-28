@@ -1,0 +1,14 @@
+! test program for when the number is above the word limit
+ 
+let
+    var a: Integer
+in
+begin
+    a := 32769;
+    a--;
+    putint(a);
+    puteol();
+    a--;
+    putint(a);
+    puteol();
+end

@@ -1,0 +1,14 @@
+! test program for when the number is 0  output : -1 -2 
+ 
+let
+    var a: Integer
+in
+begin
+    a:= 0;
+    a--;
+    putint(a);
+    puteol();
+    a--;
+    putint(a);
+    puteol();
+end

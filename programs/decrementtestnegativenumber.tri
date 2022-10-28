@@ -1,0 +1,14 @@
+! test program for when the number is negative output : -6 -7
+ 
+let
+    var a: Integer
+in
+begin
+    a:= 0 - 5;
+    a--;
+    putint(a);
+    puteol();
+    a--;
+    putint(a);
+    puteol();
+end

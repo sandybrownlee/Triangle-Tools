@@ -11,25 +11,89 @@ import triangle.ErrorReporter;
 import triangle.syntacticAnalyzer.Parser;
 import triangle.syntacticAnalyzer.Scanner;
 import triangle.syntacticAnalyzer.SourceFile;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
+
+import java.io.*;
 
 
 public class TestScanner {
 
 	@Test
-	public void testHi() {
+	public void testHi() throws IOException {
 		compileExpectSuccess("/hi.tri");
+
+		String actualOutput = readTAMOutput("hi.tam");
+		String expectedOutput = "Hi!";
+		assertEquals(expectedOutput,actualOutput);
 	}
 
 	@Test
-	public void testLoopWhile() {
+	public void testLoopWhile() throws IOException {
 		compileExpectSuccess("/loopwhile.tri");
+
+		String actualOutput = readTAMOutput("loopwhile.tam");
+		String expectedOutput = "ababababa";
+		assertEquals(expectedOutput,actualOutput);
+
+		//Test the folded version of the program
+		String actualOutputFolded = readTAMOutput("loopwhilefolded.tam");
+		String expectedOutputFolded = "ababababa";
+		assertEquals(expectedOutputFolded,actualOutputFolded);
 	}
 
 	@Test
-	public void testWhileCurly() {
+	public void testWhileCurly() throws IOException {
 		compileExpectSuccess("/while-curly.tri");
+
+		String actualOutput = readTAMOutput("while-curly.tam");
+		String expectedOutput = "aaaaa";
+		assertEquals(expectedOutput,actualOutput);
+
+		//Test the folded version of the program
+		String actualOutputFolded = readTAMOutput("while-curlyfolded.tam");
+		String expectedOutputFolded = "aaaaa";
+		assertEquals(expectedOutputFolded,actualOutputFolded);
+	}
+	@Test
+	public void testDecrement() throws IOException {
+		compileExpectSuccess("/decrement.tri");
+
+		//Test with the number to decrement being 5
+		String actualOutput = readTAMOutput("dectestpositivenum.tam");
+		String expectedOutput = "43";
+		assertEquals(expectedOutput,actualOutput);
+
+		//Test with the number to decrement being 0
+		String actualOutput2 = readTAMOutput("dectestzero.tam");
+		String expectedOutput2 = "-1-2";
+		assertEquals(expectedOutput2,actualOutput2);
+
+		//Test with the number to decrement being -5
+		String actualOutput3 = readTAMOutput("dectestnegativenum.tam");
+		String expectedOutput3 = "-6-7";
+		assertEquals(expectedOutput3,actualOutput3);
+
+		//TEST THE FOLDED VERSION OF THE PROGRAMS
+
+		//Test with the number to decrement being 5
+		String actualOutputFolded = readTAMOutput("dectestpositivenumfolded.tam");
+		String expectedOutputFolded = "43";
+		assertEquals(expectedOutputFolded,actualOutputFolded);
+
+		//Test with the number to decrement being 0
+		String actualOutputFolded2 = readTAMOutput("dectestzerofolded.tam");
+		String expectedOutputFolded2 = "-1-2";
+		assertEquals(expectedOutputFolded2,actualOutputFolded2);
+
+		//Test with the number to decrement being -5
+		String actualOutputFolded3 = readTAMOutput("dectestnegativenumfolded.tam");
+		String expectedOutputFolded3 = "-6-7";
+		assertEquals(expectedOutputFolded3,actualOutputFolded3);
+
+		//Test with the number being above the word limit
+		String actualOutput4 = readTAMOutput("decrementoverflow.tam");
+		String expectedOutput4 = "Program has failed due to overflow.";
+		assertEquals(expectedOutput4,actualOutput4);
+
 	}
 
 	@Test
@@ -55,10 +119,6 @@ public class TestScanner {
 		compileExpectFailure("/repeatuntil.tri");
 	}
 
-	@Test
-	public void testDecrement() {
-		compileExpectSuccess("/decrement.tri");
-	}
 	
 	private void compileExpectSuccess(String filename) {
 		// build.gradle has a line sourceSets.test.resources.srcDir file("$rootDir/programs")
@@ -96,16 +156,39 @@ public class TestScanner {
 		assertNotEquals("Problem compiling " + filename, 0, reporter.getNumErrors());
 	}
 
-	/*
-	 * Experimental method
-	 */
-	private void readFileOutput(String filename){
 
-		final PrintStream standardOut = System.out;
-		final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
 
-		System.setOut(new PrintStream(outputStreamCaptor)); //Read the system.out output
+	private String readTAMOutput(String filename) throws IOException {
 
-		assertEquals("Expected String", outputStreamCaptor.toString().trim());
+		//This creates a new process which is meant to enter the command prompt and execute the commands to run the program tam files
+		//Since the build.gradle file sets the programs directory as test directory we have to call "cd.." to go back to the main directory first
+		ProcessBuilder commandPrompt = new ProcessBuilder(
+				"cmd.exe", "/c", "cd.. && java -cp build/libs/Triangle-Tools.jar triangle.abstractMachine.Interpreter" +" " + filename);
+
+		commandPrompt.redirectErrorStream(true);
+		Process p = commandPrompt.start();
+		BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+		String programOutput = "";
+		String currentLine = "";
+        Boolean stopReadingOutput = false;
+
+		while (!(stopReadingOutput)) {
+			currentLine = r.readLine();
+
+			if (currentLine.equals("********** TAM Interpreter (Java Version 2.1) **********")) {
+				    currentLine = r.readLine(); //Discard the line containing TAM Interpreter (Java Version 2.1)
+				while(!(currentLine.equals("Program has halted normally."))) {
+
+					if(currentLine.equals("Program has failed due to overflow.")){
+						return currentLine;
+					}
+					programOutput = programOutput.concat(currentLine); // Add each line to the output String
+					currentLine = r.readLine();
+				}
+				stopReadingOutput = true; //Upon reading all the file output stop reading the rest of the lines
+			}
+		}
+		return programOutput;
 	}
 }

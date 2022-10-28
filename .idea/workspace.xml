@@ -6,10 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="f505e3df-4d61-4844-84b1-893c6601edd9" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/Compiler.java" beforeDir="false" afterPath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/Compiler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/optimiser/ConstantFolder.java" beforeDir="false" afterPath="$PROJECT_DIR$/Triangle.Compiler/src/main/java/triangle/optimiser/ConstantFolder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Triangle.Compiler/src/test/java/triangle/syntacticAnalyser/TestScanner.java" beforeDir="false" afterPath="$PROJECT_DIR$/Triangle.Compiler/src/test/java/triangle/syntacticAnalyser/TestScanner.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/libs/Triangle-Tools.jar" beforeDir="false" afterPath="$PROJECT_DIR$/build/libs/Triangle-Tools.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj.tam" beforeDir="false" afterPath="$PROJECT_DIR$/obj.tam" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,7 +88,7 @@
       <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
-    <configuration name="TestScanner.testBarDemo" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="TestScanner.testDecrement" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -103,7 +101,7 @@
           <list>
             <option value=":Triangle.Compiler:test" />
             <option value="--tests" />
-            <option value="&quot;triangle.syntacticAnalyser.TestScanner.testBarDemo&quot;" />
+            <option value="&quot;triangle.syntacticAnalyser.TestScanner.testDecrement&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -185,9 +183,9 @@
     <recent_temporary>
       <list>
         <item itemvalue="Gradle.TestScanner (1)" />
+        <item itemvalue="Gradle.TestScanner.testDecrement" />
         <item itemvalue="Gradle.TestScanner.testLoopWhile" />
         <item itemvalue="Gradle.TestScanner.testWhileCurly" />
-        <item itemvalue="Gradle.TestScanner.testBarDemo" />
         <item itemvalue="Gradle.TestScanner.testHi" />
       </list>
     </recent_temporary>

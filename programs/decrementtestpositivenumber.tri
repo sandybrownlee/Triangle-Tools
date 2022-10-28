@@ -1,0 +1,14 @@
+! test program for when the number is positive output : 4 3
+ 
+let
+    var a: Integer
+in
+begin
+    a:= 5;
+    a--;
+    putint(a);
+    puteol();
+    a--;
+    putint(a);
+    puteol();
+end
