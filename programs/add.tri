@@ -1,0 +1,18 @@
+let
+    var num1 : Integer;
+    var num2 : Integer;
+    var total : Integer
+   
+in
+    begin
+        num1 := 3; num2 := 2; total := num1 + num2;
+        putint(num1);
+        puteol();
+        putint(num2);
+        puteol();
+        putint(total);
+        
+        if total = 5
+        then put('T')
+        else put('F')
+    end

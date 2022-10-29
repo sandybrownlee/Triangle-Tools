@@ -18,32 +18,35 @@ public class TestScanner {
 	public void testHi() {
 		compileExpectSuccess("/hi.tri");
 	}
-	
+
+	@Test
+	public void testAdd() {
+		compileExpectSuccess("/add.tri");
+	}
 
 	@Test
 	public void testHiNewComment() {
-		compileExpectFailure("/hi-newcomment.tri");
+		compileExpectSuccess("/hi-newcomment.tri");
 	}
 	
 
 	@Test
 	public void testHiNewComment2() {
-		compileExpectFailure("/hi-newcomment2.tri");
+		compileExpectSuccess("/hi-newcomment2.tri");
 	}
 	
 
 	@Test
 	public void testBarDemo() {
-		compileExpectFailure("/bardemo.tri");
+		compileExpectSuccess("/bardemo.tri");
 	}
 	
 
 	@Test
 	public void testRepeatUntil() {
-		compileExpectFailure("/repeatuntil.tri");
+		compileExpectSuccess("/repeatuntil.tri");
 	}
-	
-	
+
 	
 	private void compileExpectSuccess(String filename) {
 		// build.gradle has a line sourceSets.test.resources.srcDir file("$rootDir/programs")
@@ -68,7 +71,7 @@ public class TestScanner {
 		SourceFile source = SourceFile.fromResource(filename);
 		Scanner scanner = new Scanner(source);
 		ErrorReporter reporter = new ErrorReporter(true);
-		Parser parser = new Parser(scanner, reporter);
+			Parser parser = new Parser(scanner, reporter);
 
 		// we expect an exception here as the program has invalid syntax
 		assertThrows(RuntimeException.class, new ThrowingRunnable() {

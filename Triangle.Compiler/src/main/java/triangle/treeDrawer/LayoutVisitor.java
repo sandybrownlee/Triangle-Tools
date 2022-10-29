@@ -16,6 +16,7 @@ package triangle.treeDrawer;
 
 import java.awt.FontMetrics;
 
+import triangle.abstractSyntaxTrees.commands.RepeatCommand;
 import triangle.abstractSyntaxTrees.Program;
 import triangle.abstractSyntaxTrees.actuals.ConstActualParameter;
 import triangle.abstractSyntaxTrees.actuals.EmptyActualParameterSequence;
@@ -157,6 +158,13 @@ public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
 		var d1 = ast.E.visit(this);
 		var d2 = ast.C.visit(this);
 		return layoutBinary("WhileCom.", d1, d2);
+	}
+
+	@Override
+	public DrawingTree visitRepeatCommand(RepeatCommand ast, Void obj){
+		var d1 = ast.E.visit(this);
+		var d2 = ast.C.visit(this);
+		return layoutBinary("RepeatCom.", d1, d2);
 	}
 
 	// Expressions
