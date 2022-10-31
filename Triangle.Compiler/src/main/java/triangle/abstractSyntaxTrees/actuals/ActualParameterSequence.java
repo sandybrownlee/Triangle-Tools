@@ -26,7 +26,7 @@ public abstract class ActualParameterSequence extends AbstractSyntaxTree {
 
 	public abstract <TArg, TResult> TResult visit(ActualParameterSequenceVisitor<TArg, TResult> v, TArg arg);
 
-	public <TResult> TResult visit(ActualParameterSequenceVisitor<Void, TResult> v) {
+	public <TArg, TResult> TResult visit(ActualParameterSequenceVisitor<TArg, TResult> v) {
 		return visit(v, null);
 	}
 }
