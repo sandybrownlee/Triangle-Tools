@@ -291,6 +291,22 @@ public class Parser {
 					Expression incOne = new BinaryExpression(vExpr, opAST, expOne, commandPos);
 					finish(commandPos);
 					commandAST = new AssignCommand(vAST, incOne, commandPos);
+				} else if (currentToken.spelling.equals("--")) {
+					// Receive the operator
+					Operator opAST = parseOperator();
+					// Overwrite the accepted operator with a new subtraction operator
+					opAST = new Operator("-", commandPos);
+					// Wrap the variable name in a VnameExpression
+					VnameExpression vExpr = new VnameExpression(vAST, commandPos);
+					// Create an integer literal of "1", then wrap it in an IntegerExpression
+					IntegerLiteral litOne = new IntegerLiteral("1", commandPos);
+					Expression expOne = new IntegerExpression(litOne, commandPos);
+					// Assemble the expressions above into the binary expression for "variable + 1"
+					Expression incOne = new BinaryExpression(vExpr, opAST, expOne, commandPos);
+					// Set that this is the last line of the command
+					finish(commandPos);
+					// Assign the result of the binary expression to the commandAST
+					commandAST = new AssignCommand(vAST, incOne, commandPos);
 				} else {
 					accept(Token.BECOMES);
 					Expression eAST = parseExpression();

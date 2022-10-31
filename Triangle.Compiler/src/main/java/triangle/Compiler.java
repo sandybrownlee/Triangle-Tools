@@ -41,12 +41,15 @@ public class Compiler {
 	@Argument(alias = "o", description = "The filename for the object program", required = false)
 	static String objectName = "obj.tam";
 
+	/** The flag for producing an AST tree diagram instead of executing it. */
 	@Argument(alias = "tree", description = "Show the program's tree instead of executing it", required = false)
 	static boolean showTree = false;
 
+	/** The flag for performing folding on the program before execution. */
 	@Argument(alias = "folding", description = "Perform folding on the program", required = false)
 	static boolean folding = false;
 
+	/** The flag for performing folding before producing an AST tree diagram. */
 	@Argument(alias = "foldtree", description = "Perform folding on the program, then show the program's tree", required = false)
 	static boolean foldTree = false;
 
@@ -72,7 +75,7 @@ public class Compiler {
 	 * @param showingTable true iff the object description details are to be
 	 *                     displayed during code generation (not currently
 	 *                     implemented).
-	 * @return true iff the source program is free of compile-time errors, otherwise
+	 * @return true if the source program is free of compile-time errors, otherwise
 	 *         false.
 	 */
 	static boolean compileProgram(String sourceName, String objectName, boolean showingAST, boolean ASTAfterFold,
@@ -104,14 +107,17 @@ public class Compiler {
 			// }
 			System.out.println("Contextual Analysis ...");
 			checker.check(theAST); // 2nd pass
-			if (!ASTAfterFold && showingAST) {
+			// As the specification states that a new option is required to perform folding
+			// before an AST, the program ensures that using the folding and tree flags
+			// together produces an unfolded tree diagram.
+			if (!ASTAfterFold && showingAST) {// If the AST is being drawn before any folding
 				drawer.draw(theAST);
 			}
-			if (folding || ASTAfterFold) {
+			if (folding || ASTAfterFold) {// If folding should be required
 				theAST.visit(new ConstantFolder());
 			}
 
-			if (ASTAfterFold) {
+			if (ASTAfterFold) {// If the AST is being drawn after folding
 				drawer.draw(theAST);
 			}
 
