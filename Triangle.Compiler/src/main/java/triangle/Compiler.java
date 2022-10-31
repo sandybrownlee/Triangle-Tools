@@ -14,6 +14,9 @@
 
 package triangle;
 
+import com.sampullara.cli.Args;
+import com.sampullara.cli.Argument;
+
 import triangle.abstractSyntaxTrees.Program;
 import triangle.codeGenerator.Emitter;
 import triangle.codeGenerator.Encoder;
@@ -32,10 +35,13 @@ import triangle.treeDrawer.Drawer;
  */
 public class Compiler {
 
-	/** The filename for the object program, normally obj.tam. */
+	@Argument(alias = "i", description = "Input File Path", required = true)
+	static String sourceName;
+	@Argument(alias = "o", description = "Output File Name", required = false)
 	static String objectName = "obj.tam";
-	
+	@Argument(alias = "tree", description = "Show the Tree", required = false)
 	static boolean showTree = false;
+	@Argument(description = "Use folding compiler", required = false)
 	static boolean folding = false;
 
 	private static Scanner scanner;
@@ -96,7 +102,7 @@ public class Compiler {
 			if (folding) {
 				theAST.visit(new ConstantFolder());
 			}
-			
+
 			if (reporter.getNumErrors() == 0) {
 				System.out.println("Code Generation ...");
 				encoder.encodeRun(theAST, showingTable); // 3rd pass
@@ -116,37 +122,18 @@ public class Compiler {
 	/**
 	 * Triangle compiler main program.
 	 *
-	 * @param args the only command-line argument to the program specifies the
-	 *             source filename.
+	 * @param args The only required argument specifies the input file path. The
+	 *             optional arguments are for specifying the output file name and
+	 *             flags for showing trees or folding.
 	 */
 	public static void main(String[] args) {
+		Compiler compiler = new Compiler();
+		Args.parseOrExit(compiler, args);
 
-		if (args.length < 1) {
-			System.out.println("Usage: tc filename [-o=outputfilename] [tree] [folding]");
-			System.exit(1);
-		}
-		
-		parseArgs(args);
-
-		String sourceName = args[0];
-		
 		var compiledOK = compileProgram(sourceName, objectName, showTree, false);
 
 		if (!showTree) {
 			System.exit(compiledOK ? 0 : 1);
-		}
-	}
-	
-	private static void parseArgs(String[] args) {
-		for (String s : args) {
-			var sl = s.toLowerCase();
-			if (sl.equals("tree")) {
-				showTree = true;
-			} else if (sl.startsWith("-o=")) {
-				objectName = s.substring(3);
-			} else if (sl.equals("folding")) {
-				folding = true;
-			}
 		}
 	}
 }
