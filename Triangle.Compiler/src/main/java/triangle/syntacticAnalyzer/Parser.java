@@ -323,6 +323,13 @@ public class Parser {
 			commandAST = parseCommand();
 			accept(Token.END);
 			break;
+			
+		case Token.LCURLY:
+			acceptIt();
+			commandAST = parseCommand();
+			System.out.println("check");
+			accept(Token.RCURLY);
+			break;
 
 		case Token.LET: {
 			acceptIt();
@@ -368,6 +375,7 @@ public class Parser {
 
 		case Token.SEMICOLON:
 		case Token.END:
+		case Token.RCURLY:
 		case Token.ELSE:
 		case Token.IN:
 		case Token.EOT:
