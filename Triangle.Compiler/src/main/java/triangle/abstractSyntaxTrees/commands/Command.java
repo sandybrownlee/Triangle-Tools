@@ -18,15 +18,15 @@ import triangle.abstractSyntaxTrees.AbstractSyntaxTree;
 import triangle.abstractSyntaxTrees.visitors.CommandVisitor;
 import triangle.syntacticAnalyzer.SourcePosition;
 
-public abstract class Command extends AbstractSyntaxTree {
+public abstract class Command extends AbstractSyntaxTree { 
 
 	public Command(SourcePosition position) {
-		super(position);
-	}
+		super(position); 
+	}  
 
 	public abstract <TArg, TResult> TResult visit(CommandVisitor<TArg, TResult> visitor, TArg arg);
 
 	public <TArg, TResult> TResult visit(CommandVisitor<TArg, TResult> visitor) {
-		return visit(visitor, null);
+		return visit(visitor, null); 
 	}
 }

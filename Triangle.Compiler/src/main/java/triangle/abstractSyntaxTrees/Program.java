@@ -21,7 +21,7 @@ import triangle.syntacticAnalyzer.SourcePosition;
 public class Program extends AbstractSyntaxTree {
 
 	public Program(Command cAST, SourcePosition position) {
-		super(position);
+		super(position); 
 		C = cAST;
 	}
 
