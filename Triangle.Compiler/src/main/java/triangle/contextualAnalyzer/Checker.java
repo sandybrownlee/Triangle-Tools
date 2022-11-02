@@ -204,6 +204,7 @@ public final class Checker implements ActualParameterVisitor<FormalParameter, Vo
 
 		checkAndReportError(eType.equals(StdEnvironment.booleanType), "Boolean expression expected here", ast.E);
 		ast.C1.visit(this);
+		ast.C2.visit(this);
 
 		return null;
 	}
