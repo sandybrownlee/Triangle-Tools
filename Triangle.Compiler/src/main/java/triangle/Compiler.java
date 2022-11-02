@@ -49,8 +49,8 @@ public class Compiler {
 	@Argument(alias = "folding", description = "Perform folding on the program", required = false)
 	static boolean folding = false;
 
-	/** The flag for performing folding before producing an AST tree diagram. */
-	@Argument(alias = "foldtree", description = "Perform folding on the program, then show the program's tree", required = false)
+	/** The flag for producing an AST tree diagram after folding. */
+	@Argument(alias = "foldtree", description = "Show the program's tree after folding instead of executing it", required = false)
 	static boolean foldTree = false;
 
 	private static Scanner scanner;
@@ -110,10 +110,10 @@ public class Compiler {
 			// As the specification states that a new option is required to perform folding
 			// before an AST, the program ensures that using the folding and tree flags
 			// together produces an unfolded tree diagram.
-			if (!ASTAfterFold && showingAST) {// If the AST is being drawn before any folding
+			if (showingAST) {// If the AST is being drawn before any folding
 				drawer.draw(theAST);
 			}
-			if (folding || ASTAfterFold) {// If folding should be required
+			if (folding) {// If folding should be required
 				theAST.visit(new ConstantFolder());
 			}
 
