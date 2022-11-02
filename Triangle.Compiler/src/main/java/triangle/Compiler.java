@@ -39,10 +39,12 @@ public class Compiler {
 	static String sourceName;
 	@Argument(alias = "o", description = "Output File Name", required = false)
 	static String objectName = "obj.tam";
-	@Argument(alias = "tree", description = "Show the Tree", required = false)
+	@Argument(alias = "tree", description = "Show the Tree before optimisations occur", required = false)
 	static boolean showTree = false;
-	@Argument(description = "Use folding compiler", required = false)
+	@Argument(description = "Use the Constant-Folder optimisation", required = false)
 	static boolean folding = false;
+	@Argument(alias = "treeAfter",description = "Show the tree after optimisations occur", required = false)
+	static boolean showTreeOptimised = false;
 
 	private static Scanner scanner;
 	private static Parser parser;
@@ -68,7 +70,7 @@ public class Compiler {
 	 * @return true iff the source program is free of compile-time errors, otherwise
 	 *         false.
 	 */
-	static boolean compileProgram(String sourceName, String objectName, boolean showingAST, boolean showingTable) {
+	static boolean compileProgram(String sourceName, String objectName, boolean showingAST, boolean showingASTAfter ,boolean showingTable) {
 
 		System.out.println("********** " + "Triangle Compiler (Java Version 2.1)" + " **********");
 
@@ -102,6 +104,9 @@ public class Compiler {
 			if (folding) {
 				theAST.visit(new ConstantFolder());
 			}
+			if (showingASTAfter) {
+				drawer.draw(theAST);
+			}
 
 			if (reporter.getNumErrors() == 0) {
 				System.out.println("Code Generation ...");
@@ -130,9 +135,9 @@ public class Compiler {
 		Compiler compiler = new Compiler();
 		Args.parseOrExit(compiler, args);
 
-		var compiledOK = compileProgram(sourceName, objectName, showTree, false);
+		var compiledOK = compileProgram(sourceName, objectName, showTree, showTreeOptimised, false);
 
-		if (!showTree) {
+		if (!showTree && !showTreeOptimised) {
 			System.exit(compiledOK ? 0 : 1);
 		}
 	}

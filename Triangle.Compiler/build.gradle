@@ -21,7 +21,7 @@ application {
 	mainClass = 'triangle.Compiler'
 }
 run {
-    args = ["-i", "C:/Users/milif/Desktop/Triangle-Tools/programs/arrays.tri", "-folding", "-tree"]
+    args = ["-i", "C:/Users/milif/Desktop/Triangle-Tools/programs/adddeep.tri", "-folding", "-treeAfter"]
 }
 
 // allow access to programs for unit tests
