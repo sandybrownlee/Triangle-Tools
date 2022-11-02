@@ -144,6 +144,13 @@ public class Compiler {
 	 *             source filename.
 	 */
 	public static void main(String[] args) {
+		
+		for (int x = 0; x < args.length; x++) {
+			if (args[x].startsWith("-o=")) {
+				objectName = args[x].substring(3);
+				args[x] = "";
+			}
+		}
 
 		List<String> unparsed = Args.parseOrExit(Compiler.class, args);
 
