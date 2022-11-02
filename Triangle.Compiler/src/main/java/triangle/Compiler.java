@@ -35,7 +35,7 @@ import triangle.treeDrawer.Drawer;
  */
 public class Compiler {
 
-	@Argument(alias = "i", description = "Input File Path", required = true)
+	@Argument(alias = "i", description = "Input File Name", required = true)
 	static String sourceName;
 	@Argument(alias = "o", description = "Output File Name", required = false)
 	static String objectName = "obj.tam";
