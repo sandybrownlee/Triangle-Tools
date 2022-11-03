@@ -24,10 +24,6 @@ import triangle.syntacticAnalyzer.Scanner;
 import triangle.syntacticAnalyzer.SourceFile;
 import triangle.treeDrawer.Drawer;
 
-//Change - import the cli 
-//Why I can't import apache?
-//import org.apache.commons.cli.*;
-
 import com.sampullara.cli.Args;
 import com.sampullara.cli.Argument;
 
