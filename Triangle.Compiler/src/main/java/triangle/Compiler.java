@@ -19,6 +19,7 @@ import triangle.codeGenerator.Emitter;
 import triangle.codeGenerator.Encoder;
 import triangle.contextualAnalyzer.Checker;
 import triangle.optimiser.ConstantFolder;
+import triangle.optimiser.StatVisitor;
 import triangle.syntacticAnalyzer.Parser;
 import triangle.syntacticAnalyzer.Scanner;
 import triangle.syntacticAnalyzer.SourceFile;
@@ -53,6 +54,10 @@ public class Compiler {
 	@Argument(alias = "foldtree", description = "Show the program's tree after folding instead of executing it", required = false)
 	static boolean foldTree = false;
 
+	/** The flag for showing statistics about the program. */
+	@Argument(alias = "stats", description = "Show statistics about the program", required = false)
+	static boolean stats = false;
+
 	private static Scanner scanner;
 	private static Parser parser;
 	private static Checker checker;
@@ -60,6 +65,7 @@ public class Compiler {
 	private static Emitter emitter;
 	private static ErrorReporter reporter;
 	private static Drawer drawer;
+	private static StatVisitor statvisitor;
 
 	/** The AST representing the source program. */
 	private static Program theAST;
@@ -79,7 +85,7 @@ public class Compiler {
 	 *         false.
 	 */
 	static boolean compileProgram(String sourceName, String objectName, boolean showingAST, boolean ASTAfterFold,
-			boolean showingTable) {
+			boolean showStats, boolean showingTable) {
 
 		System.out.println("********** " + "Triangle Compiler (Java Version 2.1)" + " **********");
 
@@ -98,6 +104,7 @@ public class Compiler {
 		emitter = new Emitter(reporter);
 		encoder = new Encoder(emitter, reporter);
 		drawer = new Drawer();
+		statvisitor = new StatVisitor();
 
 		// scanner.enableDebugging();
 		theAST = parser.parseProgram(); // 1st pass
@@ -116,9 +123,13 @@ public class Compiler {
 			if (folding) {// If folding should be required
 				theAST.visit(new ConstantFolder());
 			}
-
 			if (ASTAfterFold) {// If the AST is being drawn after folding
 				drawer.draw(theAST);
+			}
+			
+			if (showStats) {
+				theAST.visit(statvisitor);
+				statvisitor.printResults();
 			}
 
 			if (reporter.getNumErrors() == 0) {
@@ -144,7 +155,7 @@ public class Compiler {
 	 *             source filename.
 	 */
 	public static void main(String[] args) {
-		
+
 		for (int x = 0; x < args.length; x++) {
 			if (args[x].startsWith("-o=")) {
 				objectName = args[x].substring(3);
@@ -156,8 +167,8 @@ public class Compiler {
 
 		String sourceName = unparsed.get(0);
 
-		var compiledOK = compileProgram(sourceName, objectName, showTree, foldTree, false);
-
+		var compiledOK = compileProgram(sourceName, objectName, showTree, foldTree, stats, false);
+		
 		if (!showTree && !foldTree) {
 			System.exit(compiledOK ? 0 : 1);
 		}
