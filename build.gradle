@@ -11,5 +11,15 @@ dependencies {
 }
 
 jar {
-  from subprojects.sourceSets.main.output
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+	
+	from {
+	configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it)}
+	}
+
+  	from subprojects.sourceSets.main.output
+}
+
+repositories {
+	mavenCentral()
 }

@@ -24,6 +24,13 @@ import triangle.syntacticAnalyzer.Scanner;
 import triangle.syntacticAnalyzer.SourceFile;
 import triangle.treeDrawer.Drawer;
 
+//Change - import the cli 
+//Why I can't import apache?
+//import org.apache.commons.cli.*;
+
+import com.sampullara.cli.Args;
+import com.sampullara.cli.Argument;
+
 /**
  * The main driver class for the Triangle compiler.
  *
@@ -32,11 +39,20 @@ import triangle.treeDrawer.Drawer;
  */
 public class Compiler {
 
+	@Argument(alias = "o", description = "the name for the object filename .tam", required = false)
 	/** The filename for the object program, normally obj.tam. */
 	static String objectName = "obj.tam";
 	
+	@Argument(alias = "t", description = "if true it prints the Abstract Syntax Tree", required = false)
 	static boolean showTree = false;
+	
+	@Argument(alias = "f", description = "Should we fold the program", required = false)
 	static boolean folding = false;
+	
+	//Add additional @Argument whether the program will show the tree after folding the program
+	@Argument(alias = "fst", description = "fold program, then show tree", required = false)
+	static boolean foldShowTree = false;
+	
 
 	private static Scanner scanner;
 	private static Parser parser;
@@ -62,7 +78,7 @@ public class Compiler {
 	 * @return true iff the source program is free of compile-time errors, otherwise
 	 *         false.
 	 */
-	static boolean compileProgram(String sourceName, String objectName, boolean showingAST, boolean showingTable) {
+	static boolean compileProgram(String sourceName, String objectName, boolean showingAST, boolean showingTable, boolean foldThenShowTree) {
 
 		System.out.println("********** " + "Triangle Compiler (Java Version 2.1)" + " **********");
 
@@ -90,12 +106,26 @@ public class Compiler {
 			// }
 			System.out.println("Contextual Analysis ...");
 			checker.check(theAST); // 2nd pass
-			if (showingAST) {
-				drawer.draw(theAST);
-			}
-			if (folding) {
+			
+			
+			//If folding is chosen
+			if (folding || foldThenShowTree) {
 				theAST.visit(new ConstantFolder());
 			}
+			//If showing the tree is chosen
+			if (foldThenShowTree) {
+				drawer.draw(theAST);
+			}
+			else if (showingAST) {
+				drawer.draw(theAST);
+			}
+			
+			
+			
+			/*if (foldThenShowTree) {
+				//theAST.visit(new ConstantFolder());
+				drawer.draw(theAST);
+			}*/
 			
 			if (reporter.getNumErrors() == 0) {
 				System.out.println("Code Generation ...");
@@ -117,36 +147,22 @@ public class Compiler {
 	 * Triangle compiler main program.
 	 *
 	 * @param args the only command-line argument to the program specifies the
-	 *             source filename.
+	 *             source filename. 
 	 */
 	public static void main(String[] args) {
 
-		if (args.length < 1) {
-			System.out.println("Usage: tc filename [-o=outputfilename] [tree] [folding]");
-			System.exit(1);
-		}
+		Compiler compiler = new Compiler();
 		
-		parseArgs(args);
+		Args.parseOrExit(compiler, args);
 
 		String sourceName = args[0];
 		
-		var compiledOK = compileProgram(sourceName, objectName, showTree, false);
+		var compiledOK = compileProgram(sourceName, objectName, showTree, false, foldShowTree);
 
 		if (!showTree) {
 			System.exit(compiledOK ? 0 : 1);
 		}
+
 	}
 	
-	private static void parseArgs(String[] args) {
-		for (String s : args) {
-			var sl = s.toLowerCase();
-			if (sl.equals("tree")) {
-				showTree = true;
-			} else if (sl.startsWith("-o=")) {
-				objectName = s.substring(3);
-			} else if (sl.equals("folding")) {
-				folding = true;
-			}
-		}
-	}
 }
