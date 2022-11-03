@@ -600,7 +600,22 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 				foldedValue = int1 / int2;
 			} else if (o.decl == StdEnvironment.moduloDecl) {
 				foldedValue = int1 % int2;
+			} else if (o.decl == StdEnvironment.equalDecl) {
+				foldedValue = (int1 = int2);
+			} else if (o.decl == StdEnvironment.unequalDecl) {
+				foldedValue = (int1 != int2);
+			} else if (o.decl == StdEnvironment.lessDecl) {
+				foldedValue = (int1 < int2);
+			} else if (o.decl == StdEnvironment.notlessDecl) {
+				foldedValue = (int1 >= int2);
+			} else if (o.decl == StdEnvironment.greaterDecl) {
+				foldedValue = (int1 > int2);
+			} else if (o.decl == StdEnvironment.notgreaterDecl) {
+				foldedValue = (int1 <= int2);
 			}
+			
+			System.out.println("Reached this stage");
+			System.out.println((boolean) foldedValue);
 
 			if (foldedValue instanceof Integer) {
 				IntegerLiteral il = new IntegerLiteral(foldedValue.toString(), node1.getPosition());
@@ -608,7 +623,18 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 				ie.type = StdEnvironment.integerType;
 				return ie;
 			} else if (foldedValue instanceof Boolean) {
-				/* currently not handled! */
+				Identifier in = null;
+				if ((boolean) foldedValue) {
+					in = new Identifier("true", node1.getPosition());
+					in.decl = StdEnvironment.trueDecl;
+				} else {
+					in = new Identifier("false", node1.getPosition());
+					in.decl = StdEnvironment.falseDecl;
+				}
+				SimpleVname vn = new SimpleVname(in, node1.getPosition());
+				VnameExpression ve = new VnameExpression(vn, node1.getPosition());
+				ve.type = StdEnvironment.booleanType;
+				return ve;
 			}
 		}
 
