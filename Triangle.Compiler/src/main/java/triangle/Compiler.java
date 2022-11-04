@@ -25,6 +25,11 @@ import triangle.syntacticAnalyzer.SourceFile;
 import triangle.treeDrawer.Drawer;
 import triangle.statsAnalyzer.Statistics;
 
+import java.util.List;
+
+import com.sampullara.cli.Args;
+import com.sampullara.cli.Argument;
+
 /**
  * The main driver class for the Triangle compiler.
  *
@@ -33,11 +38,22 @@ import triangle.statsAnalyzer.Statistics;
  */
 public class Compiler {
 
-	/** The filename for the object program, normally obj.tam. */
-	static String objectName = "obj.tam";
-	static boolean showTree = false;
-	static boolean folding = false;
-	static boolean stats = false;
+	 /* static String sourceName = null;
+	 static String objectName = "obj.tam";
+	 static boolean showTree = false;
+	 static boolean folding = false;
+	 static boolean stats = false; */
+
+	@Argument(required = true, alias = "s", description = "The name of the object file")
+	public static String sourceName = "null";
+	@Argument(alias = "o", description = "The name of the object file")
+	public static String objectName = "obj.tam";
+	@Argument(alias = "t", description = "Show the abstract syntax tree")
+	public static boolean showTree = false;
+	@Argument(alias = "f", description = "Enable constant folding")
+	public static boolean folding = false;
+	@Argument(alias = "S", description = "Show statistics")
+	public static boolean stats = false;
 
 	private static Scanner scanner;
 	private static Parser parser;
@@ -64,9 +80,9 @@ public class Compiler {
 	 * @return true iff the source program is free of compile-time errors, otherwise
 	 *         false.
 	 */
-	static boolean compileProgram(String sourceName, String objectName, boolean showingAST, boolean showingTable, boolean stats) {
+	static boolean compileProgram(String sourceName, String objectName, boolean showingAST, boolean showingTable,
+			boolean stats) {
 
-		
 		System.out.println("********** " + "Triangle Compiler (Java Version 2.1)" + " **********");
 
 		System.out.println("Syntactic Analysis ...");
@@ -104,7 +120,7 @@ public class Compiler {
 			if (stats) {
 				statistics.read(theAST);
 			}
-			
+
 			if (reporter.getNumErrors() == 0) {
 				System.out.println("Code Generation ...");
 				encoder.encodeRun(theAST, showingTable); // 3rd pass
@@ -128,23 +144,28 @@ public class Compiler {
 	 *             source filename.
 	 */
 	public static void main(String[] args) {
+		Compiler compiler = new Compiler();
+
+		Args.parseOrExit(compiler, args);
+
+		System.out.println("Source file: " + sourceName);
 
 		if (args.length < 1) {
 			System.out.println("Usage: tc filename [-o=outputfilename] [tree] [folding]");
 			System.exit(1);
 		}
-		
-		parseArgs(args);
 
-		String sourceName = args[0];
-		
+		// parseArgs(args);
+
+		// String sourceName = args[0];
+
 		var compiledOK = compileProgram(sourceName, objectName, showTree, false, stats);
 
 		if (!showTree) {
 			System.exit(compiledOK ? 0 : 1);
 		}
 	}
-	
+
 	private static void parseArgs(String[] args) {
 		for (String s : args) {
 			var sl = s.toLowerCase();

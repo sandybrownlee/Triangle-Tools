@@ -9,3 +9,24 @@ subprojects.each { subproject ->
 jar {
   from subprojects.sourceSets.main.output
 }
+
+// this tells Gradle where to find the dependencies
+// mavenCentral has pretty much anything you're likely to want
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+	implementation group: 'com.github.spullara.cli-parser', name: 'cli-parser', version: '1.1.5'
+}
+
+
+// this will gather up all the libraries and include them in the "build" jar
+// so the program can be more easily run
+jar {
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
