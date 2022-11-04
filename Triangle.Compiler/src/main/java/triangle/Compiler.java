@@ -23,6 +23,7 @@ import triangle.syntacticAnalyzer.Parser;
 import triangle.syntacticAnalyzer.Scanner;
 import triangle.syntacticAnalyzer.SourceFile;
 import triangle.treeDrawer.Drawer;
+import triangle.statsAnalyzer.Statistics;
 
 /**
  * The main driver class for the Triangle compiler.
@@ -36,6 +37,7 @@ public class Compiler {
 	static String objectName = "obj.tam";
 	static boolean showTree = false;
 	static boolean folding = false;
+	static boolean stats = false;
 
 	private static Scanner scanner;
 	private static Parser parser;
@@ -44,6 +46,7 @@ public class Compiler {
 	private static Emitter emitter;
 	private static ErrorReporter reporter;
 	private static Drawer drawer;
+	private static Statistics statistics;
 
 	/** The AST representing the source program. */
 	private static Program theAST;
@@ -61,7 +64,7 @@ public class Compiler {
 	 * @return true iff the source program is free of compile-time errors, otherwise
 	 *         false.
 	 */
-	static boolean compileProgram(String sourceName, String objectName, boolean showingAST, boolean showingTable) {
+	static boolean compileProgram(String sourceName, String objectName, boolean showingAST, boolean showingTable, boolean stats) {
 
 		
 		System.out.println("********** " + "Triangle Compiler (Java Version 2.1)" + " **********");
@@ -78,6 +81,7 @@ public class Compiler {
 		reporter = new ErrorReporter(false);
 		parser = new Parser(scanner, reporter);
 		checker = new Checker(reporter);
+		statistics = new Statistics();
 		emitter = new Emitter(reporter);
 		encoder = new Encoder(emitter, reporter);
 		drawer = new Drawer();
@@ -95,6 +99,10 @@ public class Compiler {
 			}
 			if (folding) {
 				theAST.visit(new ConstantFolder());
+			}
+
+			if (stats) {
+				statistics.read(theAST);
 			}
 			
 			if (reporter.getNumErrors() == 0) {
@@ -130,7 +138,7 @@ public class Compiler {
 
 		String sourceName = args[0];
 		
-		var compiledOK = compileProgram(sourceName, objectName, showTree, false);
+		var compiledOK = compileProgram(sourceName, objectName, showTree, false, stats);
 
 		if (!showTree) {
 			System.exit(compiledOK ? 0 : 1);
@@ -146,6 +154,8 @@ public class Compiler {
 				objectName = s.substring(3);
 			} else if (sl.equals("folding")) {
 				folding = true;
+			} else if (sl.equals("stats")) {
+				stats = true;
 			}
 		}
 	}

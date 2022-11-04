@@ -590,7 +590,7 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 			int int1 = (Integer.parseInt(((IntegerExpression) node1).IL.spelling));
 			int int2 = (Integer.parseInt(((IntegerExpression) node2).IL.spelling));
 			Object foldedValue = null;
-			
+
 			if (o.decl == StdEnvironment.addDecl) {
 				foldedValue = int1 + int2;
 			} else if (o.decl == StdEnvironment.divideDecl) {
