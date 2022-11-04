@@ -613,9 +613,6 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 			} else if (o.decl == StdEnvironment.notgreaterDecl) {
 				foldedValue = (int1 <= int2);
 			}
-			
-			System.out.println("Reached this stage");
-			System.out.println((boolean) foldedValue);
 
 			if (foldedValue instanceof Integer) {
 				IntegerLiteral il = new IntegerLiteral(foldedValue.toString(), node1.getPosition());

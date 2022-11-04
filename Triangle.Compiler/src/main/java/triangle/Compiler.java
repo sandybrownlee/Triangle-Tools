@@ -64,7 +64,7 @@ public class Compiler {
 	private static Encoder encoder;
 	private static Emitter emitter;
 	private static ErrorReporter reporter;
-	private static Drawer drawer;
+	private static Drawer drawer, altdrawer;
 	private static StatVisitor statvisitor;
 
 	/** The AST representing the source program. */
@@ -104,6 +104,7 @@ public class Compiler {
 		emitter = new Emitter(reporter);
 		encoder = new Encoder(emitter, reporter);
 		drawer = new Drawer();
+		altdrawer = new Drawer();
 		statvisitor = new StatVisitor();
 
 		// scanner.enableDebugging();
@@ -114,9 +115,6 @@ public class Compiler {
 			// }
 			System.out.println("Contextual Analysis ...");
 			checker.check(theAST); // 2nd pass
-			// As the specification states that a new option is required to perform folding
-			// before an AST, the program ensures that using the folding and tree flags
-			// together produces an unfolded tree diagram.
 			if (showingAST) {// If the AST is being drawn before any folding
 				drawer.draw(theAST);
 			}
@@ -124,7 +122,7 @@ public class Compiler {
 				theAST.visit(new ConstantFolder());
 			}
 			if (ASTAfterFold) {// If the AST is being drawn after folding
-				drawer.draw(theAST);
+				altdrawer.draw(theAST);
 			}
 			
 			if (showStats) {
