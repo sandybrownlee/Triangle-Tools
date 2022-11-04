@@ -32,7 +32,6 @@ import triangle.treeDrawer.Drawer;
  */
 public class Compiler {
 
-
 	/** The filename for the object program, normally obj.tam. */
 	static String objectName = "obj.tam";
 	static boolean showTree = false;
