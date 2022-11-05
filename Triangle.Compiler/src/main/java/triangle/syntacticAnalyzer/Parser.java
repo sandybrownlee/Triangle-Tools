@@ -284,10 +284,40 @@ public class Parser {
 			} else {
 
 				Vname vAST = parseRestOfVname(iAST);
-				accept(Token.BECOMES);
-				Expression eAST = parseExpression();
-				finish(commandPos);
-				commandAST = new AssignCommand(vAST, eAST, commandPos);
+				//INCREMENT
+				if(currentToken.kind == Token.OPERATOR && currentToken.spelling.equals("++"))
+				{
+					acceptIt();
+
+					IntegerLiteral il = new IntegerLiteral("1", commandPos);
+					IntegerExpression ie = new IntegerExpression(il, commandPos);
+					VnameExpression vne = new VnameExpression(vAST, commandPos);
+					Operator op = new Operator("+", commandPos);
+					Expression eAST = new BinaryExpression(vne, op, ie, commandPos);
+					finish(commandPos);
+					commandAST = new AssignCommand(vAST, eAST, commandPos);
+				}
+				//DECREMENT
+				/*if(currentToken.kind == Token.OPERATOR && currentToken.spelling.equals("++"))
+				{
+					acceptIt();
+
+					IntegerLiteral il = new IntegerLiteral("1", commandPos);
+					IntegerExpression ie = new IntegerExpression(il, commandPos);
+					VnameExpression vne = new VnameExpression(vAST, commandPos);
+					Operator op = new Operator("+", commandPos);
+					Expression eAST = new BinaryExpression(vne, op, ie, commandPos);
+					finish(commandPos);
+					commandAST = new AssignCommand(vAST, eAST, commandPos);
+				}*/
+				//ASSIGNMENT
+				else
+				{
+					accept(Token.BECOMES);
+					Expression eAST = parseExpression();
+					finish(commandPos);
+					commandAST = new AssignCommand(vAST, eAST, commandPos);
+				}
 			}
 		}
 			break;
