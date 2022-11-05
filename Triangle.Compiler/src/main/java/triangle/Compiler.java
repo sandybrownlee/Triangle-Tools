@@ -41,6 +41,9 @@ public class Compiler {
 	@Argument(alias = "showAbstractSyntaxTree", description = "True if the Abstract Syntax Tree is to be displayed after contextual analysis.")
 	static boolean showTree = false;
 
+	@Argument(alias = "showAbstractSyntaxTreeAfterFoldingIsComplete", description = "True if the Abstract Syntax Tree is to be displayed after contextual analysis and folding is complete.")
+	static boolean showTreeAfterFolding = false;
+
 	@Argument(alias = "isFolding", description = "True if the program is to be folded.")
 	static boolean folding = false;
 
@@ -71,7 +74,7 @@ public class Compiler {
 	 * @return true if the source program is free of compile-time errors, otherwise
 	 *         false.
 	 */
-	static boolean compileProgram(String sourceName, String objectName, boolean showingAST, boolean showingTable) {
+	static boolean compileProgram(String sourceName, String objectName, boolean showingAST, boolean showTreeAfterFolding, boolean showingTable) {
 
 		System.out.println("********** " + "Triangle Compiler (Java Version 2.1)" + " **********");
 
@@ -99,11 +102,15 @@ public class Compiler {
 			// }
 			System.out.println("Contextual Analysis ...");
 			checker.check(theAST); // 2nd pass
-			if (showingAST) {
+			if (showingAST && showTreeAfterFolding == false) {
 				drawer.draw(theAST);
 			}
 			if (folding) {
 				theAST.visit(new ConstantFolder());
+			}
+
+			if (showTreeAfterFolding) {
+				drawer.draw(theAST);
 			}
 			
 			if (reporter.getNumErrors() == 0) {
@@ -136,7 +143,7 @@ public class Compiler {
 		// and the arguments you want to pass and populate as second argument
 		Args.parseOrExit(Compiler.class, args);
 
-		var compiledOK = compileProgram(sourceName, objectName, showTree, false);
+		var compiledOK = compileProgram(sourceName, objectName, showTree, showTreeAfterFolding, false);
 
 		if (!showTree) {
 			System.exit(compiledOK ? 0 : 1);
