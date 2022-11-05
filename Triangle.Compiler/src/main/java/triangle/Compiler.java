@@ -23,6 +23,8 @@ import triangle.syntacticAnalyzer.Parser;
 import triangle.syntacticAnalyzer.Scanner;
 import triangle.syntacticAnalyzer.SourceFile;
 import triangle.treeDrawer.Drawer;
+import com.sampullara.cli.Args;
+import com.sampullara.cli.Argument;
 
 /**
  * The main driver class for the Triangle compiler.
@@ -31,12 +33,19 @@ import triangle.treeDrawer.Drawer;
  * @author Deryck F. Brown
  */
 public class Compiler {
-
-	/** The filename for the object program, normally obj.tam. */
+	// the cli parser library lets us make instance variables with annotations like this
+	// that specify command line arguments for the program
+	@Argument(alias = "objectFileName", description = "The name of the file containing the object program.")
 	static String objectName = "obj.tam";
-	
+
+	@Argument(alias = "showAbstractSyntaxTree", description = "True if the Abstract Syntax Tree is to be displayed after contextual analysis.")
 	static boolean showTree = false;
+
+	@Argument(alias = "isFolding", description = "True if the program is to be folded.")
 	static boolean folding = false;
+
+	@Argument(alias = "sourceFileName", description = "The name of the file containing the source program.")
+	static String sourceName = "";
 
 	private static Scanner scanner;
 	private static Parser parser;
@@ -54,12 +63,12 @@ public class Compiler {
 	 *
 	 * @param sourceName   the name of the file containing the source program.
 	 * @param objectName   the name of the file containing the object program.
-	 * @param showingAST   true iff the AST is to be displayed after contextual
+	 * @param showingAST   true if the AST is to be displayed after contextual
 	 *                     analysis
-	 * @param showingTable true iff the object description details are to be
+	 * @param showingTable true if the object description details are to be
 	 *                     displayed during code generation (not currently
 	 *                     implemented).
-	 * @return true iff the source program is free of compile-time errors, otherwise
+	 * @return true if the source program is free of compile-time errors, otherwise
 	 *         false.
 	 */
 	static boolean compileProgram(String sourceName, String objectName, boolean showingAST, boolean showingTable) {
@@ -120,33 +129,17 @@ public class Compiler {
 	 *             source filename.
 	 */
 	public static void main(String[] args) {
+		// this will parse the list of arguments passed into the program, and
+		// populate the appropriate instance variables
+		// if the required arguments were not found, it will gracefully exit.
+		// Takes an instance or a class as first argument,
+		// and the arguments you want to pass and populate as second argument
+		Args.parseOrExit(Compiler.class, args);
 
-		if (args.length < 1) {
-			System.out.println("Usage: tc filename [-o=outputfilename] [tree] [folding]");
-			System.exit(1);
-		}
-		
-		parseArgs(args);
-
-		String sourceName = args[0];
-		
 		var compiledOK = compileProgram(sourceName, objectName, showTree, false);
 
 		if (!showTree) {
 			System.exit(compiledOK ? 0 : 1);
-		}
-	}
-	
-	private static void parseArgs(String[] args) {
-		for (String s : args) {
-			var sl = s.toLowerCase();
-			if (sl.equals("tree")) {
-				showTree = true;
-			} else if (sl.startsWith("-o=")) {
-				objectName = s.substring(3);
-			} else if (sl.equals("folding")) {
-				folding = true;
-			}
 		}
 	}
 }
