@@ -24,6 +24,10 @@ import triangle.syntacticAnalyzer.Scanner;
 import triangle.syntacticAnalyzer.SourceFile;
 import triangle.treeDrawer.Drawer;
 
+//cli-parser libraries
+import com.sampullara.cli.Args;
+import com.sampullara.cli.Argument;
+
 /**
  * The main driver class for the Triangle compiler.
  *
@@ -32,11 +36,21 @@ import triangle.treeDrawer.Drawer;
  */
 public class Compiler {
 
+	/** Command line arguments */
+	 @Argument(alias = "tree", description = "Print AST", required = false)
+	 	protected String treePrint = "tree";
+	 @Argument(alias = "tree2", description = "Print AST after folding", required = false)
+	 	protected String foldPrint = "tree2";
+	 @Argument(alias = "folding", description = "run folding procedure", required = false)
+	 	protected String fold = "folding";
+	
 	/** The filename for the object program, normally obj.tam. */
 	static String objectName = "obj.tam";
 	
+	/** Argument flags */
 	static boolean showTree = false;
 	static boolean folding = false;
+	static boolean showFoldTree = false;
 
 	private static Scanner scanner;
 	private static Parser parser;
@@ -45,6 +59,7 @@ public class Compiler {
 	private static Emitter emitter;
 	private static ErrorReporter reporter;
 	private static Drawer drawer;
+	private static Drawer drawer2;
 
 	/** The AST representing the source program. */
 	private static Program theAST;
@@ -54,15 +69,16 @@ public class Compiler {
 	 *
 	 * @param sourceName   the name of the file containing the source program.
 	 * @param objectName   the name of the file containing the object program.
-	 * @param showingAST   true iff the AST is to be displayed after contextual
+	 * @param showingAST   true if the AST is to be displayed after contextual
 	 *                     analysis
-	 * @param showingTable true iff the object description details are to be
+	 * @param showingTable true if the object description details are to be
 	 *                     displayed during code generation (not currently
 	 *                     implemented).
-	 * @return true iff the source program is free of compile-time errors, otherwise
+	 * @param showingFoldAST   true if the AST is to be displayed after folding
+	 * @return true if the source program is free of compile-time errors, otherwise
 	 *         false.
 	 */
-	static boolean compileProgram(String sourceName, String objectName, boolean showingAST, boolean showingTable) {
+	static boolean compileProgram(String sourceName, String objectName, boolean showingAST, boolean showingFoldAST, boolean showingTable) {
 
 		System.out.println("********** " + "Triangle Compiler (Java Version 2.1)" + " **********");
 
@@ -81,13 +97,11 @@ public class Compiler {
 		emitter = new Emitter(reporter);
 		encoder = new Encoder(emitter, reporter);
 		drawer = new Drawer();
+		drawer2 = new Drawer();
 
 		// scanner.enableDebugging();
 		theAST = parser.parseProgram(); // 1st pass
 		if (reporter.getNumErrors() == 0) {
-			// if (showingAST) {
-			// drawer.draw(theAST);
-			// }
 			System.out.println("Contextual Analysis ...");
 			checker.check(theAST); // 2nd pass
 			if (showingAST) {
@@ -95,6 +109,11 @@ public class Compiler {
 			}
 			if (folding) {
 				theAST.visit(new ConstantFolder());
+				if (showingFoldAST) {
+					drawer2.draw(theAST);
+				}
+			} else if (showingFoldAST) {
+				System.out.println("Error: Cannot print folded AST if not folding.");
 			}
 			
 			if (reporter.getNumErrors() == 0) {
@@ -120,19 +139,18 @@ public class Compiler {
 	 *             source filename.
 	 */
 	public static void main(String[] args) {
-
-		if (args.length < 1) {
-			System.out.println("Usage: tc filename [-o=outputfilename] [tree] [folding]");
-			System.exit(1);
-		}
+		Compiler compiler = new Compiler();
 		
+		//cli parse arguments
+		Args.parseOrExit(compiler, args);
 		parseArgs(args);
 
 		String sourceName = args[0];
 		
-		var compiledOK = compileProgram(sourceName, objectName, showTree, false);
+		var compiledOK = compileProgram(sourceName, objectName, showTree, showFoldTree, false);
 
-		if (!showTree) {
+		//exit if neither tree printed
+		if (!showTree && !showFoldTree) {
 			System.exit(compiledOK ? 0 : 1);
 		}
 	}
@@ -142,6 +160,8 @@ public class Compiler {
 			var sl = s.toLowerCase();
 			if (sl.equals("tree")) {
 				showTree = true;
+			} else if (sl.equals("tree2")) {
+				showFoldTree = true;
 			} else if (sl.startsWith("-o=")) {
 				objectName = s.substring(3);
 			} else if (sl.equals("folding")) {
