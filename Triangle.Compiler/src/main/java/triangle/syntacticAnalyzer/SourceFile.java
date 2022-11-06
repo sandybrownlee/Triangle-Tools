@@ -14,8 +14,6 @@
 
 package triangle.syntacticAnalyzer;
 
-import java.net.URL;
-
 public class SourceFile {
 
 	public static final char EOL = '\n';

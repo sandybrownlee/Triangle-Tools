@@ -16,10 +16,7 @@ package triangle.treeDrawer;
 
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.Rectangle;
 import java.awt.Toolkit;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
@@ -27,9 +24,7 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
 
 class DrawerFrame extends JFrame {
 	/**
