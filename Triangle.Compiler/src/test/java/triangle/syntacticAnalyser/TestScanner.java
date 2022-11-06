@@ -40,11 +40,14 @@ public class TestScanner {
 	public void testBarDemo() {
 		compileExpectSuccess("/bardemo.tri");
 	}
-	
 
 	@Test
 	public void testRepeatUntil() {
 		compileExpectSuccess("/repeatuntil.tri");
+	}
+
+	@Test
+	public void testDecrement() {compileExpectSuccess("/decrement.tri");
 	}
 
 	
