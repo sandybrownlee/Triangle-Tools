@@ -37,15 +37,14 @@ import com.sampullara.cli.Argument;
 public class Compiler {
 
 	/** Command line arguments */
+	@Argument(alias = ("o"), description = "Turn tri file to tam", required = false)
+ 	protected static String objectName = "obj.tam";
 	 @Argument(alias = "tree", description = "Print AST", required = false)
 	 	protected String treePrint = "tree";
 	 @Argument(alias = "tree2", description = "Print AST after folding", required = false)
 	 	protected String foldPrint = "tree2";
 	 @Argument(alias = "folding", description = "run folding procedure", required = false)
 	 	protected String fold = "folding";
-	
-	/** The filename for the object program, normally obj.tam. */
-	static String objectName = "obj.tam";
 	
 	/** Argument flags */
 	static boolean showTree = false;
@@ -144,7 +143,7 @@ public class Compiler {
 		//cli parse arguments
 		Args.parseOrExit(compiler, args);
 		parseArgs(args);
-
+		
 		String sourceName = args[0];
 		
 		var compiledOK = compileProgram(sourceName, objectName, showTree, showFoldTree, false);
@@ -162,8 +161,8 @@ public class Compiler {
 				showTree = true;
 			} else if (sl.equals("tree2")) {
 				showFoldTree = true;
-			} else if (sl.startsWith("-o=")) {
-				objectName = s.substring(3);
+			} else if (sl.startsWith("o=")) {
+				objectName = s.substring(2);
 			} else if (sl.equals("folding")) {
 				folding = true;
 			}
