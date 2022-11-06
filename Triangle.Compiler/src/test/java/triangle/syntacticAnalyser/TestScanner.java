@@ -59,6 +59,11 @@ public class TestScanner {
 	}
 
 	@Test
+	public void testWhileCurlyEnd() {
+		compileExpectFailure("/while-curly-end.tri");
+	}
+
+	@Test
 	public void testDecrement() {
 		compileExpectSuccess("/decrement.tri");
 	}
