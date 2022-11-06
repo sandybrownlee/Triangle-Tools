@@ -272,7 +272,6 @@ public class Parser {
 		start(commandPos);
 
 		switch (currentToken.kind) {
-
 		case Token.IDENTIFIER: {
 			Identifier iAST = parseIdentifier();
 			if (currentToken.kind == Token.LPAREN) {
@@ -283,12 +282,38 @@ public class Parser {
 				commandAST = new CallCommand(iAST, apsAST, commandPos);
 
 			} else {
-
 				Vname vAST = parseRestOfVname(iAST);
-				accept(Token.BECOMES);
-				Expression eAST = parseExpression();
-				finish(commandPos);
-				commandAST = new AssignCommand(vAST, eAST, commandPos);
+				if (currentToken.kind == Token.OPERATOR && currentToken.spelling.equals("++")) {
+					acceptIt();
+
+					//Create interliteral for the 1
+					IntegerLiteral il = new IntegerLiteral("1", commandPos);
+
+					//Wraps in an IntegerExpression
+					IntegerExpression ie = new IntegerExpression(il, commandPos);
+
+					// Variable name gets wrapped in VnameExpression
+					VnameExpression vne = new VnameExpression(vAST, commandPos);
+
+					// Operator will be + (each operator is defined by its spelling)
+					Operator op = new Operator("+", commandPos);
+
+					// Assemble expression into a BinaryExpression for a + 1
+					Expression eAST = new BinaryExpression(vne, op, ie, commandPos);
+
+					// Sets last line of command for debugging
+					finish(commandPos);
+
+					// Create assignment with binary expression on right
+					commandAST = new AssignCommand(vAST, eAST, commandPos);
+
+				}
+				else {
+					accept(Token.BECOMES);
+					Expression eAST = parseExpression();
+					finish(commandPos);
+					commandAST = new AssignCommand(vAST, eAST, commandPos);
+				}
 			}
 		}
 			break;
