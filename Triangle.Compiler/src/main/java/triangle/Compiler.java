@@ -137,8 +137,8 @@ public class Compiler {
 
 		var compiledOK = compileProgram(sourceName, objectName, showTree, showTreeOptimised, false);
 
-		if (!showTree && !showTreeOptimised) {
-			System.exit(compiledOK ? 0 : 1);
+		if (!compiledOK && !showTree && !showTreeOptimised) {
+			System.exit(1);
 		}
 	}
 }
