@@ -8,6 +8,7 @@ import triangle.abstractSyntaxTrees.commands.LetCommand;
 import triangle.abstractSyntaxTrees.commands.SequentialCommand;
 import triangle.abstractSyntaxTrees.commands.WhileCommand;
 import triangle.abstractSyntaxTrees.commands.RepeatCommand;
+import triangle.abstractSyntaxTrees.commands.LoopCommand;
 
 public interface CommandVisitor<TArg, TResult> {
 
@@ -26,5 +27,7 @@ public interface CommandVisitor<TArg, TResult> {
 	TResult visitWhileCommand(WhileCommand ast, TArg arg);
 	
 	TResult visitRepeatCommand(RepeatCommand ast, TArg arg);
+
+	TResult visitLoopCommand(LoopCommand ast, TArg arg);
 
 }

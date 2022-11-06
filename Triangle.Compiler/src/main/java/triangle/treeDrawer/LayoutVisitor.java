@@ -36,6 +36,7 @@ import triangle.abstractSyntaxTrees.commands.LetCommand;
 import triangle.abstractSyntaxTrees.commands.SequentialCommand;
 import triangle.abstractSyntaxTrees.commands.WhileCommand;
 import triangle.abstractSyntaxTrees.commands.RepeatCommand;
+import triangle.abstractSyntaxTrees.commands.LoopCommand;
 import triangle.abstractSyntaxTrees.declarations.BinaryOperatorDeclaration;
 import triangle.abstractSyntaxTrees.declarations.ConstDeclaration;
 import triangle.abstractSyntaxTrees.declarations.FuncDeclaration;
@@ -115,6 +116,14 @@ public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
 
 	// Commands
 	@Override
+	public DrawingTree visitLoopCommand(LoopCommand ast, Void obj) {
+		var d1 = ast.E.visit(this);
+		var d2 = ast.C1.visit(this);
+		var d3 = ast.C2.visit(this);
+		return layoutTernary("LoopCom.", d1, d2, d3);
+	}
+
+	@Override
 	public DrawingTree visitRepeatCommand(RepeatCommand ast, Void obj) {
 		var d1 = ast.E.visit(this);
 		var d2 = ast.C.visit(this);
@@ -176,12 +185,20 @@ public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
 		return layoutUnary("ArrayExpr.", d1);
 	}
 
+	// @Override
+	// public DrawingTree visitBinaryExpression(BinaryExpression ast, Void obj) {
+	// 	var d1 = ast.E1.visit(this);
+	// 	var d2 = ast.O.visit(this);
+	// 	var d3 = ast.E2.visit(this);
+	// 	return layoutTernary("Bin.Expr.", d1, d2, d3);
+	// }
+
 	@Override
 	public DrawingTree visitBinaryExpression(BinaryExpression ast, Void obj) {
 		var d1 = ast.E1.visit(this);
-		var d2 = ast.O.visit(this);
-		var d3 = ast.E2.visit(this);
-		return layoutTernary("Bin.Expr.", d1, d2, d3);
+		String operatorSpelling = ast.O.spelling;
+		var d2 = ast.E2.visit(this);
+		return layoutBinary("Bin.Expr. " + operatorSpelling, d1, d2);
 	}
 
 	@Override
@@ -229,11 +246,18 @@ public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
 		return layoutUnary("Rec.Expr.", d1);
 	}
 
+	// @Override
+	// public DrawingTree visitUnaryExpression(UnaryExpression ast, Void obj) {
+	// 	var d1 = ast.O.visit(this);
+	// 	var d2 = ast.E.visit(this);
+	// 	return layoutBinary("UnaryExpr.", d1, d2);
+	// }
+
 	@Override
 	public DrawingTree visitUnaryExpression(UnaryExpression ast, Void obj) {
-		var d1 = ast.O.visit(this);
-		var d2 = ast.E.visit(this);
-		return layoutBinary("UnaryExpr.", d1, d2);
+		String operatorSpelling = ast.O.spelling;
+		var d1 = ast.E.visit(this);
+		return layoutUnary("UnaryExpr. " + operatorSpelling, d1);
 	}
 
 	@Override

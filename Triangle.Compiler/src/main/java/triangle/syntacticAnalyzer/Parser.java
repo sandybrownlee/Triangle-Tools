@@ -40,6 +40,7 @@ import triangle.abstractSyntaxTrees.commands.LetCommand;
 import triangle.abstractSyntaxTrees.commands.SequentialCommand;
 import triangle.abstractSyntaxTrees.commands.WhileCommand;
 import triangle.abstractSyntaxTrees.commands.RepeatCommand;
+import triangle.abstractSyntaxTrees.commands.LoopCommand;
 import triangle.abstractSyntaxTrees.declarations.ConstDeclaration;
 import triangle.abstractSyntaxTrees.declarations.Declaration;
 import triangle.abstractSyntaxTrees.declarations.FuncDeclaration;
@@ -313,6 +314,22 @@ public class Parser {
 					
 					// we need to make an assignment, with a binary expression on the right
 					commandAST = new AssignCommand(vAST, eAST, commandPos);
+				} else if (currentToken.kind == Token.OPERATOR && currentToken.spelling.equals("--")){
+					acceptIt();
+
+					IntegerLiteral il = new IntegerLiteral("1", commandPos);
+
+					IntegerExpression ie = new IntegerExpression(il, commandPos);
+
+					VnameExpression vne = new VnameExpression(vAST, commandPos);
+					
+					Operator op = new Operator("-", commandPos);
+					
+					Expression eAST = new BinaryExpression(vne, op, ie, commandPos);
+					
+					finish(commandPos);
+					
+					commandAST = new AssignCommand(vAST, eAST, commandPos);
 				} else {
 					accept(Token.BECOMES);
 					Expression eAST = parseExpression();
@@ -328,7 +345,13 @@ public class Parser {
 			commandAST = parseCommand();
 			accept(Token.END);
 			break;
-
+		
+		case Token.LCURLY:
+			acceptIt();
+			commandAST = parseCommand();
+			accept(Token.RCURLY);
+			break;
+	
 		case Token.LET: {
 			acceptIt();
 			Declaration dAST = parseDeclaration();
@@ -371,11 +394,24 @@ public class Parser {
 		}
 			break;
 
+		case Token.LOOP: {
+			acceptIt();
+			Command cAST1 = parseSingleCommand();
+			accept(Token.WHILE);
+			Expression eAST = parseExpression();
+			accept(Token.DO);
+			Command cAST2 = parseSingleCommand();
+			finish(commandPos);
+			commandAST = new LoopCommand(eAST, cAST1, cAST2, commandPos);
+		}
+			break;
+
 		case Token.SEMICOLON:
 		case Token.END:
 		case Token.ELSE:
 		case Token.IN:
 		case Token.EOT:
+		case Token.RCURLY:
 
 			finish(commandPos);
 			commandAST = new EmptyCommand(commandPos);

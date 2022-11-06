@@ -44,10 +44,19 @@ public class TestScanner {
 	}
 	
 	@Test
-	public void testadd() {
+	public void testAdd() {
 		compileExpectSuccess("/add.tri");
 	}
 	
+	@Test
+	public void testDecrement() {
+		compileExpectSuccess("/decrement.tri");
+	}
+
+	@Test
+	public void testWhileCurly() {
+		compileExpectSuccess("/while-curly.tri");
+	}
 	
 	
 	

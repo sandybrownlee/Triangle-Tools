@@ -1,14 +1,16 @@
-! this won't work until after some lab work
+! print out ababababa
 
 let
   var a : Integer
 in
 begin
   a := 0;
-  repeat
+  loop
   begin
     put('a');
     a := a + 1;
   end
-  until a >= 5
+  while a < 5 do
+  	put('b');
+  
 end

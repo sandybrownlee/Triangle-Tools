@@ -27,4 +27,15 @@
 			<location>/home/david/Documents/ERASMUS-stirling/courses/autumn/CSCU9A5-Code-Analysis-And-Performance/week234/Triangle-Tools/programs</location>
 		</link>
 	</linkedResources>
+	<filteredResources>
+		<filter>
+			<id>1667475364042</id>
+			<name></name>
+			<type>30</type>
+			<matcher>
+				<id>org.eclipse.core.resources.regexFilterMatcher</id>
+				<arguments>node_modules|\.git|__CREATED_BY_JAVA_LANGUAGE_SERVER__</arguments>
+			</matcher>
+		</filter>
+	</filteredResources>
 </projectDescription>
