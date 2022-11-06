@@ -25,8 +25,6 @@ import triangle.syntacticAnalyzer.SourceFile;
 import triangle.treeDrawer.Drawer;
 import triangle.statsAnalyzer.Statistics;
 
-import java.util.List;
-
 import com.sampullara.cli.Args;
 import com.sampullara.cli.Argument;
 
@@ -54,6 +52,8 @@ public class Compiler {
 	public static boolean folding = false;
 	@Argument(alias = "S", description = "Show statistics")
 	public static boolean stats = false;
+	@Argument(alias = "p", description = "Show the abstract syntax tree post-folding")
+	public static boolean postShowingAST;
 
 	private static Scanner scanner;
 	private static Parser parser;
@@ -61,7 +61,8 @@ public class Compiler {
 	private static Encoder encoder;
 	private static Emitter emitter;
 	private static ErrorReporter reporter;
-	private static Drawer drawer;
+	private static Drawer drawerBefore;
+	private static Drawer drawerAfter;
 	private static Statistics statistics;
 
 	/** The AST representing the source program. */
@@ -100,7 +101,8 @@ public class Compiler {
 		statistics = new Statistics();
 		emitter = new Emitter(reporter);
 		encoder = new Encoder(emitter, reporter);
-		drawer = new Drawer();
+		drawerBefore = new Drawer();
+		drawerAfter = new Drawer();
 
 		// scanner.enableDebugging();
 		theAST = parser.parseProgram(); // 1st pass
@@ -109,14 +111,17 @@ public class Compiler {
 			// drawer.draw(theAST);
 			// }
 			System.out.println("Contextual Analysis ...");
-			checker.check(theAST); // 2nd pass
 			if (showingAST) {
-				drawer.draw(theAST);
+				drawerBefore.draw(theAST);
 			}
+			checker.check(theAST); // 2nd pass
+			
 			if (folding) {
 				theAST.visit(new ConstantFolder());
 			}
-
+			if (postShowingAST) {
+				drawerAfter.draw(theAST);
+			}
 			if (stats) {
 				statistics.read(theAST);
 			}
@@ -163,21 +168,6 @@ public class Compiler {
 
 		if (!showTree) {
 			System.exit(compiledOK ? 0 : 1);
-		}
-	}
-
-	private static void parseArgs(String[] args) {
-		for (String s : args) {
-			var sl = s.toLowerCase();
-			if (sl.equals("tree")) {
-				showTree = true;
-			} else if (sl.startsWith("-o=")) {
-				objectName = s.substring(3);
-			} else if (sl.equals("folding")) {
-				folding = true;
-			} else if (sl.equals("stats")) {
-				stats = true;
-			}
 		}
 	}
 }

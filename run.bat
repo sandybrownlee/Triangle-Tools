@@ -5,4 +5,4 @@ set compiler_setting2="%~3"
 set compiler_setting3="%~4"
 set compiler_setting4="%~5"
 java -cp build/libs/Triangle-Tools.jar triangle.Compiler -s programs/%source% -o %source%.tam %compiler_setting1% %compiler_setting2% %compiler_setting3% %compiler_setting4% %compiler_setting5%
-java -cp build/libs/Triangle-Tools.jar triangle.abstractMachine.Interpreter "obj.tam"
+java -cp build/libs/Triangle-Tools.jar triangle.abstractMachine.Interpreter %source%.tam

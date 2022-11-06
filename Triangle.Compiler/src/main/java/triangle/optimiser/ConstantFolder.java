@@ -591,6 +591,7 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 			int int2 = (Integer.parseInt(((IntegerExpression) node2).IL.spelling));
 			Object foldedValue = null;
 
+			/* Integers */
 			if (o.decl == StdEnvironment.addDecl) {
 				foldedValue = int1 + int2;
 			} else if (o.decl == StdEnvironment.divideDecl) {
@@ -602,13 +603,42 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 			} else if (o.decl == StdEnvironment.multiplyDecl) {
 				foldedValue = int1 * int2;
 			}
+
+			/* Booleans */
+			else if (o.decl == StdEnvironment.equalDecl) {
+				foldedValue = int1 == int2;
+			} else if (o.decl == StdEnvironment.lessDecl) {
+				foldedValue = int1 < int2;
+			} else if (o.decl == StdEnvironment.notgreaterDecl) {
+				foldedValue = int1 <= int2;
+			} else if (o.decl == StdEnvironment.greaterDecl) {
+				foldedValue = int1 > int2;
+			} else if (o.decl == StdEnvironment.notlessDecl) {
+				foldedValue = int1 >= int2;
+			} else if (o.decl == StdEnvironment.unequalDecl) {
+				foldedValue = int1 != int2;
+			}
 			if (foldedValue instanceof Integer) {
 				IntegerLiteral il = new IntegerLiteral(foldedValue.toString(), node1.getPosition());
 				IntegerExpression ie = new IntegerExpression(il, node1.getPosition());
 				ie.type = StdEnvironment.integerType;
 				return ie;
 			} else if (foldedValue instanceof Boolean) {
-				/* currently not handled! */
+				//Make an identifier object with the spelling "true" or "false"
+				Identifier bl = new Identifier(foldedValue.toString(), node1.getPosition());
+				//Set the decl attribute to StdEnvironment.[value]Decl
+				if ((Boolean) foldedValue) {
+					bl.decl = StdEnvironment.trueDecl;
+				} else {
+					bl.decl = StdEnvironment.falseDecl;
+				}
+				//Wrap in a SimpleVname
+				SimpleVname be = new SimpleVname(bl, node1.getPosition());
+				//Wrap in a VnameExpression
+				VnameExpression bve = new VnameExpression(be, node1.getPosition());
+				//Set type
+				bve.type = StdEnvironment.booleanType;
+				return bve;
 			}
 		}
 
