@@ -117,7 +117,6 @@ public class Compiler {
 			}
 			
 			
-			
 			/*if (foldThenShowTree) {
 				//theAST.visit(new ConstantFolder());
 				drawer.draw(theAST);
