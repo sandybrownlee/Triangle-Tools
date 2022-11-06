@@ -45,6 +45,8 @@ public class Compiler {
 	static boolean folding = false;
 	@Argument(alias = "treeAfter",description = "Show the tree after optimisations occur", required = false)
 	static boolean showTreeOptimised = false;
+	@Argument(alias = "s",description = "Show the summary statistics", required = false)
+	static boolean stats = false;
 
 	private static Scanner scanner;
 	private static Parser parser;
@@ -53,6 +55,7 @@ public class Compiler {
 	private static Emitter emitter;
 	private static ErrorReporter reporter;
 	private static Drawer drawer;
+	private static Summariser summariser;
 
 	/** The AST representing the source program. */
 	private static Program theAST;
@@ -89,6 +92,7 @@ public class Compiler {
 		emitter = new Emitter(reporter);
 		encoder = new Encoder(emitter, reporter);
 		drawer = new Drawer();
+		summariser = new Summariser();
 
 		// scanner.enableDebugging();
 		theAST = parser.parseProgram(); // 1st pass
@@ -106,6 +110,14 @@ public class Compiler {
 			}
 			if (showingASTAfter) {
 				drawer.draw(theAST);
+			}
+			if (stats){
+				System.out.println("Generating Summary ...");
+				theAST.visit(summariser);
+				System.out.println("Number of Binary Expressions: " + summariser.getNumBinaryExpressions());
+				System.out.println("Number of If Commands: "+ summariser.getNumIfCommands());
+				System.out.println("Number of While Commands: "+  summariser.getNumWhileCommands());
+
 			}
 
 			if (reporter.getNumErrors() == 0) {
