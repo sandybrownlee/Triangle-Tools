@@ -3,9 +3,18 @@ apply plugin: 'java'
 sourceCompatibility = 11
 
 subprojects.each { subproject ->
-  evaluationDependsOn(subproject.path)
+    evaluationDependsOn(subproject.path)
 }
 
 jar {
-  from subprojects.sourceSets.main.output
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from subprojects.sourceSets.main.output
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+repositories {
+    mavenCentral()
 }
