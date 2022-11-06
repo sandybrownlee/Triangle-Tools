@@ -179,6 +179,7 @@ public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
 		var d1 = ast.E1.visit(this);
 		var d2 = ast.O.visit(this);
 		var d3 = ast.E2.visit(this);
+		//Converting expression to display operator's spelling.
 		return layoutTernary("Bin.Expr." + "(" + d2.caption + ")",d1,d2,d3);
 	}
 
@@ -231,6 +232,7 @@ public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
 	public DrawingTree visitUnaryExpression(UnaryExpression ast, Void obj) {
 		var d1 = ast.O.visit(this);
 		var d2 = ast.E.visit(this);
+		//Converting expression to display operator's spelling.
 		return layoutBinary("UnaryExpr." + "(" + d2.caption + ")",d1,d2);
 	}
 
