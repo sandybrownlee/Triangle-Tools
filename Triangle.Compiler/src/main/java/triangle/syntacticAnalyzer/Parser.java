@@ -286,7 +286,7 @@ public class Parser {
 				if (currentToken.kind == Token.OPERATOR && currentToken.spelling.equals("--")) {
 					acceptIt();
 
-					//Create interliteral for the 1
+					//Create interliteral for the -1
 					IntegerLiteral il = new IntegerLiteral("-1", commandPos);
 
 					//Wraps in an IntegerExpression
