@@ -109,7 +109,7 @@ public class Compiler {
 				theAST.visit(new ConstantFolder());
 			}
 
-			if (showTreeAfterFolding) {
+			if (showingAST && showTreeAfterFolding) {
 				drawer.draw(theAST);
 			}
 			
