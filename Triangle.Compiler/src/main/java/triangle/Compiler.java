@@ -14,6 +14,7 @@
 
 package triangle;
 
+import com.sampullara.cli.Argument;
 import triangle.abstractSyntaxTrees.Program;
 import triangle.codeGenerator.Emitter;
 import triangle.codeGenerator.Encoder;
@@ -130,7 +131,7 @@ public class Compiler {
 			System.exit(compiledOK ? 0 : 1);
 		}
 	}
-	
+
 	private static void parseArgs(String[] args) {
 		for (String s : args) {
 			var sl = s.toLowerCase();
@@ -140,5 +141,14 @@ public class Compiler {
 				objectName = s.substring(3);
 			}
 		}
+	}
+
+	private class Loader {
+		@Argument(alias = "tree", description = "If to output tree", required = false)
+		Boolean tree = false;
+		@Argument(alias = "-o=", description = "Regular expression to parse lines", required = true)
+		String regex;
+		@Argument(alias = "folding", description = "If to output tree", required = false)
+		Boolean folding = false;
 	}
 }
