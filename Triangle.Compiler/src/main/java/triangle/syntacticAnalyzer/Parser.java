@@ -295,10 +295,10 @@ public class Parser {
 					// Variable name gets wrapped in VnameExpression
 					VnameExpression vne = new VnameExpression(vAST, commandPos);
 
-					// Operator will be + (each operator is defined by its spelling)
+					// Operator will be - (each operator is defined by its spelling)
 					Operator op = new Operator("-", commandPos);
 
-					// Assemble expression into a BinaryExpression for a + 1
+					// Assemble expression into a BinaryExpression for a - 1
 					Expression eAST = new BinaryExpression(vne, op, ie, commandPos);
 
 					// Sets last line of command for debugging
