@@ -317,6 +317,15 @@ public class Parser {
 			commandAST = parseCommand();
 			accept(Token.END);
 			break;
+			
+		//add new case for '{'
+		case Token.LCURLY:
+			acceptIt();
+			commandAST = parseCommand();
+			accept(Token.RCURLY);
+			
+		
+		break;
 
 		case Token.LET: {
 			acceptIt();
@@ -360,11 +369,13 @@ public class Parser {
 		}
 			break;
 
+		
 		case Token.SEMICOLON:
 		case Token.END:
 		case Token.ELSE:
 		case Token.IN:
 		case Token.EOT:
+		case Token.RCURLY: //add case for '}'
 
 			finish(commandPos);
 			commandAST = new EmptyCommand(commandPos);
