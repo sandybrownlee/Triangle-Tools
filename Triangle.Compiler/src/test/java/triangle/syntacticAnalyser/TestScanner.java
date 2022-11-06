@@ -20,90 +20,60 @@ public class TestScanner {
 	@Test
 	public void testHi() throws IOException {
 		compileExpectSuccess("/hi.tri");
-
-		String actualOutput = readTAMFileOutput("hi.tam");
-		String expectedOutput = "Hi!";
-		assertEquals(expectedOutput,actualOutput);
-
+		testTAMOutput("hi.tam","Hi!");
 	}
 
 	@Test
 	public void testLoopWhile() throws IOException {
 		compileExpectSuccess("/loopwhile.tri");
-
-		String actualOutput = readTAMFileOutput("loopwhile.tam");
-		String expectedOutput = "ababababa";
-		assertEquals(expectedOutput,actualOutput);
+		testTAMOutput("loopwhile.tam","ababababa");
 
 		//Test the folded version of the program
-		String actualOutputFolded = readTAMFileOutput("loopwhilefolded.tam");
-		String expectedOutputFolded = "ababababa";
-		assertEquals(expectedOutputFolded,actualOutputFolded);
+		testTAMOutput("loopwhilefolded.tam","ababababa");
 	}
 
 	@Test
 	public void testWhileCurly() throws IOException {
 		compileExpectSuccess("/while-curly.tri");
 
-		String actualOutput = readTAMFileOutput("while-curly.tam");
-		String expectedOutput = "aaaaa";
-		assertEquals(expectedOutput,actualOutput);
+		testTAMOutput("while-curly.tam","aaaaa");
 
 		//Test the folded version of the program
-		String actualOutputFolded = readTAMFileOutput("while-curlyfolded.tam");
-		String expectedOutputFolded = "aaaaa";
-		assertEquals(expectedOutputFolded,actualOutputFolded);
+		testTAMOutput("while-curlyfolded.tam","aaaaa");
 	}
 	@Test
 	public void testDecrement() throws IOException {
 		compileExpectSuccess("/decrement.tri");
 
 		//Test with the number to decrement being 5
-		String actualOutput = readTAMFileOutput("dectestpositivenum.tam");
-		String expectedOutput = "43";
-		assertEquals(expectedOutput,actualOutput);
+		testTAMOutput("dectestpositivenum.tam","43");
 
 		//Test with the number to decrement being 0
-		String actualOutput2 = readTAMFileOutput("dectestzero.tam");
-		String expectedOutput2 = "-1-2";
-		assertEquals(expectedOutput2,actualOutput2);
+		testTAMOutput("dectestzero.tam","-1-2");
 
 		//Test with the number to decrement being -5
-		String actualOutput3 = readTAMFileOutput("dectestnegativenum.tam");
-		String expectedOutput3 = "-6-7";
-		assertEquals(expectedOutput3,actualOutput3);
+		testTAMOutput("dectestnegativenum.tam","-6-7");
 
 		//TEST THE FOLDED VERSION OF THE PROGRAMS
 
 		//Test with the number to decrement being 5
-		String actualOutputFolded = readTAMFileOutput("dectestpositivenumfolded.tam");
-		String expectedOutputFolded = "43";
-		assertEquals(expectedOutputFolded,actualOutputFolded);
+		testTAMOutput("dectestpositivenumfolded.tam","43");
 
 		//Test with the number to decrement being 0
-		String actualOutputFolded2 = readTAMFileOutput("dectestzerofolded.tam");
-		String expectedOutputFolded2 = "-1-2";
-		assertEquals(expectedOutputFolded2,actualOutputFolded2);
+		testTAMOutput("dectestzerofolded.tam","-1-2");
 
 		//Test with the number to decrement being -5
-		String actualOutputFolded3 = readTAMFileOutput("dectestnegativenumfolded.tam");
-		String expectedOutputFolded3 = "-6-7";
-		assertEquals(expectedOutputFolded3,actualOutputFolded3);
+		testTAMOutput("dectestnegativenumfolded.tam","-6-7");
 
 		//Test with the number being above the word limit
-		String actualOutput4 = readTAMFileOutput("decrementoverflow.tam");
-		String expectedOutput4 = "Program has failed due to overflow.";
-		assertEquals(expectedOutput4,actualOutput4);
+		testTAMOutput("decrementoverflow.tam","Program has failed due to overflow.");
 
 	}
 
 	@Test
 	public void testBarDemo() throws IOException {
 		compileExpectSuccess("/bardemo.tri");
-
-		String actualOutputFolded = readTAMFileOutput("bardemo.tam");
-		String expectedOutputFolded = "12100200";
-		assertEquals(expectedOutputFolded,actualOutputFolded);
+		testTAMOutput("bardemo.tam","12100200");
 	}
 
 
@@ -149,6 +119,10 @@ public class TestScanner {
 		assertNotEquals("Problem compiling " + filename, 0, reporter.getNumErrors());
 	}
 
+	private void testTAMOutput(String tamFileName,String expectedOutput) throws IOException {
+		String actualOutput = readTAMFileOutput(tamFileName); //Reads the output of the tam file for the test
+		assertEquals(expectedOutput,actualOutput);
+	}
 
 
 	private String readTAMFileOutput(String fileName) throws IOException {
