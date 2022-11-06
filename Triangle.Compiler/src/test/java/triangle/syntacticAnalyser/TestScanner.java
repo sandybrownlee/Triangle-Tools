@@ -30,7 +30,16 @@ public class TestScanner {
 	public void testHiNewComment2() {
 		compileExpectFailure("/hi-newcomment2.tri");
 	}
-	
+
+	@Test
+	public void testIncrement() {
+		compileExpectSuccess("/increment.tri");
+	}
+
+	@Test
+	public void testDecrement() {
+		compileExpectSuccess("/decrement.tri");
+	}
 
 	@Test
 	public void testBarDemo() {
