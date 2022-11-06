@@ -39,6 +39,15 @@ public class TestEncoder {
         assertEquals(expected[0], output[1].trim());
         assertEquals(expected[1], output[2].trim());
     }
+    
+    @Test
+    public void testLoopWhile(){
+        compile("C:/Users/milif/Desktop/Triangle-Tools/programs/loopwhile.tri");
+        testOut.reset();
+        Interpreter.main(new String[0]);
+        String[] output = getOutput().split("\\n");
+        assertEquals("ababababa", output[1].trim());
+    }
 
     @After
     public void restoreSystemInputOutput() {

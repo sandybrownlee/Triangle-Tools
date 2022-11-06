@@ -67,6 +67,11 @@ public class TestScanner {
 	public void testDecrement() {
 		compileExpectSuccess("/decrement.tri");
 	}
+
+	@Test
+	public void testLoopWhile() {
+		compileExpectSuccess("/loopwhile.tri");
+	}
 	
 	
 	
