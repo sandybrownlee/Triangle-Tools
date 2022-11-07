@@ -54,6 +54,11 @@ public class TestScanner {
 		compileExpectSuccess("/repeatuntil.tri");
 	}
 	
+	//Add test for loop-while-do!
+	@Test
+	public void testLoopWhile() {
+		compileExpectSuccess("/loopwhile.tri");
+	}
 	
 	
 	private void compileExpectSuccess(String filename) {

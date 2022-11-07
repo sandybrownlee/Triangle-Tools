@@ -40,6 +40,7 @@ import triangle.abstractSyntaxTrees.commands.LetCommand;
 import triangle.abstractSyntaxTrees.commands.RepeatCommand;
 import triangle.abstractSyntaxTrees.commands.SequentialCommand;
 import triangle.abstractSyntaxTrees.commands.WhileCommand;
+import triangle.abstractSyntaxTrees.commands.LoopWhileCommand;
 import triangle.abstractSyntaxTrees.declarations.ConstDeclaration;
 import triangle.abstractSyntaxTrees.declarations.Declaration;
 import triangle.abstractSyntaxTrees.declarations.FuncDeclaration;
@@ -320,12 +321,12 @@ public class Parser {
 			
 		//add new case for '{'
 		case Token.LCURLY:
+			//consume current token
 			acceptIt();
+			//parse command until '}' is encountered
 			commandAST = parseCommand();
 			accept(Token.RCURLY);
-			
-		
-		break;
+			break;
 
 		case Token.LET: {
 			acceptIt();
@@ -360,12 +361,23 @@ public class Parser {
 			break;
 		case Token.REPEAT: {
 			acceptIt();
-		
 			Command cAST = parseSingleCommand();
 			accept(Token.UNTIL);
 			Expression eAST = parseExpression();
 			finish(commandPos);
 			commandAST = new RepeatCommand(eAST, cAST, commandPos);
+		}
+			break;
+			
+		case Token.LOOP: {
+			acceptIt();
+			Command cAST_1 = parseSingleCommand();
+			accept(Token.WHILE);
+			Expression eAST = parseExpression();
+			accept(Token.DO);
+			Command cAST_2 = parseSingleCommand();
+			finish(commandPos);
+			commandAST = new LoopWhileCommand(eAST, cAST_1, cAST_2, commandPos);
 		}
 			break;
 
@@ -375,7 +387,7 @@ public class Parser {
 		case Token.ELSE:
 		case Token.IN:
 		case Token.EOT:
-		case Token.RCURLY: //add case for '}'
+		case Token.RCURLY: //add case for '}' 
 
 			finish(commandPos);
 			commandAST = new EmptyCommand(commandPos);

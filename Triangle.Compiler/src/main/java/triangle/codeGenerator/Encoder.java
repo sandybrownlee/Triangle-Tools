@@ -41,6 +41,7 @@ import triangle.abstractSyntaxTrees.commands.LetCommand;
 import triangle.abstractSyntaxTrees.commands.RepeatCommand;
 import triangle.abstractSyntaxTrees.commands.SequentialCommand;
 import triangle.abstractSyntaxTrees.commands.WhileCommand;
+import triangle.abstractSyntaxTrees.commands.LoopWhileCommand;
 import triangle.abstractSyntaxTrees.declarations.BinaryOperatorDeclaration;
 import triangle.abstractSyntaxTrees.declarations.ConstDeclaration;
 import triangle.abstractSyntaxTrees.declarations.Declaration;
@@ -100,6 +101,7 @@ import triangle.abstractSyntaxTrees.vnames.DotVname;
 import triangle.abstractSyntaxTrees.vnames.SimpleVname;
 import triangle.abstractSyntaxTrees.vnames.SubscriptVname;
 import triangle.abstractSyntaxTrees.vnames.Vname;
+import triangle.abstractSyntaxTrees.commands.LoopWhileCommand;
 import triangle.codeGenerator.entities.AddressableEntity;
 import triangle.codeGenerator.entities.BarPrimitiveRoutine;
 import triangle.codeGenerator.entities.EqualityRoutine;
@@ -115,6 +117,7 @@ import triangle.codeGenerator.entities.TypeRepresentation;
 import triangle.codeGenerator.entities.UnknownAddress;
 import triangle.codeGenerator.entities.UnknownRoutine;
 import triangle.codeGenerator.entities.UnknownValue;
+
 
 public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 		ActualParameterSequenceVisitor<Frame, Integer>, ArrayAggregateVisitor<Frame, Integer>,
@@ -184,15 +187,26 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 	}
 	@Override
 	public Void visitRepeatCommand(RepeatCommand ast, Frame frame) {
-		//needs rearranging
-		//var jumpAddr = emitter.emit(OpCode.JUMP, 0, Register.CB, 0);
 		var loopAddr = emitter.getNextInstrAddr();
-		ast.E.visit(this, frame);
 		ast.C.visit(this, frame);
-		//emitter.patch(jumpAddr);
+		ast.E.visit(this, frame);
+		emitter.emit(OpCode.JUMPIF, Machine.falseRep, Register.CB, loopAddr);
 		
+		return null;
+	}
+	@Override
+	public Void visitLoopWhileCommand(LoopWhileCommand ast, Frame frame) {
+		//Similar to visitWhileCommand but jump to C1 first
+		var jumpAddr = emitter.emit(OpCode.JUMP, 0, Register.CB, 0); //we want only once to store at 0 because we will soon know the jump address
+		var loopAddr = emitter.getNextInstrAddr();
+		//jump to C2 if JUMPIF (1)
+		ast.C2.visit(this, frame);
+		emitter.patch(jumpAddr);  //backpatching
+		ast.C1.visit(this, frame);
+		ast.E.visit(this, frame);		
 		emitter.emit(OpCode.JUMPIF, Machine.trueRep, Register.CB, loopAddr);
 		return null;
+		
 	}
 
 	// Expressions
