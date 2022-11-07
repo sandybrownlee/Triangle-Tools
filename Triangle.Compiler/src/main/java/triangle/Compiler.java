@@ -41,7 +41,7 @@ public class Compiler {
 	@Argument(alias = "showAbstractSyntaxTree", description = "True if the Abstract Syntax Tree is to be displayed after contextual analysis.")
 	static boolean showTree = false;
 
-	@Argument(alias = "showAbstractSyntaxTreeAfterFoldingIsComplete", description = "True if the Abstract Syntax Tree is to be displayed after contextual analysis and folding is complete.")
+	@Argument(alias = "showTreeAfterFolding", description = "True if the Abstract Syntax Tree is to be displayed after contextual analysis and folding is complete.")
 	static boolean showTreeAfterFolding = false;
 
 	@Argument(alias = "isFolding", description = "True if the program is to be folded.")
@@ -56,7 +56,7 @@ public class Compiler {
 	private static Encoder encoder;
 	private static Emitter emitter;
 	private static ErrorReporter reporter;
-	private static Drawer drawer;
+	private static Drawer drawer, anotherDrawer;
 
 	/** The AST representing the source program. */
 	private static Program theAST;
@@ -93,6 +93,7 @@ public class Compiler {
 		emitter = new Emitter(reporter);
 		encoder = new Encoder(emitter, reporter);
 		drawer = new Drawer();
+		anotherDrawer = new Drawer();
 
 		// scanner.enableDebugging();
 		theAST = parser.parseProgram(); // 1st pass
@@ -107,11 +108,13 @@ public class Compiler {
 			}
 			if (folding) {
 				theAST.visit(new ConstantFolder());
+				if (showingAST && showTreeAfterFolding) {
+					theAST.visit(new ConstantFolder());
+					anotherDrawer.draw(theAST);
+				}
 			}
 
-			if (showingAST && showTreeAfterFolding) {
-				drawer.draw(theAST);
-			}
+
 			
 			if (reporter.getNumErrors() == 0) {
 				System.out.println("Code Generation ...");
@@ -145,7 +148,7 @@ public class Compiler {
 
 		var compiledOK = compileProgram(sourceName, objectName, showTree, showTreeAfterFolding, false);
 
-		if (!showTree) {
+		if (!showTree && !showTreeAfterFolding) {
 			System.exit(compiledOK ? 0 : 1);
 		}
 	}
