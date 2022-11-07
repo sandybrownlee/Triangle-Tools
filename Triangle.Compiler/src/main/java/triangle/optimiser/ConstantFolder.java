@@ -154,7 +154,6 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 
 	@Override
 	public AbstractSyntaxTree visitSimpleVname(SimpleVname ast, Void arg) {
-		System.out.println(ast.I.spelling);
 		ast.I.visit(this);
 		return null;
 	}
@@ -492,24 +491,24 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 
 	@Override
 	public AbstractSyntaxTree visitSequentialCommand(SequentialCommand ast, Void arg) {
-//		if (ast.C2 instanceof WhileCommand && !(hoisted.contains(ast.getPosition()))) {
-//			WhileHoister hoister = new WhileHoister();
-//			ast.C2.visit(hoister);
-//			hoister.completeAssignment();
-//			ArrayList<Expression> constant = new ArrayList<Expression>();
-//			ast.C2.visit(hoister);
-//			constant = hoister.getConstant();
-//			Command sc = ast.C1;
-//			for (int x = 0; x < constant.size(); x++) {
-//				Identifier i = new Identifier("hoist" + Integer.toString(x), ast.C2.getPosition());
-//				SimpleVname vn = new SimpleVname(i, ast.C2.getPosition());
-//				AssignCommand as = new AssignCommand(vn, constant.get(x), ast.C2.getPosition());
-//				sc = new SequentialCommand(sc, as, ast.C1.getPosition());
-//			}
-//			//Place new SC at ast.c1
-//			//ast.C1 = sc;
-//			hoisted.add(ast.getPosition());
-//		}
+		if (ast.C2 instanceof WhileCommand && !(hoisted.contains(ast.getPosition()))) {
+			WhileHoister hoister = new WhileHoister();
+			ast.C2.visit(hoister);
+			hoister.completeAssignment();
+			ArrayList<Expression> constant = hoister.getConstant();
+			ast.C2.visit(hoister);
+			ArrayList<Identifier> hoistVariables = hoister.getHoistVariables();
+			Command sc = ast.C1;
+			for (int x = 0; x < constant.size(); x++) {
+				Identifier i = hoistVariables.get(x);
+				SimpleVname vn = new SimpleVname(i, ast.C2.getPosition());
+				AssignCommand as = new AssignCommand(vn, constant.get(x), ast.C2.getPosition());
+				sc = new SequentialCommand(sc, as, ast.C1.getPosition());
+			}
+			//Place new SC at ast.c1
+			ast.C1 = sc;
+			hoisted.add(ast.getPosition());
+		}
 		ast.C1.visit(this);
 		ast.C2.visit(this);
 		return null;

@@ -29,5 +29,5 @@ public class SequentialCommand extends Command {
 		return v.visitSequentialCommand(this, arg);
 	}
 
-	public final Command C1, C2;
+	public Command C1, C2;
 }

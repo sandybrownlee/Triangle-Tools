@@ -99,11 +99,13 @@ public class WhileHoister implements ActualParameterVisitor<Void, AbstractSyntax
 
 	private ArrayList<String> assigned;
 	private ArrayList<Expression> constant;
+	private ArrayList<Identifier> hoistVariables;
 	private boolean assignComplete = false;
 	
 	public WhileHoister() {
 		assigned = new ArrayList<String>();
 		constant = new ArrayList<Expression>();
+		hoistVariables = new ArrayList<Identifier>();
 		assignComplete = false;
 	}
 	
@@ -113,6 +115,10 @@ public class WhileHoister implements ActualParameterVisitor<Void, AbstractSyntax
 	
 	public ArrayList<Expression> getConstant() {
 		return constant;
+	}
+	
+	public ArrayList<Identifier> getHoistVariables() {
+		return hoistVariables;
 	}
 	
 	public void completeAssignment() {
@@ -424,13 +430,13 @@ public class WhileHoister implements ActualParameterVisitor<Void, AbstractSyntax
 	public AbstractSyntaxTree visitAssignCommand(AssignCommand ast, Void arg) {
 		if (assignComplete) {
 			HoistExpression hoister = new HoistExpression(assigned);
-			System.out.println(assigned.size());
 			ast.E.visit(hoister);
 			if (hoister.isHoistable()) {
 				constant.add(ast.E);
 				int index = constant.indexOf(ast.E);
 				Identifier i = new Identifier("hoist"+Integer.toString(index),ast.getPosition());
 				i.decl = ((SimpleVname) ast.V).I.decl;
+				hoistVariables.add(i);
 				SimpleVname vn = new SimpleVname(i, ast.getPosition());
 				VnameExpression ve = new VnameExpression(vn, ast.getPosition());
 				ve.type = ast.E.type;
