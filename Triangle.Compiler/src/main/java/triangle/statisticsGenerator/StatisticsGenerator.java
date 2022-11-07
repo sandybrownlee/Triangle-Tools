@@ -29,9 +29,6 @@ public class StatisticsGenerator implements ActualParameterVisitor<Void, Abstrac
         OperatorVisitor<Void, AbstractSyntaxTree>, ProgramVisitor<Void, AbstractSyntaxTree>,
         RecordAggregateVisitor<Void, AbstractSyntaxTree>, TypeDenoterVisitor<Void, AbstractSyntaxTree>,
         VnameVisitor<Void, AbstractSyntaxTree> {
-    {
-
-    }
 
     private int binaryCount = 0;
     private int ifCount = 0;
@@ -51,38 +48,31 @@ public class StatisticsGenerator implements ActualParameterVisitor<Void, Abstrac
 
     @Override
     public AbstractSyntaxTree visitMultipleActualParameterSequence(MultipleActualParameterSequence ast, Void unused) {
-        ast.AP.visit(this);
-        ast.APS.visit(this);
         return null;
     }
 
     @Override
     public AbstractSyntaxTree visitSingleActualParameterSequence(SingleActualParameterSequence ast, Void unused) {
-        ast.AP.visit(this);
         return null;
     }
 
     @Override
     public AbstractSyntaxTree visitConstActualParameter(ConstActualParameter ast, Void unused) {
-        ast.E.visit(this);
         return null;
     }
 
     @Override
     public AbstractSyntaxTree visitFuncActualParameter(FuncActualParameter ast, Void unused) {
-        ast.I.visit(this);
         return null;
     }
 
     @Override
     public AbstractSyntaxTree visitProcActualParameter(ProcActualParameter ast, Void unused) {
-        ast.I.visit(this);
         return null;
     }
 
     @Override
     public AbstractSyntaxTree visitVarActualParameter(VarActualParameter ast, Void unused) {
-        ast.V.visit(this);
         return null;
     }
 
@@ -164,34 +154,24 @@ public class StatisticsGenerator implements ActualParameterVisitor<Void, Abstrac
 
     @Override
     public AbstractSyntaxTree visitBinaryOperatorDeclaration(BinaryOperatorDeclaration ast, Void unused) {
-        ast.ARG1.visit(this);
-        ast.ARG2.visit(this);
-        ast.O.visit(this);
-        ast.RES.visit(this);
         return null;
     }
 
     @Override
     public AbstractSyntaxTree visitConstDeclaration(ConstDeclaration ast, Void unused) {
         ast.E.visit(this);
-        ast.I.visit(this);
         return null;
     }
 
     @Override
     public AbstractSyntaxTree visitFuncDeclaration(FuncDeclaration ast, Void unused) {
         ast.E.visit(this);
-        ast.FPS.visit(this);
-        ast.I.visit(this);
-        ast.T.visit(this);
         return null;
     }
 
     @Override
     public AbstractSyntaxTree visitProcDeclaration(ProcDeclaration ast, Void unused) {
         ast.C.visit(this);
-        ast.FPS.visit(this);
-        ast.I.visit(this);
         return null;
     }
 
@@ -204,23 +184,16 @@ public class StatisticsGenerator implements ActualParameterVisitor<Void, Abstrac
 
     @Override
     public AbstractSyntaxTree visitTypeDeclaration(TypeDeclaration ast, Void unused) {
-        ast.I.visit(this);
-        ast.T.visit(this);
         return null;
     }
 
     @Override
     public AbstractSyntaxTree visitUnaryOperatorDeclaration(UnaryOperatorDeclaration ast, Void unused) {
-        ast.ARG.visit(this);
-        ast.O.visit(this);
-        ast.RES.visit(this);
         return null;
     }
 
     @Override
     public AbstractSyntaxTree visitVarDeclaration(VarDeclaration ast, Void unused) {
-        ast.I.visit(this);
-        ast.T.visit(this);
         return null;
     }
 
@@ -235,20 +208,16 @@ public class StatisticsGenerator implements ActualParameterVisitor<Void, Abstrac
         binaryCount++;
         ast.E1.visit(this);
         ast.E2.visit(this);
-        ast.O.visit(this);
         return null;
     }
 
     @Override
     public AbstractSyntaxTree visitCallExpression(CallExpression ast, Void unused) {
-        ast.APS.visit(this);
-        ast.I.visit(this);
         return null;
     }
 
     @Override
     public AbstractSyntaxTree visitCharacterExpression(CharacterExpression ast, Void unused) {
-        ast.CL.visit(this);
         return null;
     }
 
@@ -267,12 +236,11 @@ public class StatisticsGenerator implements ActualParameterVisitor<Void, Abstrac
 
     @Override
     public AbstractSyntaxTree visitIntegerExpression(IntegerExpression ast, Void unused) {
-        return ast;
+        return null;
     }
 
     @Override
     public AbstractSyntaxTree visitLetExpression(LetExpression ast, Void unused) {
-        ast.D.visit(this);
         ast.E.visit(this);
         return null;
     }
@@ -286,7 +254,6 @@ public class StatisticsGenerator implements ActualParameterVisitor<Void, Abstrac
     @Override
     public AbstractSyntaxTree visitUnaryExpression(UnaryExpression ast, Void unused) {
         ast.E.visit(this);
-        ast.O.visit(this);
         return null;
     }
 
@@ -298,16 +265,11 @@ public class StatisticsGenerator implements ActualParameterVisitor<Void, Abstrac
 
     @Override
     public AbstractSyntaxTree visitMultipleFieldTypeDenoter(MultipleFieldTypeDenoter ast, Void unused) {
-        ast.FT.visit(this);
-        ast.I.visit(this);
-        ast.T.visit(this);
         return null;
     }
 
     @Override
     public AbstractSyntaxTree visitSingleFieldTypeDenoter(SingleFieldTypeDenoter ast, Void unused) {
-        ast.I.visit(this);
-        ast.T.visit(this);
         return null;
     }
 
@@ -318,42 +280,31 @@ public class StatisticsGenerator implements ActualParameterVisitor<Void, Abstrac
 
     @Override
     public AbstractSyntaxTree visitMultipleFormalParameterSequence(MultipleFormalParameterSequence ast, Void unused) {
-        ast.FP.visit(this);
-        ast.FPS.visit(this);
         return null;
     }
 
     @Override
     public AbstractSyntaxTree visitSingleFormalParameterSequence(SingleFormalParameterSequence ast, Void unused) {
-        ast.FP.visit(this);
         return null;
     }
 
     @Override
     public AbstractSyntaxTree visitConstFormalParameter(ConstFormalParameter ast, Void unused) {
-        ast.I.visit(this);
-        ast.T.visit(this);
         return null;
     }
 
     @Override
     public AbstractSyntaxTree visitFuncFormalParameter(FuncFormalParameter ast, Void unused) {
-        ast.I.visit(this);
-        ast.T.visit(this);
         return null;
     }
 
     @Override
     public AbstractSyntaxTree visitProcFormalParameter(ProcFormalParameter ast, Void unused) {
-        ast.I.visit(this);
-        ast.FPS.visit(this);
         return null;
     }
 
     @Override
     public AbstractSyntaxTree visitVarFormalParameter(VarFormalParameter ast, Void unused) {
-        ast.I.visit(this);
-        ast.T.visit(this);
         return null;
     }
 
@@ -386,7 +337,6 @@ public class StatisticsGenerator implements ActualParameterVisitor<Void, Abstrac
     @Override
     public AbstractSyntaxTree visitMultipleRecordAggregate(MultipleRecordAggregate ast, Void unused) {
         ast.E.visit(this);
-        ast.I.visit(this);
         ast.RA.visit(this);
         return null;
     }
@@ -394,7 +344,6 @@ public class StatisticsGenerator implements ActualParameterVisitor<Void, Abstrac
     @Override
     public AbstractSyntaxTree visitSingleRecordAggregate(SingleRecordAggregate ast, Void unused) {
         ast.E.visit(this);
-        ast.I.visit(this);
         return null;
     }
 
@@ -405,8 +354,6 @@ public class StatisticsGenerator implements ActualParameterVisitor<Void, Abstrac
 
     @Override
     public AbstractSyntaxTree visitArrayTypeDenoter(ArrayTypeDenoter ast, Void unused) {
-        ast.IL.visit(this);
-        ast.T.visit(this);
         return null;
     }
 
@@ -427,7 +374,6 @@ public class StatisticsGenerator implements ActualParameterVisitor<Void, Abstrac
 
     @Override
     public AbstractSyntaxTree visitSimpleTypeDenoter(SimpleTypeDenoter ast, Void unused) {
-        ast.I.visit(this);
         return null;
     }
 
@@ -438,20 +384,17 @@ public class StatisticsGenerator implements ActualParameterVisitor<Void, Abstrac
 
     @Override
     public AbstractSyntaxTree visitRecordTypeDenoter(RecordTypeDenoter ast, Void unused) {
-        ast.FT.visit(this);
         return null;
     }
 
     @Override
     public AbstractSyntaxTree visitDotVname(DotVname ast, Void unused) {
-        ast.I.visit(this);
         ast.V.visit(this);
         return null;
     }
 
     @Override
     public AbstractSyntaxTree visitSimpleVname(SimpleVname ast, Void unused) {
-        ast.I.visit(this);
         return null;
     }
 
