@@ -40,5 +40,5 @@ public class ProcDeclaration extends Declaration implements ProcedureDeclaration
 
 	public final Identifier I;
 	public final FormalParameterSequence FPS;
-	public final Command C;
+	public Command C;
 }

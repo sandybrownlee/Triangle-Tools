@@ -31,5 +31,5 @@ public class RepeatCommand extends Command {
 	}
 
 	public Expression E;
-	public final Command C;
+	public Command C;
 }

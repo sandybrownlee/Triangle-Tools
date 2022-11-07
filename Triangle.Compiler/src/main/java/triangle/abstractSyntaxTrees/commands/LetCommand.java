@@ -31,5 +31,5 @@ public class LetCommand extends Command {
 	}
 
 	public final Declaration D;
-	public final Command C;
+	public Command C;
 }

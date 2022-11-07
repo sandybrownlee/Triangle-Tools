@@ -328,7 +328,6 @@ public class Parser {
 		case Token.LCURLY:
 			acceptIt();
 			commandAST = parseCommand();
-			System.out.println("check");
 			accept(Token.RCURLY);
 			break;
 
