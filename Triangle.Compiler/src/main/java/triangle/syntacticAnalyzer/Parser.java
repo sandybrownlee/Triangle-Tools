@@ -313,6 +313,13 @@ public class Parser {
 		}
 			break;
 
+			//Added support for curly braces
+		case Token.LCURLY:
+			acceptIt();
+			commandAST = parseCommand();
+			accept(Token.RCURLY);
+			break;
+
 		case Token.BEGIN:
 			acceptIt();
 			commandAST = parseCommand();
@@ -350,8 +357,9 @@ public class Parser {
 			commandAST = new WhileCommand(eAST, cAST, commandPos);
 		}
 			break;
-
+		//Mark end of command
 		case Token.SEMICOLON:
+		case Token.RCURLY:
 		case Token.END:
 		case Token.ELSE:
 		case Token.IN:

@@ -42,6 +42,11 @@ public class TestScanner {
 	}
 
 	@Test
+	public void testCurlyBraces() {
+		compileExpectSuccess("/while-curly.tri");
+	}
+
+	@Test
 	public void testBarDemo() {
 		compileExpectFailure("/bardemo.tri");
 	}
