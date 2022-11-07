@@ -159,10 +159,7 @@ public class StatVisitor implements ActualParameterVisitor<Void, AbstractSyntaxT
 
 	@Override
 	public AbstractSyntaxTree visitSubscriptVname(SubscriptVname ast, Void arg) {
-		AbstractSyntaxTree replacement = ast.E.visit(this);
-		if (replacement != null) {
-			ast.E = (Expression) replacement;
-		}
+		ast.E.visit(this);
 		ast.V.visit(this);
 		return null;
 	}
@@ -213,10 +210,7 @@ public class StatVisitor implements ActualParameterVisitor<Void, AbstractSyntaxT
 
 	@Override
 	public AbstractSyntaxTree visitMultipleRecordAggregate(MultipleRecordAggregate ast, Void arg) {
-		AbstractSyntaxTree replacement = ast.E.visit(this);
-		if (replacement != null) {
-			ast.E = (Expression) replacement;
-		}
+		ast.E.visit(this);
 		ast.I.visit(this);
 		ast.RA.visit(this);
 		return null;
@@ -224,10 +218,7 @@ public class StatVisitor implements ActualParameterVisitor<Void, AbstractSyntaxT
 
 	@Override
 	public AbstractSyntaxTree visitSingleRecordAggregate(SingleRecordAggregate ast, Void arg) {
-		AbstractSyntaxTree replacement = ast.E.visit(this);
-		if (replacement != null) {
-			ast.E = (Expression) replacement;
-		}
+		ast.E.visit(this);
 		ast.I.visit(this);
 		return null;
 	}
@@ -435,7 +426,6 @@ public class StatVisitor implements ActualParameterVisitor<Void, AbstractSyntaxT
 	@Override
 	public AbstractSyntaxTree visitIfCommand(IfCommand ast, Void arg) {
 		countIf += 1;
-		System.out.println(ast.getPosition());
 		ast.C1.visit(this);
 		ast.C2.visit(this);
 		ast.E.visit(this);

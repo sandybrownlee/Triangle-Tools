@@ -18,7 +18,6 @@ import triangle.abstractSyntaxTrees.aggregates.SingleArrayAggregate;
 import triangle.abstractSyntaxTrees.aggregates.SingleRecordAggregate;
 import triangle.abstractSyntaxTrees.commands.AssignCommand;
 import triangle.abstractSyntaxTrees.commands.CallCommand;
-import triangle.abstractSyntaxTrees.commands.Command;
 import triangle.abstractSyntaxTrees.commands.EmptyCommand;
 import triangle.abstractSyntaxTrees.commands.IfCommand;
 import triangle.abstractSyntaxTrees.commands.LetCommand;
@@ -85,9 +84,8 @@ import triangle.abstractSyntaxTrees.vnames.DotVname;
 import triangle.abstractSyntaxTrees.vnames.SimpleVname;
 import triangle.abstractSyntaxTrees.vnames.SubscriptVname;
 import triangle.abstractSyntaxTrees.vnames.Vname;
-import triangle.syntacticAnalyzer.SourcePosition;
 
-public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSyntaxTree>,
+public class HoistExpression implements ActualParameterVisitor<Void, AbstractSyntaxTree>,
 		ActualParameterSequenceVisitor<Void, AbstractSyntaxTree>, ArrayAggregateVisitor<Void, AbstractSyntaxTree>,
 		CommandVisitor<Void, AbstractSyntaxTree>, DeclarationVisitor<Void, AbstractSyntaxTree>,
 		ExpressionVisitor<Void, AbstractSyntaxTree>, FormalParameterSequenceVisitor<Void, AbstractSyntaxTree>,
@@ -96,12 +94,18 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 		RecordAggregateVisitor<Void, AbstractSyntaxTree>, TypeDenoterVisitor<Void, AbstractSyntaxTree>,
 		VnameVisitor<Void, AbstractSyntaxTree> {
 	
-	private ArrayList<SourcePosition> hoisted = new ArrayList<SourcePosition>();
-	
-	{
+	private ArrayList<String> assigned;
+	private boolean hoistable;
 
+	public HoistExpression(ArrayList<String> as) {
+		assigned = as;
+		hoistable = true;
 	}
-
+	
+	public boolean isHoistable() {
+		return hoistable;
+	}
+	
 	@Override
 	public AbstractSyntaxTree visitConstFormalParameter(ConstFormalParameter ast, Void arg) {
 		ast.I.visit(this);
@@ -154,17 +158,16 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 
 	@Override
 	public AbstractSyntaxTree visitSimpleVname(SimpleVname ast, Void arg) {
-		System.out.println(ast.I.spelling);
+		if (assigned.contains(ast.I.spelling)) {
+			hoistable = false;
+		}
 		ast.I.visit(this);
 		return null;
 	}
 
 	@Override
 	public AbstractSyntaxTree visitSubscriptVname(SubscriptVname ast, Void arg) {
-		AbstractSyntaxTree replacement = ast.E.visit(this);
-		if (replacement != null) {
-			ast.E = (Expression) replacement;
-		}
+		ast.E.visit(this);
 		ast.V.visit(this);
 		return null;
 	}
@@ -215,10 +218,7 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 
 	@Override
 	public AbstractSyntaxTree visitMultipleRecordAggregate(MultipleRecordAggregate ast, Void arg) {
-		AbstractSyntaxTree replacement = ast.E.visit(this);
-		if (replacement != null) {
-			ast.E = (Expression) replacement;
-		}
+		ast.E.visit(this);
 		ast.I.visit(this);
 		ast.RA.visit(this);
 		return null;
@@ -226,10 +226,7 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 
 	@Override
 	public AbstractSyntaxTree visitSingleRecordAggregate(SingleRecordAggregate ast, Void arg) {
-		AbstractSyntaxTree replacement = ast.E.visit(this);
-		if (replacement != null) {
-			ast.E = (Expression) replacement;
-		}
+		ast.E.visit(this);
 		ast.I.visit(this);
 		return null;
 	}
@@ -286,27 +283,9 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 
 	@Override
 	public AbstractSyntaxTree visitBinaryExpression(BinaryExpression ast, Void arg) {
-		AbstractSyntaxTree replacement1 = ast.E1.visit(this);
-		AbstractSyntaxTree replacement2 = ast.E2.visit(this);
+		ast.E1.visit(this);
+		ast.E2.visit(this);
 		ast.O.visit(this);
-
-		// if visiting a child node returns something, it's either the original constant
-		// (IntegerLiteral) or a folded version replacing the expression at that child
-		// node
-		// If both child nodes are not null; return a folded version of this
-		// BinaryExpression
-		// Otherwise, at least one child node isn't constant (foldable) so just replace
-		// the
-		// foldable child nodes with their folded equivalent and return null
-		if (replacement1 != null && replacement2 != null) {
-			return foldBinaryExpression(replacement1, replacement2, ast.O);
-		} else if (replacement1 != null) {
-			ast.E1 = (Expression) replacement1;
-		} else if (replacement2 != null) {
-			ast.E2 = (Expression) replacement2;
-		}
-
-		// if we get here, we can't fold any higher than this level
 		return null;
 	}
 
@@ -330,18 +309,10 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 
 	@Override
 	public AbstractSyntaxTree visitIfExpression(IfExpression ast, Void arg) {
-		AbstractSyntaxTree replacement1 = ast.E1.visit(this);
-		if (replacement1 != null) {
-			ast.E1 = (Expression) replacement1;
-		}
-		AbstractSyntaxTree replacement2 = ast.E2.visit(this);
-		if (replacement2 != null) {
-			ast.E2 = (Expression) replacement2;
-		}
-		AbstractSyntaxTree replacement3 = ast.E3.visit(this);
-		if (replacement3 != null) {
-			ast.E3 = (Expression) replacement3;
-		}
+		
+		ast.E1.visit(this);
+		ast.E2.visit(this);
+		ast.E3.visit(this);
 
 		return null;
 	}
@@ -354,10 +325,7 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 	@Override
 	public AbstractSyntaxTree visitLetExpression(LetExpression ast, Void arg) {
 		ast.D.visit(this);
-		AbstractSyntaxTree replacement = ast.E.visit(this);
-		if (replacement != null) {
-			ast.E = (Expression) replacement;
-		}
+		ast.E.visit(this);
 		return null;
 	}
 
@@ -369,17 +337,16 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 
 	@Override
 	public AbstractSyntaxTree visitUnaryExpression(UnaryExpression ast, Void arg) {
-		AbstractSyntaxTree replacement = ast.E.visit(this);
-		if (replacement != null) {
-			ast.E = (Expression) replacement;
-		}
-
+		ast.E.visit(this);
 		ast.O.visit(this);
 		return null;
 	}
 
 	@Override
 	public AbstractSyntaxTree visitVnameExpression(VnameExpression ast, Void arg) {
+		if (assigned.contains(ast.V)) {
+			hoistable = false;
+		}
 		ast.V.visit(this);
 		return null;
 	}
@@ -395,20 +362,14 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 
 	@Override
 	public AbstractSyntaxTree visitConstDeclaration(ConstDeclaration ast, Void arg) {
-		AbstractSyntaxTree replacement = ast.E.visit(this);
-		if (replacement != null) {
-			ast.E = (Expression) replacement;
-		}
+		ast.E.visit(this);
 		ast.I.visit(this);
 		return null;
 	}
 
 	@Override
 	public AbstractSyntaxTree visitFuncDeclaration(FuncDeclaration ast, Void arg) {
-		AbstractSyntaxTree replacement = ast.E.visit(this);
-		if (replacement != null) {
-			ast.E = (Expression) replacement;
-		}
+		ast.E.visit(this);
 		ast.FPS.visit(this);
 		ast.I.visit(this);
 		ast.T.visit(this);
@@ -454,10 +415,7 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 
 	@Override
 	public AbstractSyntaxTree visitAssignCommand(AssignCommand ast, Void arg) {
-		AbstractSyntaxTree replacement = ast.E.visit(this);
-		if (replacement != null) {
-			ast.E = (Expression) replacement;
-		}
+		ast.E.visit(this);
 		ast.V.visit(this);
 		return null;
 	}
@@ -476,10 +434,7 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 	public AbstractSyntaxTree visitIfCommand(IfCommand ast, Void arg) {
 		ast.C1.visit(this);
 		ast.C2.visit(this);
-		AbstractSyntaxTree replacement = ast.E.visit(this);
-		if (replacement != null) {
-			ast.E = (Expression) replacement;
-		}
+		ast.E.visit(this);
 		return null;
 	}
 
@@ -492,75 +447,43 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 
 	@Override
 	public AbstractSyntaxTree visitSequentialCommand(SequentialCommand ast, Void arg) {
-		if (ast.C2 instanceof WhileCommand && !(hoisted.contains(ast.getPosition()))) {
-			WhileHoister hoister = new WhileHoister();
-			ast.C2.visit(hoister);
-			hoister.completeAssignment();
-			ArrayList<Expression> constant = new ArrayList<Expression>();
-			ast.C2.visit(hoister);
-			constant = hoister.getConstant();
-			Command sc = ast.C1;
-			for (int x = 0; x < constant.size(); x++) {
-				Identifier i = new Identifier("hoist" + Integer.toString(x), ast.C2.getPosition());
-				SimpleVname vn = new SimpleVname(i, ast.C2.getPosition());
-				AssignCommand as = new AssignCommand(vn, constant.get(x), ast.C2.getPosition());
-				sc = new SequentialCommand(sc, as, ast.C1.getPosition());
-			}
-			//Place new SC at ast.c1
-			//ast.C1 = sc;
-			hoisted.add(ast.getPosition());
-		}
 		ast.C1.visit(this);
 		ast.C2.visit(this);
 		return null;
 	}
-
+	
 	@Override
 	public AbstractSyntaxTree visitLoopWhileCommand(LoopWhileCommand ast, Void arg) {
 		ast.C1.visit(this);
 		ast.C2.visit(this);
-		AbstractSyntaxTree replacement = ast.E.visit(this);
-		if (replacement != null) {
-			ast.E = (Expression) replacement;
-		}
+		ast.E.visit(this);
 		return null;
 	}
 
+	@Override
 	public AbstractSyntaxTree visitWhileCommand(WhileCommand ast, Void arg) {
-		AbstractSyntaxTree replacement = ast.E.visit(this);
-		if (replacement != null) {
-			ast.E = (Expression) replacement;
-		}
 		ast.C.visit(this);
+		ast.E.visit(this);
 		return null;
 	}
 
 	@Override
 	public AbstractSyntaxTree visitRepeatCommand(RepeatCommand ast, Void arg) {
 		ast.C.visit(this);
-		AbstractSyntaxTree replacement = ast.E.visit(this);
-		if (replacement != null) {
-			ast.E = (Expression) replacement;
-		}
+		ast.E.visit(this);
 		return null;
 	}
 
 	@Override
 	public AbstractSyntaxTree visitMultipleArrayAggregate(MultipleArrayAggregate ast, Void arg) {
 		ast.AA.visit(this);
-		AbstractSyntaxTree replacement = ast.E.visit(this);
-		if (replacement != null) {
-			ast.E = (Expression) replacement;
-		}
+		ast.E.visit(this);
 		return null;
 	}
 
 	@Override
 	public AbstractSyntaxTree visitSingleArrayAggregate(SingleArrayAggregate ast, Void arg) {
-		AbstractSyntaxTree replacement = ast.E.visit(this);
-		if (replacement != null) {
-			ast.E = (Expression) replacement;
-		}
+		ast.E.visit(this);
 		return null;
 	}
 
@@ -584,10 +507,7 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 
 	@Override
 	public AbstractSyntaxTree visitConstActualParameter(ConstActualParameter ast, Void arg) {
-		AbstractSyntaxTree replacement = ast.E.visit(this);
-		if (replacement != null) {
-			ast.E = (Expression) replacement;
-		}
+		ast.E.visit(this);
 		return null;
 	}
 
@@ -606,62 +526,6 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 	@Override
 	public AbstractSyntaxTree visitVarActualParameter(VarActualParameter ast, Void arg) {
 		ast.V.visit(this);
-		return null;
-	}
-
-	public AbstractSyntaxTree foldBinaryExpression(AbstractSyntaxTree node1, AbstractSyntaxTree node2, Operator o) {
-		// the only case we know how to deal with for now is two IntegerExpressions
-		if ((node1 instanceof IntegerExpression) && (node2 instanceof IntegerExpression)) {
-			int int1 = (Integer.parseInt(((IntegerExpression) node1).IL.spelling));
-			int int2 = (Integer.parseInt(((IntegerExpression) node2).IL.spelling));
-			Object foldedValue = null;
-
-			if (o.decl == StdEnvironment.addDecl) {
-				foldedValue = int1 + int2;
-			} else if (o.decl == StdEnvironment.subtractDecl) {
-				foldedValue = int1 - int2;
-			} else if (o.decl == StdEnvironment.multiplyDecl) {
-				foldedValue = int1 * int2;
-			} else if (o.decl == StdEnvironment.divideDecl) {
-				foldedValue = int1 / int2;
-			} else if (o.decl == StdEnvironment.moduloDecl) {
-				foldedValue = int1 % int2;
-			} else if (o.decl == StdEnvironment.equalDecl) {
-				foldedValue = (int1 = int2);
-			} else if (o.decl == StdEnvironment.unequalDecl) {
-				foldedValue = (int1 != int2);
-			} else if (o.decl == StdEnvironment.lessDecl) {
-				foldedValue = (int1 < int2);
-			} else if (o.decl == StdEnvironment.notlessDecl) {
-				foldedValue = (int1 >= int2);
-			} else if (o.decl == StdEnvironment.greaterDecl) {
-				foldedValue = (int1 > int2);
-			} else if (o.decl == StdEnvironment.notgreaterDecl) {
-				foldedValue = (int1 <= int2);
-			}
-
-			if (foldedValue instanceof Integer) {
-				IntegerLiteral il = new IntegerLiteral(foldedValue.toString(), node1.getPosition());
-				IntegerExpression ie = new IntegerExpression(il, node1.getPosition());
-				ie.type = StdEnvironment.integerType;
-				return ie;
-			} else if (foldedValue instanceof Boolean) {
-				Identifier in = null;
-				if ((boolean) foldedValue) {
-					in = new Identifier("true", node1.getPosition());
-					in.decl = StdEnvironment.trueDecl;
-				} else {
-					in = new Identifier("false", node1.getPosition());
-					in.decl = StdEnvironment.falseDecl;
-				}
-				SimpleVname vn = new SimpleVname(in, node1.getPosition());
-				VnameExpression ve = new VnameExpression(vn, node1.getPosition());
-				ve.type = StdEnvironment.booleanType;
-				return ve;
-			}
-		}
-
-		// any unhandled situation (i.e., not foldable) is ignored
 		return null;
 	}
 
