@@ -638,7 +638,6 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 	}
 
 	public AbstractSyntaxTree foldBinaryExpression(AbstractSyntaxTree node1, AbstractSyntaxTree node2, Operator o) {
-		// the only case we know how to deal with for now is two IntegerExpressions
 		if ((node1 instanceof IntegerExpression) && (node2 instanceof IntegerExpression)) {
 			int int1 = (Integer.parseInt(((IntegerExpression) node1).IL.spelling));
 			int int2 = (Integer.parseInt(((IntegerExpression) node2).IL.spelling));
@@ -655,7 +654,7 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 			} else if (o.decl == StdEnvironment.moduloDecl) {
 				foldedValue = int1 % int2;
 			} else if (o.decl == StdEnvironment.equalDecl) {
-				foldedValue = (int1 = int2);
+				foldedValue = (int1 == int2);
 			} else if (o.decl == StdEnvironment.unequalDecl) {
 				foldedValue = (int1 != int2);
 			} else if (o.decl == StdEnvironment.lessDecl) {
