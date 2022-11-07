@@ -34,6 +34,7 @@ import triangle.abstractSyntaxTrees.aggregates.MultipleRecordAggregate;
 import triangle.abstractSyntaxTrees.aggregates.SingleArrayAggregate;
 import triangle.abstractSyntaxTrees.aggregates.SingleRecordAggregate;
 import triangle.abstractSyntaxTrees.commands.*;
+import triangle.abstractSyntaxTrees.commands.LoopCommand;
 import triangle.abstractSyntaxTrees.declarations.BinaryOperatorDeclaration;
 import triangle.abstractSyntaxTrees.declarations.ConstDeclaration;
 import triangle.abstractSyntaxTrees.declarations.Declaration;
@@ -177,10 +178,22 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 
 	@Override
 	public Void visitRepeatCommand(RepeatCommand repeatCommand, Frame frame) {
-		var loopAddr = emitter.getNextInstrAddr();
+		var repeatAddr = emitter.getNextInstrAddr();
 		repeatCommand.C.visit(this, frame);
 		repeatCommand.E.visit(this, frame);
-		emitter.emit(OpCode.JUMPIF, Machine.falseRep, Register.CB, loopAddr);
+		emitter.emit(OpCode.JUMPIF, Machine.falseRep, Register.CB, repeatAddr);
+		return null;
+	}
+
+	@Override
+	public Void visitLoopCommand(LoopCommand loopCommand, Frame frame) {
+		var loopAddr = emitter.getNextInstrAddr();
+		loopCommand.C1.visit(this, frame);
+		loopCommand.E.visit(this, frame);
+		var jumpAddr = emitter.emit(OpCode.JUMP, 0, Register.CB, 0);
+		emitter.patch(jumpAddr);
+		loopCommand.C2.visit(this, frame);
+		emitter.emit(OpCode.JUMPIF, Machine.trueRep, Register.CB, loopAddr);
 		return null;
 	}
 

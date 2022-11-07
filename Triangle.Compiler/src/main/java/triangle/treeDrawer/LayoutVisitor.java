@@ -91,6 +91,7 @@ import triangle.abstractSyntaxTrees.visitors.VnameVisitor;
 import triangle.abstractSyntaxTrees.vnames.DotVname;
 import triangle.abstractSyntaxTrees.vnames.SimpleVname;
 import triangle.abstractSyntaxTrees.vnames.SubscriptVname;
+import triangle.abstractSyntaxTrees.commands.LoopCommand;
 
 public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
 		ActualParameterSequenceVisitor<Void, DrawingTree>, ArrayAggregateVisitor<Void, DrawingTree>,
@@ -165,6 +166,14 @@ public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
 		return layoutBinary("RepeatCom.", d2, d1);
 	}
 
+	@Override
+	public DrawingTree visitLoopCommand(LoopCommand loopCommand, Void unused) {
+		var d1 = loopCommand.C1.visit(this);
+		var d2 = loopCommand.E.visit(this);
+		var d3 = loopCommand.C2.visit(this);
+		return layoutTernary("LoopCom.", d1, d2, d3);
+	}
+
 	// Expressions
 	@Override
 	public DrawingTree visitArrayExpression(ArrayExpression ast, Void obj) {
@@ -178,7 +187,7 @@ public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
 		var d1 = ast.E1.visit(this); //visit left child node first
 		var d2 = ast.O.visit(this); //visit operator
 		var d3 = ast.E2.visit(this);//visit right child node after
-		return layoutTernary("Bin.Expr.", d1, d2, d3);
+		return layoutTernary("Bin.Expr." + "(" + d2.caption +")", d1, d2, d3);
 	}
 
 	@Override
@@ -230,7 +239,7 @@ public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
 	public DrawingTree visitUnaryExpression(UnaryExpression ast, Void obj) {
 		var d1 = ast.O.visit(this);
 		var d2 = ast.E.visit(this);
-		return layoutBinary("UnaryExpr.", d1, d2);
+		return layoutBinary("UnaryExpr."  + "(" + d1.caption +")", d1, d2);
 	}
 
 	@Override
