@@ -2,7 +2,6 @@
 let
     var a : Integer;
     var b : Integer
-
 in
     begin
         a := 1;

@@ -60,3 +60,9 @@ local.properties
 # Typically, this file would be tracked if it contains build/dependency configurations:
 #.project
 /.gradle/
+
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build
