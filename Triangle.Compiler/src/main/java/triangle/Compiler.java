@@ -35,8 +35,8 @@ public class Compiler {
 	/** The filename for the object program, normally obj.tam. */
 	static String objectName = "obj.tam";
 	
-	static boolean showTree = false;
-	static boolean folding = false;
+	static boolean showTree = true;
+	static boolean folding = true;
 
 	private static Scanner scanner;
 	private static Parser parser;
@@ -130,7 +130,7 @@ public class Compiler {
 
 		String sourceName = args[0];
 		
-		var compiledOK = compileProgram(sourceName, objectName, showTree, false);
+		var compiledOK = compileProgram(sourceName, objectName, showTree, true);
 
 		if (!showTree) {
 			System.exit(compiledOK ? 0 : 1);
