@@ -60,7 +60,8 @@ public class Compiler {
 	private static Encoder encoder;
 	private static Emitter emitter;
 	private static ErrorReporter reporter;
-	private static Drawer drawer;
+	private static Drawer drawerPreOptimised;
+	private static Drawer drawerPostOptimised;
 	private static StatisticsGenerator statsCounter;
 
 	/** The AST representing the source program. */
@@ -98,7 +99,8 @@ public class Compiler {
 		checker = new Checker(reporter);
 		emitter = new Emitter(reporter);
 		encoder = new Encoder(emitter, reporter);
-		drawer = new Drawer();
+		drawerPreOptimised = new Drawer();
+		drawerPostOptimised = new Drawer();
 		statsCounter = new StatisticsGenerator();
 
 		// scanner.enableDebugging();
@@ -108,13 +110,13 @@ public class Compiler {
 			System.out.println("Contextual Analysis ...");
 			checker.check(theAST); // 2nd pass
 
-			if (showingAST && !showAfterFolding) {
-				drawer.draw(theAST);
+			if (showingAST) {
+				drawerPreOptimised.draw(theAST);
 			}
 			if (folding) {
 				theAST.visit(new ConstantFolder());
-				if (showingAST && showAfterFolding) {
-					drawer.draw(theAST);
+				if (showAfterFolding) {
+					drawerPostOptimised.draw(theAST);
 				}
 			}
 			if (statistics) {
