@@ -5,18 +5,16 @@ sourceCompatibility = 11
 subprojects.each { subproject ->
   evaluationDependsOn(subproject.path)
 }
-
-jar {
-  from subprojects.sourceSets.main.output
+repositories {
+    mavenCentral()
 }
 
-tasks.register('uberJar', Jar) {
-    archiveClassifier = 'uber'
+dependencies {
+  implementation group: 'com.github.spullara.cli-parser', name: 'cli-parser', version:'1.1.6'
+}
 
-    from sourceSets.main.output
-
-    dependsOn configurations.runtimeClasspath
-    from {
-        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
-    }
+jar {
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+  from configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+  from subprojects.sourceSets.main.output
 }
