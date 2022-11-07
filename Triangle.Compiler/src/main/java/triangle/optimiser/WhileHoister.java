@@ -436,14 +436,18 @@ public class WhileHoister implements ActualParameterVisitor<Void, AbstractSyntax
 				int index = constant.indexOf(ast.E);
 				Identifier i = new Identifier("reservedforhoist"+Integer.toString(index),ast.getPosition());
 				Vname ivn = ast.V;
-				while (!(ivn instanceof SimpleVname)) {
+				while (true) {
 					if (ivn instanceof DotVname) {
 						ivn = ((DotVname) ivn).V;
 					} else if (ivn instanceof SubscriptVname) {
 						ivn = ((SubscriptVname) ivn).V;
+					} else {
+						ivn = ((SimpleVname) ivn);
+						break;
 					}
 				}
-				i.decl = ((SimpleVname) ast.V).I.decl;
+				assigned.add(((SimpleVname) ivn).I.spelling);
+				i.decl = ((SimpleVname) ivn).I.decl;
 				hoistVariables.add(i);
 				SimpleVname vn = new SimpleVname(i, ast.getPosition());
 				VnameExpression ve = new VnameExpression(vn, ast.getPosition());
@@ -452,8 +456,6 @@ public class WhileHoister implements ActualParameterVisitor<Void, AbstractSyntax
 			}
 		}
 		ast.E.visit(this);
-		SimpleVname temp = ((SimpleVname) ast.V);
-		assigned.add(temp.I.spelling);
 		ast.V.visit(this);
 		return null;
 	}
