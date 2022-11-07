@@ -512,7 +512,9 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 			ast.C1 = new SequentialCommand(new EmptyCommand(ast.C1.getPosition()), ast.C1,ast.C1.getPosition());
 		}
 		if (ast.C2 instanceof WhileCommand && !(hoisted.contains(ast.getPosition()))) {
+			//Create a new object for hoisting while loops.
 			WhileHoister hoister = new WhileHoister();
+			//Visit the WhileCommand, 
 			ast.C2.visit(hoister);
 			hoister.completeAssignment();
 			ArrayList<Expression> constant = hoister.getConstant();
