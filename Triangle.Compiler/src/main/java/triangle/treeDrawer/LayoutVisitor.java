@@ -239,7 +239,7 @@ public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
 		var d2 = ast.ARG1.visit(this);
 		var d3 = ast.ARG2.visit(this);
 		var d4 = ast.RES.visit(this);
-		return layoutQuaternary("Bin.Op.Decl.", d1, d2, d3, d4);
+		return layoutQuaternary("Binary Operator (+)", d1, d2, d3, d4);
 	}
 
 	@Override
@@ -285,7 +285,7 @@ public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
 		var d1 = ast.O.visit(this);
 		var d2 = ast.ARG.visit(this);
 		var d3 = ast.RES.visit(this);
-		return layoutTernary("UnaryOp.Decl.", d1, d2, d3);
+		return layoutTernary("Unary Operator (+)", d1, d2, d3);
 	}
 
 	@Override
@@ -494,7 +494,7 @@ public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
 
 	@Override
 	public DrawingTree visitOperator(Operator ast, Void obj) {
-		return layoutNullary(ast.spelling);
+		return layoutNullary("Operator (+)", ast.spelling);
 	}
 
 	// Value-or-variable names

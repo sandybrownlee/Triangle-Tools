@@ -24,6 +24,10 @@ import triangle.syntacticAnalyzer.Scanner;
 import triangle.syntacticAnalyzer.SourceFile;
 import triangle.treeDrawer.Drawer;
 
+//add cli-parser lib
+import com.sampullara.cli.Args;
+import com.sampullara.cli.Argument;
+
 /**
  * The main driver class for the Triangle compiler.
  *
@@ -31,6 +35,9 @@ import triangle.treeDrawer.Drawer;
  * @author Deryck F. Brown
  */
 public class Compiler {
+
+	@Argument(alias = "c", description = "Compiler", required=false)
+	protected String compiler = "compiler";
 
 	/** The filename for the object program, normally obj.tam. */
 	static String objectName = "obj.tam";
