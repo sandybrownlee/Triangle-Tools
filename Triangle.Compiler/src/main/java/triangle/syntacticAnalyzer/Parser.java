@@ -34,6 +34,7 @@ import triangle.abstractSyntaxTrees.aggregates.SingleRecordAggregate;
 import triangle.abstractSyntaxTrees.commands.AssignCommand;
 import triangle.abstractSyntaxTrees.commands.CallCommand;
 import triangle.abstractSyntaxTrees.commands.Command;
+import triangle.abstractSyntaxTrees.commands.DecrementCommand;
 import triangle.abstractSyntaxTrees.commands.EmptyCommand;
 import triangle.abstractSyntaxTrees.commands.IfCommand;
 import triangle.abstractSyntaxTrees.commands.LetCommand;
@@ -327,6 +328,16 @@ public class Parser {
 			Command cAST = parseSingleCommand();
 			finish(commandPos);
 			commandAST = new WhileCommand(eAST, cAST, commandPos);
+		}
+			break;
+
+		case Token.DECREMENT: {
+			acceptIt();
+			Expression eAST = parseExpression();
+			accept(Token.DO);
+			Command cAST = parseSingleCommand();
+			finish(commandPos);
+			commandAST = new DecrementCommand(eAST, cAST, commandPos);
 		}
 			break;
 
