@@ -34,7 +34,6 @@ public class TestScanner {
 	public void testHiNewComment2() {
 		compileExpectSuccess("/hi-newcomment2.tri");
 	}
-	
 
 	@Test
 	public void testBarDemo() {
