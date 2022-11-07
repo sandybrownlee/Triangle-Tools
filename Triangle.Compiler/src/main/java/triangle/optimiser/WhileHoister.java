@@ -434,7 +434,15 @@ public class WhileHoister implements ActualParameterVisitor<Void, AbstractSyntax
 			if (hoister.isHoistable()) {
 				constant.add(ast.E);
 				int index = constant.indexOf(ast.E);
-				Identifier i = new Identifier("hoist"+Integer.toString(index),ast.getPosition());
+				Identifier i = new Identifier("reservedforhoist"+Integer.toString(index),ast.getPosition());
+				Vname ivn = ast.V;
+				while (!(ivn instanceof SimpleVname)) {
+					if (ivn instanceof DotVname) {
+						ivn = ((DotVname) ivn).V;
+					} else if (ivn instanceof SubscriptVname) {
+						ivn = ((SubscriptVname) ivn).V;
+					}
+				}
 				i.decl = ((SimpleVname) ast.V).I.decl;
 				hoistVariables.add(i);
 				SimpleVname vn = new SimpleVname(i, ast.getPosition());
