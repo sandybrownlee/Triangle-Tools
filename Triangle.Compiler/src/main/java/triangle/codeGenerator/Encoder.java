@@ -35,6 +35,7 @@ import triangle.abstractSyntaxTrees.aggregates.SingleArrayAggregate;
 import triangle.abstractSyntaxTrees.aggregates.SingleRecordAggregate;
 import triangle.abstractSyntaxTrees.commands.AssignCommand;
 import triangle.abstractSyntaxTrees.commands.CallCommand;
+import triangle.abstractSyntaxTrees.commands.DecrementCommand;
 import triangle.abstractSyntaxTrees.commands.EmptyCommand;
 import triangle.abstractSyntaxTrees.commands.IfCommand;
 import triangle.abstractSyntaxTrees.commands.LetCommand;
@@ -133,6 +134,13 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 	public Void visitCallCommand(CallCommand ast, Frame frame) {
 		var argsSize = ast.APS.visit(this, frame);
 		ast.I.visit(this, frame.replace(argsSize));
+		return null;
+	}
+
+	@Override
+	public Void visitDecrementCommand(DecrementCommand ast, Frame frame) {
+		var argsSize = ast.APS.visit(this, frame);
+		ast.I.visit(this, frame.expand(-1));
 		return null;
 	}
 
