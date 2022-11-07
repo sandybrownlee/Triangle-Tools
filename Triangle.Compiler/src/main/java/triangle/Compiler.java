@@ -23,6 +23,7 @@ import triangle.syntacticAnalyzer.Parser;
 import triangle.syntacticAnalyzer.Scanner;
 import triangle.syntacticAnalyzer.SourceFile;
 import triangle.treeDrawer.Drawer;
+import triangle.optimiser.SummaryStatistics;
 
 import com.sampullara.cli.Args;
 import com.sampullara.cli.Argument;
@@ -42,12 +43,15 @@ public class Compiler {
 	@Argument(alias = "t", description = "if true it prints the Abstract Syntax Tree", required = false)
 	static boolean showTree = false;
 	
-	@Argument(alias = "f", description = "Should we fold the program", required = false)
+	@Argument(alias = "f", description = "should we fold the program", required = false)
 	static boolean folding = false;
 	
 	//Add additional @Argument whether the program will show the tree after folding the program
 	@Argument(alias = "fst", description = "fold program, then show tree", required = false)
 	static boolean foldShowTree = false;
+
+	@Argument(alias = "stats", description = "show summary statistics", required = false)
+	static boolean stats = false;
 	
 
 	private static Scanner scanner;
@@ -57,6 +61,7 @@ public class Compiler {
 	private static Emitter emitter;
 	private static ErrorReporter reporter;
 	private static Drawer drawer;
+	private static SummaryStatistics statistics;
 
 	/** The AST representing the source program. */
 	private static Program theAST;
@@ -93,6 +98,7 @@ public class Compiler {
 		emitter = new Emitter(reporter);
 		encoder = new Encoder(emitter, reporter);
 		drawer = new Drawer();
+		statistics = new SummaryStatistics();
 
 		// scanner.enableDebugging();
 		theAST = parser.parseProgram(); // 1st pass
@@ -116,15 +122,16 @@ public class Compiler {
 				drawer.draw(theAST);
 			}
 			
-			
-			/*if (foldThenShowTree) {
-				//theAST.visit(new ConstantFolder());
-				drawer.draw(theAST);
-			}*/
-			
 			if (reporter.getNumErrors() == 0) {
 				System.out.println("Code Generation ...");
 				encoder.encodeRun(theAST, showingTable); // 3rd pass
+			}
+			
+			//If showing statistics is chosen
+			if (stats) {
+				theAST.visit(statistics);
+				System.out.println("Summary Statistics: ");
+				statistics.printSummaryStatistics();
 			}
 		}
 
