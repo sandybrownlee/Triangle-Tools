@@ -366,7 +366,14 @@ public class Parser {
 				commandAST = new RepeatCommand(eAST, cAST, commandPos);
 			}
 			break;
-
+			/*
+			case Token.LCURLY:
+				acceptIt();
+				CommandAST = parseCommand();
+				accept(Token.RCURLY);
+				break;
+			 */
+		case Token.RCURLY:
 		case Token.SEMICOLON:
 		case Token.END:
 		case Token.ELSE:
