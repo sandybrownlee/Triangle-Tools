@@ -325,6 +325,7 @@ public class Parser {
 			break;
 
 
+
 		case Token.LET: {
 			acceptIt();
 			Declaration dAST = parseDeclaration();
@@ -334,6 +335,12 @@ public class Parser {
 			commandAST = new LetCommand(dAST, cAST, commandPos);
 		}
 			break;
+
+			case Token.LCURLY:
+				acceptIt();
+				commandAST = parseCommand();
+				accept(Token.RCURLY);
+				break;
 
 		case Token.IF: {
 			acceptIt();
@@ -366,13 +373,7 @@ public class Parser {
 				commandAST = new RepeatCommand(eAST, cAST, commandPos);
 			}
 			break;
-			/*
-			case Token.LCURLY:
-				acceptIt();
-				CommandAST = parseCommand();
-				accept(Token.RCURLY);
-				break;
-			 */
+
 		case Token.RCURLY:
 		case Token.SEMICOLON:
 		case Token.END:
