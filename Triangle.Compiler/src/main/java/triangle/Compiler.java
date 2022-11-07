@@ -28,8 +28,6 @@ import triangle.treeDrawer.Drawer;
 import com.sampullara.cli.Args;
 import com.sampullara.cli.Argument;
 
-import java.util.List;
-
 /**
  * The main driver class for the Triangle compiler.
  *
@@ -81,6 +79,7 @@ public class Compiler {
 	 * @param objectName   the name of the file containing the object program.
 	 * @param showingAST   true iff the AST is to be displayed after contextual
 	 *                     analysis
+	 * @param showingAST   true iff the AST is to be displayed after contextual
 	 * @param showingTable true iff the object description details are to be
 	 *                     displayed during code generation (not currently
 	 *                     implemented).
