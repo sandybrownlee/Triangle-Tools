@@ -31,6 +31,7 @@ import triangle.abstractSyntaxTrees.aggregates.SingleArrayAggregate;
 import triangle.abstractSyntaxTrees.aggregates.SingleRecordAggregate;
 import triangle.abstractSyntaxTrees.commands.AssignCommand;
 import triangle.abstractSyntaxTrees.commands.CallCommand;
+import triangle.abstractSyntaxTrees.commands.DecrementCommand;
 import triangle.abstractSyntaxTrees.commands.EmptyCommand;
 import triangle.abstractSyntaxTrees.commands.IfCommand;
 import triangle.abstractSyntaxTrees.commands.LetCommand;
@@ -139,6 +140,11 @@ public final class Checker implements ActualParameterVisitor<FormalParameter, Vo
 			reportUndeclaredOrError(binding, ast.I, "\"%\" is not a procedure identifier");
 		}
 
+		return null;
+	}
+
+	@Override
+	public Void visitDecrementCommand(DecrementCommand ast, Void arg) {
 		return null;
 	}
 
