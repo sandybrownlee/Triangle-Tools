@@ -15,6 +15,7 @@
 package triangle.contextualAnalyzer;
 
 import triangle.ErrorReporter;
+import triangle.Statistics;
 import triangle.StdEnvironment;
 import triangle.abstractSyntaxTrees.AbstractSyntaxTree;
 import triangle.abstractSyntaxTrees.Program;
@@ -151,6 +152,7 @@ public final class Checker implements ActualParameterVisitor<FormalParameter, Vo
 	@Override
 	public Void visitIfCommand(IfCommand ast, Void arg) {
 		var eType = ast.E.visit(this);
+		Statistics.ifComVisited();
 
 		checkAndReportError(eType.equals(StdEnvironment.booleanType), "Boolean expression expected here", ast.E);
 
@@ -179,6 +181,7 @@ public final class Checker implements ActualParameterVisitor<FormalParameter, Vo
 	@Override
 	public Void visitWhileCommand(WhileCommand ast, Void arg) {
 		var eType = ast.E.visit(this);
+		Statistics.whileComVisited();
 
 		checkAndReportError(eType.equals(StdEnvironment.booleanType), "Boolean expression expected here", ast.E);
 		ast.C.visit(this);
@@ -204,6 +207,7 @@ public final class Checker implements ActualParameterVisitor<FormalParameter, Vo
 		var e1Type = ast.E1.visit(this);
 		var e2Type = ast.E2.visit(this);
 		var binding = ast.O.visit(this);
+		Statistics.binExpVisited();
 
 		if (binding instanceof BinaryOperatorDeclaration) {
 			BinaryOperatorDeclaration bbinding = (BinaryOperatorDeclaration)binding;

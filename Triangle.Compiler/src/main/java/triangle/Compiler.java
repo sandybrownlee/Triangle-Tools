@@ -45,11 +45,14 @@ public class Compiler {
 	 	protected String foldPrint = "tree2";
 	 @Argument(alias = "folding", description = "run folding procedure", required = false)
 	 	protected String fold = "folding";
+	 @Argument(alias = "stats", description = "print program statistics", required = false)
+	 	protected String stats = "stats";
 	
 	/** Argument flags */
 	static boolean showTree = false;
 	static boolean folding = false;
 	static boolean showFoldTree = false;
+	static boolean showStats = false;
 
 	private static Scanner scanner;
 	private static Parser parser;
@@ -59,6 +62,7 @@ public class Compiler {
 	private static ErrorReporter reporter;
 	private static Drawer drawer;
 	private static Drawer drawer2;
+	private static Statistics statistics;
 
 	/** The AST representing the source program. */
 	private static Program theAST;
@@ -77,7 +81,7 @@ public class Compiler {
 	 * @return true if the source program is free of compile-time errors, otherwise
 	 *         false.
 	 */
-	static boolean compileProgram(String sourceName, String objectName, boolean showingAST, boolean showingFoldAST, boolean showingTable) {
+	static boolean compileProgram(String sourceName, String objectName, boolean showingAST, boolean showingFoldAST, boolean showingStats, boolean showingTable) {
 
 		System.out.println("********** " + "Triangle Compiler (Java Version 2.1)" + " **********");
 
@@ -97,6 +101,7 @@ public class Compiler {
 		encoder = new Encoder(emitter, reporter);
 		drawer = new Drawer();
 		drawer2 = new Drawer();
+		statistics = new Statistics();
 
 		// scanner.enableDebugging();
 		theAST = parser.parseProgram(); // 1st pass
@@ -111,13 +116,20 @@ public class Compiler {
 				if (showingFoldAST) {
 					drawer2.draw(theAST);
 				}
-			} else if (showingFoldAST) {
-				System.out.println("Error: Cannot print folded AST if not folding.");
+			} else if (showingFoldAST || showingStats) {
+				if (showingFoldAST) {
+					System.out.println("Error: Cannot print folded AST if not folding.");
+				}
 			}
 			
 			if (reporter.getNumErrors() == 0) {
 				System.out.println("Code Generation ...");
 				encoder.encodeRun(theAST, showingTable); // 3rd pass
+				
+				if (showingStats) {
+					statistics.printStats();
+				}
+				
 			}
 		}
 
@@ -146,7 +158,7 @@ public class Compiler {
 		
 		String sourceName = args[0];
 		
-		var compiledOK = compileProgram(sourceName, objectName, showTree, showFoldTree, false);
+		var compiledOK = compileProgram(sourceName, objectName, showTree, showFoldTree, showStats, false);
 
 		//exit if neither tree printed
 		if (!showTree && !showFoldTree) {
@@ -161,6 +173,8 @@ public class Compiler {
 				showTree = true;
 			} else if (sl.equals("tree2")) {
 				showFoldTree = true;
+			} else if (sl.equals("stats")) {
+				showStats = true;
 			} else if (sl.startsWith("o=")) {
 				objectName = s.substring(2);
 			} else if (sl.equals("folding")) {
