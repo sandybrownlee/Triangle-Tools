@@ -599,10 +599,12 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 				IntegerExpression ie = new IntegerExpression(il, node1.getPosition());
 				ie.type = StdEnvironment.integerType;
 				return ie;
-			} else if (foldedValue instanceof Boolean) {
+			// if foldedValue is not an integer and not null, it can only be boolean
+			} else if (foldedValue != null) {
 				// The type denoter is given a known value of 1 or 0, representing true or false
 				BoolTypeDenoter btd = new BoolTypeDenoter(node1.getPosition());
 				btd.entity = new KnownValue(1, (Boolean)foldedValue ? 1 : 0);
+
 				Identifier i = new Identifier(foldedValue.toString(), node1.getPosition());
 				i.decl = btd;
 				i.type = StdEnvironment.booleanType;
@@ -610,6 +612,7 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 				sm.type = StdEnvironment.booleanType;
 				VnameExpression ve = new VnameExpression(sm, node1.getPosition());
 				ve.type = StdEnvironment.booleanType;
+
 				return ve;
 			}
 		}

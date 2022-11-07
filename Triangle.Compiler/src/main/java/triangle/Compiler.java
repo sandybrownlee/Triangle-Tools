@@ -103,7 +103,6 @@ public class Compiler {
 		drawerPostOptimised = new Drawer();
 		statsCounter = new StatisticsGenerator();
 
-		// scanner.enableDebugging();
 		theAST = parser.parseProgram(); // 1st pass
 		if (reporter.getNumErrors() == 0) {
 
@@ -119,6 +118,7 @@ public class Compiler {
 					drawerPostOptimised.draw(theAST);
 				}
 			}
+
 			if (statistics) {
 				System.out.println("Generating Statistics ...");
 				theAST.visit(statsCounter);
