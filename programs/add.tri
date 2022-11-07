@@ -1,0 +1,25 @@
+! Program that will read two int values and print their sum and their product
+
+let
+	var i : Integer;
+	var j : Integer
+in
+begin
+	getint(var i);
+	getint(var j);
+	putint(i + j);
+	puteol();
+	putint(i * j);
+	puteol();
+	if (i = j)
+	then
+	begin
+		put('S');
+		put('a');
+		put('m');
+		put('e');
+		put('!');
+		puteol();
+	end
+	else
+end
