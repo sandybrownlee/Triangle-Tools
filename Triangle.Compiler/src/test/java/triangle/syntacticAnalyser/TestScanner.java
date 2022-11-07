@@ -51,7 +51,7 @@ public class TestScanner {
 	}
 
 	@Test
-	public void testWhileCurly() {compileExpectSuccess("/while-curly.tri");
+	public void testWhileCurly() {compileExpectFailure("/while-curly.tri");
 	}
 	
 	private void compileExpectSuccess(String filename) {
