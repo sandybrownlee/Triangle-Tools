@@ -6,10 +6,16 @@ import triangle.syntacticAnalyzer.SourcePosition;
 
 public class DecrementCommand extends Command {
 
+	/**
+	 * @param eAST
+	 * @param cAST
+	 * @param position
+	 */
+	
 	public DecrementCommand(Expression eAST, Command cAST, SourcePosition position) {
 		super(position);
 		E = eAST;
-		C = eASR - 1;
+		C = eAST - 1;
 	}
 
 	public <TArg, TResult> TResult visit(CommandVisitor<TArg, TResult> v, TArg arg) {
