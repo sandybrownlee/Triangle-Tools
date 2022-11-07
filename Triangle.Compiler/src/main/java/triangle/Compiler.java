@@ -148,11 +148,11 @@ public class Compiler {
     }
 
     private class Loader {
-        @Argument(alias = "tree", description = "If to output tree", required = false)
-        Boolean tree = false;
         @Argument(alias = "-o=", description = "Regular expression to parse lines", required = true)
         String regex;
-        @Argument(alias = "folding", description = "If to output tree", required = false)
+        @Argument(alias = "tree", description = "If to output tree no folding", required = false)
+        Boolean tree = false;
+        @Argument(alias = "folding", description = "If to output tree folding", required = false)
         Boolean folding = false;
     }
 }

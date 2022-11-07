@@ -287,7 +287,7 @@ public class Parser {
 					acceptIt();
 
 					//Create interliteral for the -1
-					IntegerLiteral il = new IntegerLiteral("-1", commandPos);
+					IntegerLiteral il = new IntegerLiteral("1", commandPos);
 
 					//Wraps in an IntegerExpression
 					IntegerExpression ie = new IntegerExpression(il, commandPos);
