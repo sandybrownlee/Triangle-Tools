@@ -25,6 +25,7 @@ import triangle.abstractSyntaxTrees.commands.UnaryCommand;
 import triangle.abstractSyntaxTrees.commands.WhileCommand;
 import triangle.abstractSyntaxTrees.declarations.BinaryOperatorDeclaration;
 import triangle.abstractSyntaxTrees.declarations.ConstDeclaration;
+import triangle.abstractSyntaxTrees.declarations.ConstantDeclaration;
 import triangle.abstractSyntaxTrees.declarations.FuncDeclaration;
 import triangle.abstractSyntaxTrees.declarations.ProcDeclaration;
 import triangle.abstractSyntaxTrees.declarations.SequentialDeclaration;
@@ -600,18 +601,26 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 
 			if (o.decl == StdEnvironment.addDecl) {
 				foldedValue = int1 + int2;
-			}
-			else if (o.decl == StdEnvironment.subtractDecl) {
+			} else if (o.decl == StdEnvironment.subtractDecl) {
 				foldedValue = int1 - int2;
-			}
-			else if (o.decl == StdEnvironment.multiplyDecl) {
+			} else if (o.decl == StdEnvironment.multiplyDecl) {
 				foldedValue = int1 * int2;
-			}
-			else if (o.decl == StdEnvironment.divideDecl) {
+			} else if (o.decl == StdEnvironment.divideDecl) {
 				foldedValue = int1 / int2;
-			}
-			else if (o.decl == StdEnvironment.moduloDecl) {
+			} else if (o.decl == StdEnvironment.moduloDecl) {
 				foldedValue = int1 % int2;
+			} else if (o.decl == StdEnvironment.equalDecl) {
+				foldedValue = int1 == int2;
+			} else if (o.decl == StdEnvironment.lessDecl) {
+				foldedValue = int1 < int2;
+			} else if (o.decl == StdEnvironment.notgreaterDecl) {
+				foldedValue = int1 <= int2;
+			} else if (o.decl == StdEnvironment.greaterDecl) {
+				foldedValue = int1 > int2;
+			} else if (o.decl == StdEnvironment.notlessDecl) {
+				foldedValue = int1 >= int2;
+			} else if (o.decl == StdEnvironment.unequalDecl) {
+				foldedValue = int1 != int2;
 			}
 
 			if (foldedValue instanceof Integer) {
@@ -620,14 +629,22 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 				ie.type = StdEnvironment.integerType;
 				return ie;
 			} else if (foldedValue instanceof Boolean) {
-				/* currently not handled! */
+				Identifier i = new Identifier((boolean) foldedValue ? "true" : "false", node1.getPosition());
+				if ((boolean) foldedValue) {
+					i.decl = StdEnvironment.trueDecl;
+				} else {
+					i.decl = StdEnvironment.falseDecl;
+				}
+				SimpleVname vName = new SimpleVname(i, i.getPosition());
+				vName.type = ((ConstantDeclaration)i.decl).getType();
+				VnameExpression ve = new VnameExpression(vName, vName.getPosition());
+				ve.type = vName.type;
+				return ve;
 			}
 		}
 
 		// any unhandled situation (i.e., not foldable) is ignored
 		return null;
 	}
-
-	
 
 }
