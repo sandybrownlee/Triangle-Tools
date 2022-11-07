@@ -55,6 +55,7 @@ public class Compiler {
 	private static Emitter emitter;
 	private static ErrorReporter reporter;
 	private static Drawer drawer;
+	private static Drawer drawerAfter;
 	private static Summariser summariser;
 
 	/** The AST representing the source program. */
@@ -67,6 +68,7 @@ public class Compiler {
 	 * @param objectName   the name of the file containing the object program.
 	 * @param showingAST   true iff the AST is to be displayed after contextual
 	 *                     analysis
+	 * @param showingASTAfter true iff the AST is to be displayed after code optimisations
 	 * @param showingTable true iff the object description details are to be
 	 *                     displayed during code generation (not currently
 	 *                     implemented).
@@ -92,6 +94,7 @@ public class Compiler {
 		emitter = new Emitter(reporter);
 		encoder = new Encoder(emitter, reporter);
 		drawer = new Drawer();
+		drawerAfter = new Drawer();
 		summariser = new Summariser();
 
 		// scanner.enableDebugging();
@@ -109,7 +112,7 @@ public class Compiler {
 				theAST.visit(new ConstantFolder());
 			}
 			if (showingASTAfter) {
-				drawer.draw(theAST);
+				drawerAfter.draw(theAST);
 			}
 			if (stats){
 				System.out.println("Generating Summary ...");
