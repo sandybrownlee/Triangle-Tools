@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertThrows;
 
+import java.beans.Transient;
+
 import org.junit.Test;
 import org.junit.function.ThrowingRunnable;
 
@@ -41,6 +43,12 @@ public class TestScanner {
 	@Test
 	public void testRepeatUntil() {
 		compileExpectSuccess("/repeatuntil.tri");
+	}
+
+	/* new test for DecrementCommand */
+	@Test
+	public void testDecrementCommand() {
+		compileExpectSuccess("/DecrementCommand.java");
 	}
 	
 	

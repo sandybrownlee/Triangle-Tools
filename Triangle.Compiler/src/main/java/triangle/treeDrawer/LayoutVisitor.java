@@ -30,6 +30,7 @@ import triangle.abstractSyntaxTrees.aggregates.SingleArrayAggregate;
 import triangle.abstractSyntaxTrees.aggregates.SingleRecordAggregate;
 import triangle.abstractSyntaxTrees.commands.AssignCommand;
 import triangle.abstractSyntaxTrees.commands.CallCommand;
+import triangle.abstractSyntaxTrees.commands.DecrementCommand;
 import triangle.abstractSyntaxTrees.commands.EmptyCommand;
 import triangle.abstractSyntaxTrees.commands.IfCommand;
 import triangle.abstractSyntaxTrees.commands.LetCommand;
@@ -123,6 +124,11 @@ public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
 		var d1 = ast.I.visit(this);
 		var d2 = ast.APS.visit(this);
 		return layoutBinary("CallCom.", d1, d2);
+	}
+
+	@Override
+	public DrawingTree visitDecrementCommand(DecrementCommand ast, Void obj) {
+		return layoutBinary("DecCom.", d1, d2);
 	}
 
 	@Override

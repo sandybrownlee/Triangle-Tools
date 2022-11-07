@@ -35,7 +35,8 @@ public final class Scanner {
 
 	private boolean isOperator(char c) {
 		return (c == '+' || c == '-' || c == '*' || c == '/' || c == '=' || c == '<' || c == '>' || c == '\\'
-				|| c == '&' || c == '@' || c == '%' || c == '^' || c == '?');
+				|| c == '&' || c == '@' || c == '%' || c == '^' || c == '?' || 
+				/* new decrement operator */ c == '|');
 	}
 
 	///////////////////////////////////////////////////////////////////////////////
@@ -173,6 +174,7 @@ public final class Scanner {
 		case '%':
 		case '^':
 		case '?':
+		case '|': // new operator
 			takeIt();
 			while (isOperator(currentChar))
 				takeIt();
