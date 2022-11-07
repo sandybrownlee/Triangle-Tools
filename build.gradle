@@ -27,8 +27,6 @@ dependencies {
 	testImplementation group: 'junit', name: 'junit', version: '4.13.2'
 }
 
-import com.sampullara.cli.Argument;
-
 // this will gather up all the libraries and include them in the "build" jar
 // so the program can be more easily run
 jar {
