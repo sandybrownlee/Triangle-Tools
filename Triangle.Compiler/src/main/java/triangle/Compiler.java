@@ -40,19 +40,13 @@ public class Compiler {
 	@Argument(alias = ("o"), description = "Turn tri file to tam", required = false)
  	protected static String objectName = "obj.tam";
 	 @Argument(alias = "tree", description = "Print AST", required = false)
-	 	protected String treePrint = "tree";
+	 	protected static Boolean showTree = false;
 	 @Argument(alias = "tree2", description = "Print AST after folding", required = false)
-	 	protected String foldPrint = "tree2";
+	 	protected static Boolean showFoldTree = false;
 	 @Argument(alias = "folding", description = "run folding procedure", required = false)
-	 	protected String fold = "folding";
+	 	protected static Boolean folding = false;
 	 @Argument(alias = "stats", description = "print program statistics", required = false)
-	 	protected String stats = "stats";
-	
-	/** Argument flags */
-	static boolean showTree = false;
-	static boolean folding = false;
-	static boolean showFoldTree = false;
-	static boolean showStats = false;
+	 	protected static Boolean showStats = false;
 
 	private static Scanner scanner;
 	private static Parser parser;
