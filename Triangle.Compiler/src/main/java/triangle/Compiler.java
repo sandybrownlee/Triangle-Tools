@@ -38,7 +38,7 @@ public class Compiler {
 	@Argument(alias = "objectFileName", description = "The name of the file containing the object program.")
 	static String objectName = "obj.tam";
 
-	@Argument(alias = "showAbstractSyntaxTree", description = "True if the Abstract Syntax Tree is to be displayed after contextual analysis.")
+	@Argument(alias = "showTree", description = "True if the Abstract Syntax Tree is to be displayed after contextual analysis.")
 	static boolean showTree = false;
 
 	@Argument(alias = "showTreeAfterFolding", description = "True if the Abstract Syntax Tree is to be displayed after contextual analysis and folding is complete.")
@@ -98,23 +98,17 @@ public class Compiler {
 		// scanner.enableDebugging();
 		theAST = parser.parseProgram(); // 1st pass
 		if (reporter.getNumErrors() == 0) {
-			// if (showingAST) {
-			// drawer.draw(theAST);
-			// }
 			System.out.println("Contextual Analysis ...");
 			checker.check(theAST); // 2nd pass
-			if (showingAST && showTreeAfterFolding == false) {
+			if (showingAST) {
 				drawer.draw(theAST);
 			}
 			if (folding) {
 				theAST.visit(new ConstantFolder());
-				if (showingAST && showTreeAfterFolding) {
-					theAST.visit(new ConstantFolder());
+				if (showTreeAfterFolding) {
 					anotherDrawer.draw(theAST);
 				}
 			}
-
-
 			
 			if (reporter.getNumErrors() == 0) {
 				System.out.println("Code Generation ...");
