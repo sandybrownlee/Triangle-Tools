@@ -5,7 +5,7 @@ import triangle.abstractSyntaxTrees.visitors.CommandVisitor;
 import triangle.syntacticAnalyzer.SourcePosition;
 
 public class LoopWhileCommand {
-    public LoopWhileCommand(Expression eAST, Command cAST, SourcePosition position) {
+    public LoopWhileCommand(Command c1AST, Expression eAST, Command cAST, SourcePosition position) {
         super(position);
         E = eAST;
         C = cAST;
