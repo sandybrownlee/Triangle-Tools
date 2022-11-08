@@ -299,6 +299,12 @@ public class Parser {
 			accept(Token.END);
 			break;
 
+		case Token.LCURLY:
+			acceptIt();
+			commandAST = parseCommand();
+			accept(Token.RCURLY);
+			break;
+
 		case Token.LET: {
 			acceptIt();
 			Declaration dAST = parseDeclaration();
@@ -345,7 +351,8 @@ public class Parser {
 		case Token.END:
 		case Token.ELSE:
 		case Token.IN:
-		case Token.EOT:
+		case Token.EOT
+		case Token.RCURLY:
 
 			finish(commandPos);
 			commandAST = new EmptyCommand(commandPos);
@@ -447,15 +454,6 @@ public class Parser {
 			accept(Token.RBRACKET);
 			finish(expressionPos);
 			expressionAST = new ArrayExpression(aaAST, expressionPos);
-		}
-			break;
-
-		case Token.LCURLY: {
-			acceptIt();
-			RecordAggregate raAST = parseRecordAggregate();
-			accept(Token.RCURLY);
-			finish(expressionPos);
-			expressionAST = new RecordExpression(raAST, expressionPos);
 		}
 			break;
 
@@ -820,8 +818,7 @@ public class Parser {
 		case Token.LET:
 		case Token.IF:
 		case Token.LPAREN:
-		case Token.LBRACKET:
-		case Token.LCURLY: {
+		case Token.LBRACKET: {
 			Expression eAST = parseExpression();
 			finish(actualPos);
 			actualAST = new ConstActualParameter(eAST, actualPos);
