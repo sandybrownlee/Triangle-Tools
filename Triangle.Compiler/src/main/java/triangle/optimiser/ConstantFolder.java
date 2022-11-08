@@ -690,6 +690,8 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 				ie.type = StdEnvironment.integerType;
 				return ie;
 			} else if (foldedValue instanceof Boolean) {
+				// Depending on the result of foldedValue, create either a true or false
+				// identifier, with the proper declaration.
 				Identifier in = null;
 				if ((boolean) foldedValue) {
 					in = new Identifier("true", node1.getPosition());
@@ -698,9 +700,12 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 					in = new Identifier("false", node1.getPosition());
 					in.decl = StdEnvironment.falseDecl;
 				}
+				// Wrap the identifier in a VnameExpression.
 				SimpleVname vn = new SimpleVname(in, node1.getPosition());
 				VnameExpression ve = new VnameExpression(vn, node1.getPosition());
+				// Declare that the variable is a boolean.
 				ve.type = StdEnvironment.booleanType;
+				// Return the variable;
 				return ve;
 			}
 		}

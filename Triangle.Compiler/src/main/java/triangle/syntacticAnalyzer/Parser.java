@@ -325,6 +325,8 @@ public class Parser {
 			accept(Token.END);
 			break;
 
+		// Same code as for BEGIN/END. Allows for LCURLY/RCURLY to define blocks of
+		// code.
 		case Token.LCURLY:
 			acceptIt();
 			commandAST = parseCommand();
@@ -387,6 +389,7 @@ public class Parser {
 
 		case Token.SEMICOLON:
 		case Token.END:
+			// Added here to match END, allows RCURLY to end blocks without errors.
 		case Token.RCURLY:
 		case Token.ELSE:
 		case Token.IN:

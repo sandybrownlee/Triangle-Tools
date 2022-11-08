@@ -96,9 +96,10 @@ public class StatVisitor implements ActualParameterVisitor<Void, AbstractSyntaxT
 	private int countWhile;
 
 	public void printResults() {
-		System.out.println("Binary Expressions: " + Integer.toString(countBinary));
-		System.out.println("If Statements: " + Integer.toString(countIf));
-		System.out.println("While Statements: " + Integer.toString(countWhile));
+		//Print the three stats tracked to the console, labelling them for ease of use.
+		System.out.println("BinaryExpressions: " + Integer.toString(countBinary));
+		System.out.println("IfCommands: " + Integer.toString(countIf));
+		System.out.println("WhileCommands: " + Integer.toString(countWhile));
 	}
 	
 	@Override
@@ -225,6 +226,7 @@ public class StatVisitor implements ActualParameterVisitor<Void, AbstractSyntaxT
 
 	@Override
 	public AbstractSyntaxTree visitProgram(Program ast, Void arg) {
+		//Initialise the counters for the three stats.
 		countBinary = 0;
 		countIf = 0;
 		countWhile = 0;
@@ -278,7 +280,8 @@ public class StatVisitor implements ActualParameterVisitor<Void, AbstractSyntaxT
 
 	@Override
 	public AbstractSyntaxTree visitBinaryExpression(BinaryExpression ast, Void arg) {
-		countBinary += 1;
+		//Increment the count of BinaryExpressions.
+		countBinary++;
 		ast.E1.visit(this);
 		ast.E2.visit(this);
 		ast.O.visit(this);
@@ -425,7 +428,8 @@ public class StatVisitor implements ActualParameterVisitor<Void, AbstractSyntaxT
 
 	@Override
 	public AbstractSyntaxTree visitIfCommand(IfCommand ast, Void arg) {
-		countIf += 1;
+		//Increment the count of IfCommands.
+		countIf++;
 		ast.C1.visit(this);
 		ast.C2.visit(this);
 		ast.E.visit(this);
@@ -456,7 +460,8 @@ public class StatVisitor implements ActualParameterVisitor<Void, AbstractSyntaxT
 
 	@Override
 	public AbstractSyntaxTree visitWhileCommand(WhileCommand ast, Void arg) {
-		countWhile += 1;
+		//Increment the count of WhileCommands.
+		countWhile++;
 		ast.C.visit(this);
 		ast.E.visit(this);
 		return null;

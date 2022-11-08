@@ -182,15 +182,26 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 		emitter.emit(OpCode.JUMPIF, Machine.falseRep, Register.CB, loopAddr);
 		return null;
 	}
-	
+
 	@Override
 	public Void visitLoopWhileCommand(LoopWhileCommand ast, Frame frame) {
+		// While the loop's order is not as provided, since the executions starts after
+		// command 2 in the loop, it executes all comands in the same order and with the
+		// same conditions as provided in the specifications.
+		
+		// Initially, jump to after command 2 in the loop.
 		var jumpAddr = emitter.emit(OpCode.JUMP, 0, Register.CB, 0);
+		// Set loop address to the next instruction - the execution of command 2.
 		var loopAddr = emitter.getNextInstrAddr();
+		// Execute command 2.
 		ast.C2.visit(this, frame);
 		emitter.patch(jumpAddr);
+		// Execute command 1.
 		ast.C1.visit(this, frame);
+		// Evaluate the expression.
 		ast.E.visit(this, frame);
+		// If the expression is true, jump to the execution of command 2. If not do not
+		// jump, ending the loop.
 		emitter.emit(OpCode.JUMPIF, Machine.trueRep, Register.CB, loopAddr);
 		return null;
 	}
