@@ -1,5 +1,6 @@
 package triangle.optimiser;
 
+import com.sun.jdi.BooleanValue;
 import triangle.StdEnvironment;
 import triangle.abstractSyntaxTrees.AbstractSyntaxTree;
 import triangle.abstractSyntaxTrees.Program;
@@ -602,6 +603,19 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 				foldedValue = int1 * int2;
 			} else if (o.decl == StdEnvironment.subtractDecl) {
 				foldedValue = int1 - int2;
+			} else if (o.decl == StdEnvironment.equalDecl){
+				foldedValue = int1 = int2;
+			}else if (o.decl == StdEnvironment.lessDecl){
+				foldedValue = int1 < int2;
+			} else if (o.decl == StdEnvironment.notgreaterDecl){
+				foldedValue = int1 <= int2;
+			} else if (o.decl == StdEnvironment.greaterDecl){
+				foldedValue = int1 > int2;
+			} else if (o.decl == StdEnvironment.notlessDecl) {
+				foldedValue = int1 >= int2;
+			}
+			else if (o.decl == StdEnvironment.unequalDecl) {
+				foldedValue = int1 != int2;
 			}
 
 			if (foldedValue instanceof Integer) {
@@ -610,7 +624,17 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 				ie.type = StdEnvironment.integerType;
 				return ie;
 			} else if (foldedValue instanceof Boolean) {
+				Identifier id = new Identifier(foldedValue.toString().toLowerCase(), node1.getPosition());
+				if (id.spelling.equalsIgnoreCase("true")){
+					id.decl = StdEnvironment.trueDecl;
+				} else if (id.spelling.equalsIgnoreCase("false")){
+					id.decl = StdEnvironment.falseDecl;
+				}
 
+				SimpleVname svn = new SimpleVname(id, node1.getPosition());
+				VnameExpression vne = new VnameExpression(svn, node1.getPosition());
+				vne.type = StdEnvironment.booleanType;
+				return vne;
 			}
 		}
 
