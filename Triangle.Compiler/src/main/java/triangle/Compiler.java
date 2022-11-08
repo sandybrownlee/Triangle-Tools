@@ -36,7 +36,7 @@ import com.sampullara.cli.Argument;
 public class Compiler {
 
 	//Example cmd line cmd:
-	// java -cp build/libs/Triangle-Tools.jar triangle.Compiler -src programs/while-curly.tri -o compiled/while-curly.tam -tree -fold -treeafterfold
+	// java -cp build/libs/Triangle-Tools.jar triangle.Compiler -src programs/repeatuntil.tri -o compiled/repeatuntil.tam -tree -fold -treeafterfold
 
 	/** The filename for the object program, normally obj.tam. */
 	@Argument(alias = "o", description = "The name of the file containing the object program.")
