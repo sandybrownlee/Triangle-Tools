@@ -152,6 +152,7 @@ public final class Checker implements ActualParameterVisitor<FormalParameter, Vo
 	@Override
 	public Void visitIfCommand(IfCommand ast, Void arg) {
 		var eType = ast.E.visit(this);
+		//increment if command counter for stat printing
 		Statistics.ifComVisited();
 
 		checkAndReportError(eType.equals(StdEnvironment.booleanType), "Boolean expression expected here", ast.E);
@@ -181,6 +182,7 @@ public final class Checker implements ActualParameterVisitor<FormalParameter, Vo
 	@Override
 	public Void visitWhileCommand(WhileCommand ast, Void arg) {
 		var eType = ast.E.visit(this);
+		//increment while command counter for stat printing
 		Statistics.whileComVisited();
 
 		checkAndReportError(eType.equals(StdEnvironment.booleanType), "Boolean expression expected here", ast.E);
@@ -207,6 +209,7 @@ public final class Checker implements ActualParameterVisitor<FormalParameter, Vo
 		var e1Type = ast.E1.visit(this);
 		var e2Type = ast.E2.visit(this);
 		var binding = ast.O.visit(this);
+		//increment binary expression counter for stat printing
 		Statistics.binExpVisited();
 
 		if (binding instanceof BinaryOperatorDeclaration) {

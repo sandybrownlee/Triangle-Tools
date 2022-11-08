@@ -579,6 +579,7 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 			int int2 = (Integer.parseInt(((IntegerExpression) node2).IL.spelling));
 			Object foldedValue = null;
 			
+			// set foldedValue according to operation
 			if (o.decl == StdEnvironment.addDecl) {
 				foldedValue = int1 + int2;
 			} else if (o.decl == StdEnvironment.divideDecl) {
@@ -602,13 +603,17 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 			} else if (o.decl == StdEnvironment.unequalDecl) {
 				foldedValue = int1 != int2;
 			}
-
+			
+			//if result is an integer
 			if (foldedValue instanceof Integer) {
+				//display result to AST instead of operation
 				IntegerLiteral il = new IntegerLiteral(foldedValue.toString(), node1.getPosition());
 				IntegerExpression ie = new IntegerExpression(il, node1.getPosition());
 				ie.type = StdEnvironment.integerType;
 				return ie;
+			//if result is a boolean
 			} else if (foldedValue instanceof Boolean) {
+				//display result to AST instead of operation
 				Identifier id = new Identifier(foldedValue.toString(), node1.getPosition());
 				if (foldedValue.toString().equals("true")){
 					id.decl = StdEnvironment.trueDecl;
@@ -624,7 +629,10 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 		// any unhandled situation (i.e., not foldable) is ignored
 		return null;
 	}
-
+	
+	/**
+	 * method to replace loop command expression in AST if replacement exists
+	 */
 	@Override
 	public AbstractSyntaxTree visitLoopCommand(LoopCommand ast, Void arg) {
 		ast.C1.visit(this);

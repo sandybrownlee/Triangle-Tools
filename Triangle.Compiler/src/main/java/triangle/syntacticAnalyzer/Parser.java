@@ -285,6 +285,7 @@ public class Parser {
 			} else {
 
 				Vname vAST = parseRestOfVname(iAST);
+				//if decrement operator
 				if (currentToken.kind == Token.OPERATOR && currentToken.spelling.equals("--")) {
 					acceptIt();
 					IntegerLiteral il = new IntegerLiteral("1", commandPos);
@@ -309,7 +310,8 @@ public class Parser {
 			commandAST = parseCommand();
 			accept(Token.END);
 			break;
-			
+		
+		//start of curly bracket command block
 		case Token.LCURLY:
 			acceptIt();
 			commandAST = parseCommand();
@@ -348,6 +350,7 @@ public class Parser {
 		}
 			break;
 			
+		//start of loop-while-do
 		case Token.LOOP: {
 			acceptIt();
 			Command cAST1 = parseSingleCommand();

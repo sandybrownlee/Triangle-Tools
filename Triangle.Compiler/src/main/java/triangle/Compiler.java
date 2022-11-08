@@ -72,6 +72,7 @@ public class Compiler {
 	 *                     displayed during code generation (not currently
 	 *                     implemented).
 	 * @param showingFoldAST   true if the AST is to be displayed after folding
+	 * @param showingStats true if stats should be printed after code generation
 	 * @return true if the source program is free of compile-time errors, otherwise
 	 *         false.
 	 */
@@ -110,7 +111,8 @@ public class Compiler {
 				if (showingFoldAST) {
 					drawer2.draw(theAST);
 				}
-			} else if (showingFoldAST || showingStats) {
+			// Display error if attempting to display folded AST without folding
+			} else if (showingFoldAST) {
 				if (showingFoldAST) {
 					System.out.println("Error: Cannot print folded AST if not folding.");
 				}
@@ -120,10 +122,10 @@ public class Compiler {
 				System.out.println("Code Generation ...");
 				encoder.encodeRun(theAST, showingTable); // 3rd pass
 				
-				if (showingStats) {
-					statistics.printStats();
-				}
-				
+			}
+			// Print stats on expressions and commands visited.
+			if (showingStats) {
+				statistics.printStats();
 			}
 		}
 
@@ -144,9 +146,10 @@ public class Compiler {
 	 *             source filename.
 	 */
 	public static void main(String[] args) {
+		//create new compiler instance
 		Compiler compiler = new Compiler();
 		
-		//cli parse arguments
+		//check required arguments are present, and that arguments are entered correctly
 		Args.parseOrExit(compiler, args);
 		parseArgs(args);
 		
@@ -161,6 +164,7 @@ public class Compiler {
 	}
 	
 	private static void parseArgs(String[] args) {
+		//set flags depending on which arguments are present.
 		for (String s : args) {
 			var sl = s.toLowerCase();
 			if (sl.equals("tree")) {
