@@ -1,0 +1,28 @@
+let
+  var a : Integer;
+  var b : Boolean
+in
+begin
+  a := 0;
+  b := true;
+  repeat
+  begin
+	b := 1 < 3;
+    if b
+    then a++
+    else ;
+    b := 1 > 3;
+    if b
+    then a++
+    else ;
+    b := 2 >= 1;
+	if b
+    then a++
+    else ;
+    b := 2 < 1;
+	if b
+    then a++
+    else ;
+  end
+  until a > 10000;
+end

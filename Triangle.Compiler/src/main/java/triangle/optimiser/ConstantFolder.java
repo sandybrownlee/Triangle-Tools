@@ -95,9 +95,9 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 		OperatorVisitor<Void, AbstractSyntaxTree>, ProgramVisitor<Void, AbstractSyntaxTree>,
 		RecordAggregateVisitor<Void, AbstractSyntaxTree>, TypeDenoterVisitor<Void, AbstractSyntaxTree>,
 		VnameVisitor<Void, AbstractSyntaxTree> {
-	
+
 	private ArrayList<SourcePosition> hoisted = new ArrayList<SourcePosition>();
-	
+
 	{
 
 	}
@@ -236,7 +236,7 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 	@Override
 	public AbstractSyntaxTree visitProgram(Program ast, Void arg) {
 		if (ast.C instanceof WhileCommand) {
-			ast.C = new SequentialCommand(new EmptyCommand(ast.C.getPosition()), ast.C,ast.C.getPosition());
+			ast.C = new SequentialCommand(new EmptyCommand(ast.C.getPosition()), ast.C, ast.C.getPosition());
 		}
 		ast.C.visit(this);
 		return null;
@@ -420,7 +420,7 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 	@Override
 	public AbstractSyntaxTree visitProcDeclaration(ProcDeclaration ast, Void arg) {
 		if (ast.C instanceof WhileCommand) {
-			ast.C = new SequentialCommand(new EmptyCommand(ast.C.getPosition()), ast.C,ast.C.getPosition());
+			ast.C = new SequentialCommand(new EmptyCommand(ast.C.getPosition()), ast.C, ast.C.getPosition());
 		}
 		ast.C.visit(this);
 		ast.FPS.visit(this);
@@ -480,11 +480,11 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 	@Override
 	public AbstractSyntaxTree visitIfCommand(IfCommand ast, Void arg) {
 		if (ast.C1 instanceof WhileCommand) {
-			ast.C1 = new SequentialCommand(new EmptyCommand(ast.C1.getPosition()), ast.C1,ast.C1.getPosition());
+			ast.C1 = new SequentialCommand(new EmptyCommand(ast.C1.getPosition()), ast.C1, ast.C1.getPosition());
 		}
 		ast.C1.visit(this);
 		if (ast.C2 instanceof WhileCommand) {
-			ast.C2 = new SequentialCommand(new EmptyCommand(ast.C2.getPosition()), ast.C2,ast.C2.getPosition());
+			ast.C2 = new SequentialCommand(new EmptyCommand(ast.C2.getPosition()), ast.C2, ast.C2.getPosition());
 		}
 		ast.C2.visit(this);
 		AbstractSyntaxTree replacement = ast.E.visit(this);
@@ -497,7 +497,7 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 	@Override
 	public AbstractSyntaxTree visitLetCommand(LetCommand ast, Void arg) {
 		if (ast.C instanceof WhileCommand) {
-			ast.C = new SequentialCommand(new EmptyCommand(ast.C.getPosition()), ast.C,ast.C.getPosition());
+			ast.C = new SequentialCommand(new EmptyCommand(ast.C.getPosition()), ast.C, ast.C.getPosition());
 		}
 		ast.C.visit(this);
 		ast.D.visit(this);
@@ -506,30 +506,45 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 
 	@Override
 	public AbstractSyntaxTree visitSequentialCommand(SequentialCommand ast, Void arg) {
-		boolean hasWhile = false;
-		WhileCommand toHoist = null;
 		if (ast.C1 instanceof WhileCommand) {
-			ast.C1 = new SequentialCommand(new EmptyCommand(ast.C1.getPosition()), ast.C1,ast.C1.getPosition());
+			ast.C1 = new SequentialCommand(new EmptyCommand(ast.C1.getPosition()), ast.C1, ast.C1.getPosition());
 		}
-		if (ast.C2 instanceof WhileCommand && !(hoisted.contains(ast.getPosition()))) {
-			//Create a new object for hoisting while loops.
+		if (ast.C2 instanceof WhileCommand && !(hoisted.contains(ast.C2.getPosition()))) {
+			// Create a new object for hoisting while loops.
 			WhileHoister hoister = new WhileHoister();
-			//Visit the WhileCommand, 
+			// Visit the WhileCommand, noting each Vname that is assigned a value.
 			ast.C2.visit(hoister);
+			// Signal to the WhileHoister that all Vnames that are assigned values have now
+			// been located.
 			hoister.completeAssignment();
-			ArrayList<Expression> constant = hoister.getConstant();
+			// Visit the WHileCOmmand again, this time replacing each hoistable expression
+			// assigned with a constant.
 			ast.C2.visit(hoister);
+			// Get all expressions that were removed by hoisting.
+			ArrayList<Expression> constant = hoister.getConstant();
+			// Get all constants that replaced hoisted expressions.
 			ArrayList<Identifier> hoistVariables = hoister.getHoistVariables();
+			// Create a copy of the first command.
 			Command sc = ast.C1;
+			// Iterating over each hoisted expression:
 			for (int x = 0; x < constant.size(); x++) {
+				// Get the constant it was replaced by.
 				Identifier i = hoistVariables.get(x);
+				// Create a new Vname that holds this constant and the new position.
 				SimpleVname vn = new SimpleVname(i, ast.C2.getPosition());
+				// Create an AssignCommand that assigns this constant the value of the hoisted
+				// expression it replaced.
 				AssignCommand as = new AssignCommand(vn, constant.get(x), ast.C2.getPosition());
+				// Create a new SequentialCommand, with C1 (and all previous assignment
+				// commands) as the first position, and this assignment as the second.
 				sc = new SequentialCommand(sc, as, ast.C1.getPosition());
 			}
-			//Place new SC at ast.c1
+			// Replace C1 with the new SequentialCommand, effectively inserting
+			// AssignCommands for all hoisted values before it.
 			ast.C1 = sc;
-			hoisted.add(ast.getPosition());
+			// Add the current AST's position to the ArrayList of hoisted while loops (while
+			// hoisting multiple times has no effect, this prevents infinite recursion.
+			hoisted.add(ast.C2.getPosition());
 		}
 		ast.C1.visit(this);
 		ast.C2.visit(this);
@@ -539,11 +554,11 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 	@Override
 	public AbstractSyntaxTree visitLoopWhileCommand(LoopWhileCommand ast, Void arg) {
 		if (ast.C1 instanceof WhileCommand) {
-			ast.C1 = new SequentialCommand(new EmptyCommand(ast.C1.getPosition()), ast.C1,ast.C1.getPosition());
+			ast.C1 = new SequentialCommand(new EmptyCommand(ast.C1.getPosition()), ast.C1, ast.C1.getPosition());
 		}
 		ast.C1.visit(this);
 		if (ast.C2 instanceof WhileCommand) {
-			ast.C2 = new SequentialCommand(new EmptyCommand(ast.C2.getPosition()), ast.C2,ast.C2.getPosition());
+			ast.C2 = new SequentialCommand(new EmptyCommand(ast.C2.getPosition()), ast.C2, ast.C2.getPosition());
 		}
 		ast.C2.visit(this);
 		AbstractSyntaxTree replacement = ast.E.visit(this);
@@ -565,7 +580,7 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 	@Override
 	public AbstractSyntaxTree visitRepeatCommand(RepeatCommand ast, Void arg) {
 		if (ast.C instanceof WhileCommand) {
-			ast.C = new SequentialCommand(new EmptyCommand(ast.C.getPosition()), ast.C,ast.C.getPosition());
+			ast.C = new SequentialCommand(new EmptyCommand(ast.C.getPosition()), ast.C, ast.C.getPosition());
 		}
 		ast.C.visit(this);
 		AbstractSyntaxTree replacement = ast.E.visit(this);

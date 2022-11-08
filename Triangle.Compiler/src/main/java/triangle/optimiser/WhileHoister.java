@@ -101,30 +101,26 @@ public class WhileHoister implements ActualParameterVisitor<Void, AbstractSyntax
 	private ArrayList<Expression> constant;
 	private ArrayList<Identifier> hoistVariables;
 	private boolean assignComplete = false;
-	
+
 	public WhileHoister() {
 		assigned = new ArrayList<String>();
 		constant = new ArrayList<Expression>();
 		hoistVariables = new ArrayList<Identifier>();
 		assignComplete = false;
 	}
-	
-	public ArrayList<String> getAssigned() {
-		return assigned;
-	}
-	
+
 	public ArrayList<Expression> getConstant() {
 		return constant;
 	}
-	
+
 	public ArrayList<Identifier> getHoistVariables() {
 		return hoistVariables;
 	}
-	
+
 	public void completeAssignment() {
 		assignComplete = true;
 	}
-	
+
 	@Override
 	public AbstractSyntaxTree visitConstFormalParameter(ConstFormalParameter ast, Void arg) {
 		ast.I.visit(this);
@@ -325,7 +321,7 @@ public class WhileHoister implements ActualParameterVisitor<Void, AbstractSyntax
 
 	@Override
 	public AbstractSyntaxTree visitIfExpression(IfExpression ast, Void arg) {
-		
+
 		ast.E1.visit(this);
 		ast.E2.visit(this);
 		ast.E3.visit(this);
@@ -425,30 +421,39 @@ public class WhileHoister implements ActualParameterVisitor<Void, AbstractSyntax
 		ast.T.visit(this);
 		return null;
 	}
-	
+
 	@Override
 	public AbstractSyntaxTree visitAssignCommand(AssignCommand ast, Void arg) {
+		// If the notation of variables that are assigned values within the loop is
+		// complete:
 		if (assignComplete) {
+			// Create a new object for checking if expressions are hoistable.
 			HoistExpression hoister = new HoistExpression(assigned);
+			// VIsit the expression, checking if it refers to any of the noted variables
+			// assigned within the loop.
 			ast.E.visit(hoister);
+			// If it does not refer to any, and is therefore hoistable:
 			if (hoister.isHoistable()) {
+				//Add the expression to the list of Expressions.
 				constant.add(ast.E);
 				int index = constant.indexOf(ast.E);
-				Identifier i = new Identifier("reservedforhoist"+Integer.toString(index),ast.getPosition());
-				i.decl = getVname(ast.V,arg).decl;
+				Identifier i = new Identifier("reservedforhoist" + Integer.toString(index), ast.getPosition());
+				i.decl = getVname(ast.V, arg).decl;
 				hoistVariables.add(i);
 				SimpleVname vn = new SimpleVname(i, ast.getPosition());
 				VnameExpression ve = new VnameExpression(vn, ast.getPosition());
 				ve.type = ast.E.type;
 				ast.E = ve;
 			}
+		} else {
+			// Get the spelling of the identifier which is assigned a value and note it.
+			assigned.add(getVname(ast.V, arg).spelling);
 		}
 		ast.E.visit(this);
-		assigned.add(getVname(ast.V,arg).spelling);
 		ast.V.visit(this);
 		return null;
 	}
-	
+
 	public Identifier getVname(Vname target, Void arg) {
 		Vname ivn = target;
 		while (true) {
@@ -495,7 +500,7 @@ public class WhileHoister implements ActualParameterVisitor<Void, AbstractSyntax
 		ast.C2.visit(this);
 		return null;
 	}
-	
+
 	@Override
 	public AbstractSyntaxTree visitLoopWhileCommand(LoopWhileCommand ast, Void arg) {
 		ast.C1.visit(this);
