@@ -23,6 +23,11 @@ import triangle.syntacticAnalyzer.Scanner;
 import triangle.syntacticAnalyzer.SourceFile;
 import triangle.treeDrawer.Drawer;
 
+
+//Import cli parser library components
+import com.sampullara.cli.Args;
+import com.sampullara.cli.Argument;
+
 /**
  * The main driver class for the Triangle compiler.
  *
@@ -31,10 +36,16 @@ import triangle.treeDrawer.Drawer;
  */
 public class Compiler {
 
-	/** The filename for the object program, normally obj.tam. */
-	static String objectName = "obj.tam";
-	
-	static boolean showTree = false;
+	// Create command line argument instance variables
+	@Argument(alias = "f", description = "Source filename", required = false)
+	protected String fileName = "fileName";
+
+	@Argument(alias = "o", description = "Filename for the object program", required = false)
+	protected static String objectName = "obj.tam";
+
+	@Argument(alias = "t", description = "Show Tree", required = false)
+	protected static boolean showTree = false;
+
 
 	private static Scanner scanner;
 	private static Parser parser;
@@ -115,30 +126,23 @@ public class Compiler {
 	 */
 	public static void main(String[] args) {
 
+		// Create a new compiler object
+		Compiler compiler = new Compiler();
+
+		// Assign passed in arguments to instance variables
+		Args.parseOrExit(compiler, args);
+
 		if (args.length < 1) {
 			System.out.println("Usage: tc filename [-o=outputfilename] [tree]");
 			System.exit(1);
 		}
-		
-		parseArgs(args);
 
-		String sourceName = args[0];
 		
-		var compiledOK = compileProgram(sourceName, objectName, showTree, false);
+		var compiledOK = compileProgram(compiler.fileName, compiler.objectName, compiler.showTree, false);
 
 		if (!showTree) {
 			System.exit(compiledOK ? 0 : 1);
 		}
 	}
-	
-	private static void parseArgs(String[] args) {
-		for (String s : args) {
-			var sl = s.toLowerCase();
-			if (sl.equals("tree")) {
-				showTree = true;
-			} else if (sl.startsWith("-o=")) {
-				objectName = s.substring(3);
-			}
-		}
-	}
+
 }

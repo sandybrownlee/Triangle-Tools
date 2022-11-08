@@ -282,21 +282,53 @@ public class Parser {
 				commandAST = new CallCommand(iAST, apsAST, commandPos);
 
 			} else {
-
 				Vname vAST = parseRestOfVname(iAST);
-				accept(Token.BECOMES);
-				Expression eAST = parseExpression();
-				finish(commandPos);
-				commandAST = new AssignCommand(vAST, eAST, commandPos);
+				if (currentToken.kind == Token.OPERATOR && currentToken.spelling.equals("--")) {
+					acceptIt();
+
+					// Create an integer literal to represent the number 1
+					IntegerLiteral il = new IntegerLiteral("1", commandPos);
+
+					// Wrap the integer literal in an IntegerExpression
+					IntegerExpression ie = new IntegerExpression(il, commandPos);
+
+					// Wrap the variable name in a VnameExpression
+					VnameExpression vne = new VnameExpression(vAST, commandPos);
+
+					// Create the new decrementation operator
+					Operator op = new Operator("-", commandPos);
+
+					// Produce the BinaryExpression
+					Expression eAST = new BinaryExpression(vne, op, ie, commandPos);
+
+					finish(commandPos);
+
+					// Create an assignment with a binary expression
+					commandAST = new AssignCommand(vAST, eAST, commandPos);
+
+				} else {
+					accept(Token.BECOMES);
+					Expression eAST = parseExpression();
+					finish(commandPos);
+					commandAST = new AssignCommand(vAST, eAST, commandPos);
+				}
 			}
 		}
 			break;
 
-		case Token.BEGIN:
+		case Token.BEGIN: {
 			acceptIt();
 			commandAST = parseCommand();
 			accept(Token.END);
+		}
 			break;
+
+		case Token.LCURLY: {
+			acceptIt();
+			commandAST = parseCommand();
+			accept(Token.RCURLY);
+		}
+		break;
 
 		case Token.LET: {
 			acceptIt();
@@ -332,6 +364,7 @@ public class Parser {
 
 		case Token.SEMICOLON:
 		case Token.END:
+		case Token.RCURLY:
 		case Token.ELSE:
 		case Token.IN:
 		case Token.EOT:

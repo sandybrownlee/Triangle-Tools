@@ -1,21 +1,33 @@
 apply plugin: 'java'
 apply plugin: 'application'
 
+// Set source compatibility (Java 11)
 sourceCompatibility = 11
 
+// Point into the maven Central repo
 repositories {
-    mavenCentral()
+	mavenCentral()
 }
 
-
+// Add the dependencies for the CLI Parser and JUnit libraries as well as the Triangle.AbstractMachine
 dependencies {
+	implementation group: 'com.github.spullara.cli-parser', name: 'cli-parser', version: '1.1.5'
 	implementation project(':Triangle.AbstractMachine')
 	testImplementation group: 'junit', name: 'junit', version: '4.13.2'
 }
 
+// Point to the compiler
 application {
 	mainClass = 'Triangle.Compiler'
 }
 
 // allow access to programs for unit tests
 sourceSets.test.resources.srcDir file("$rootDir/programs")
+
+jar {
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+	from {
+		configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+	}
+}
