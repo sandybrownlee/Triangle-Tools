@@ -15,16 +15,17 @@ import triangle.syntacticAnalyzer.SourceFile;
 public class TestScanner {
 
 	@Test
+	public void testCurlyBracketsCommands() { compileExpectSuccess("/while-curly.tri"); }
+
+	@Test
 	public void testHi() {
 		compileExpectSuccess("/hi.tri");
 	}
-	
 
 	@Test
 	public void testHiNewComment() {
 		compileExpectSuccess("/hi-newcomment.tri");
 	}
-	
 
 	@Test
 	public void testHiNewComment2() {
@@ -37,7 +38,7 @@ public class TestScanner {
 	}
 
 	@Test
-	public void testDecrement() { compileExpectSuccess("/decrement.tri"); }
+	public void testDecrementUnaryOperator() { compileExpectSuccess("/decrement.tri"); }
 
 	@Test
 	public void testRepeatUntil() {

@@ -302,6 +302,12 @@ public class Parser {
 		}
 			break;
 
+		case Token.LCURLY:
+			acceptIt();
+			commandAST = parseCommand();
+			accept(Token.RCURLY);
+			break;
+
 		case Token.BEGIN:
 			acceptIt();
 			commandAST = parseCommand();
@@ -351,6 +357,7 @@ public class Parser {
 		}
 			break;
 
+		case Token.RCURLY:
 		case Token.SEMICOLON:
 		case Token.END:
 		case Token.ELSE:
