@@ -4,11 +4,12 @@ import triangle.abstractSyntaxTrees.expressions.Expression;
 import triangle.abstractSyntaxTrees.visitors.CommandVisitor;
 import triangle.syntacticAnalyzer.SourcePosition;
 
-public class LoopWhileCommand {
-    public LoopWhileCommand(Command c1AST, Expression eAST, Command cAST, SourcePosition position) {
+public class LoopWhileCommand extends Command {
+    public LoopWhileCommand(Command cAST, Expression eAST, Command c2AST, SourcePosition position) {
         super(position);
         E = eAST;
-        C = cAST;
+        C1 = cAST;
+        C2 = c2AST;
     }
 
     public <TArg, TResult> TResult visit(CommandVisitor<TArg, TResult> v, TArg arg) {
@@ -16,5 +17,6 @@ public class LoopWhileCommand {
     }
 
     public Expression E;
-    public final Command C;
+    public final Command C1;
+    public final Command C2;
 }
