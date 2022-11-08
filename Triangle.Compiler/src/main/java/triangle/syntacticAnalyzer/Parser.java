@@ -354,6 +354,20 @@ public class Parser {
 		}
 			break;
 
+			//Creating case token for LOOP, Task 5
+			case Token.LOOP: {
+				acceptIt();
+				Command c1AST = parseSingleCommand();
+				accept(Token.WHILE);
+				Expression eAST = parseExpression();
+				accept(Token.DO);
+				Command c2AST = parseSingleCommand();
+				finish(commandPos);
+				commandAST = new WhileCommand(eAST, c1AST, c2AST, commandPos); //Creating new While Command
+			}
+
+			break;
+
 		case Token.WHILE: {
 			acceptIt();
 			Expression eAST = parseExpression();
@@ -373,7 +387,7 @@ public class Parser {
 				commandAST = new RepeatCommand(eAST, cAST, commandPos);
 			}
 			break;
-
+		//Created RCurly case token, so it acts as the end for the LCurly.
 		case Token.RCURLY:
 		case Token.SEMICOLON:
 		case Token.END:
