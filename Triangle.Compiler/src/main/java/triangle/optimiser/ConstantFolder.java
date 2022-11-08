@@ -495,6 +495,11 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 		return null;
 	}
 
+	@Override
+	public AbstractSyntaxTree visitLoopWhileCommand(LoopWhileCommand loopWhileCommand, Void unused) {
+		return null;
+	}
+
 	// TODO uncomment if you've implemented the repeat command
 //	@Override
 //	public AbstractSyntaxTree visitRepeatCommand(RepeatCommand ast, Void arg) {

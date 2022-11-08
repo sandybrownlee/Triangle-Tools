@@ -15,6 +15,9 @@ import triangle.syntacticAnalyzer.SourceFile;
 public class TestScanner {
 
 	@Test
+	public void testLoopWhile() { compileExpectSuccess("/loopwhile.tri"); }
+
+	@Test
 	public void testCurlyBracketsCommands() { compileExpectSuccess("/while-curly.tri"); }
 
 	@Test
