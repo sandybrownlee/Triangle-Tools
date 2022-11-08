@@ -329,6 +329,17 @@ public class Parser {
 		}
 		break;
 
+		case Token.LOOP: {
+			acceptIt();
+			Command cAST1 = parseSingleCommand();
+			accept(Token.WHILE);
+			Expression eAST = parseExpression();
+			accept(Token.DO);
+			Command cAST2 = parseSingleCommand();
+			finish(commandPos);
+			commandAST = new LoopWhileDoCommand(eAST, cAST1, cAST2, commandPos);
+		}
+			break;
 		case Token.LET: {
 			acceptIt();
 			Declaration dAST = parseDeclaration();

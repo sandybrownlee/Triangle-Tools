@@ -47,6 +47,9 @@ public class TestScanner {
 	}
 
 	@Test
+	public void testLoopDoWhile() {compileExpectSuccess("/loopwhile.tri");}
+
+	@Test
 	public void testBarDemo() {
 		compileExpectFailure("/bardemo.tri");
 	}
