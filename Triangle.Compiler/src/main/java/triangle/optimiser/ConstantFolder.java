@@ -601,18 +601,11 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 				return ie;
 			// if foldedValue is not an integer and not null, it can only be boolean
 			} else if (foldedValue != null) {
-				// The type denoter is given a known value of 1 or 0, representing true or false
-				BoolTypeDenoter btd = new BoolTypeDenoter(node1.getPosition());
-				btd.entity = new KnownValue(1, (Boolean)foldedValue ? 1 : 0);
-
 				Identifier i = new Identifier(foldedValue.toString(), node1.getPosition());
-				i.decl = btd;
-				i.type = StdEnvironment.booleanType;
+				i.decl = ((Boolean)foldedValue ? StdEnvironment.trueDecl : StdEnvironment.falseDecl);
 				SimpleVname sm = new SimpleVname(i, node1.getPosition());
-				sm.type = StdEnvironment.booleanType;
 				VnameExpression ve = new VnameExpression(sm, node1.getPosition());
 				ve.type = StdEnvironment.booleanType;
-
 				return ve;
 			}
 		}

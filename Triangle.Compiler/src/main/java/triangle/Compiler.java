@@ -109,6 +109,12 @@ public class Compiler {
 			System.out.println("Contextual Analysis ...");
 			checker.check(theAST); // 2nd pass
 
+			if (statistics) {
+				System.out.println("Generating Statistics ...");
+				theAST.visit(statsCounter);
+				System.out.println(statsCounter.toString());
+			}
+
 			if (showingAST) {
 				drawerPreOptimised.draw(theAST);
 			}
@@ -117,12 +123,6 @@ public class Compiler {
 				if (showAfterFolding) {
 					drawerPostOptimised.draw(theAST);
 				}
-			}
-
-			if (statistics) {
-				System.out.println("Generating Statistics ...");
-				theAST.visit(statsCounter);
-				System.out.println(statsCounter.toString());
 			}
 			
 			if (reporter.getNumErrors() == 0) {
