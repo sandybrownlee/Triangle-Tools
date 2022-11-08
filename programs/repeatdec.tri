@@ -1,0 +1,14 @@
+! Taken repeat until and modified
+
+let
+  var a : Integer
+in
+begin
+  a := 0;
+  repeat
+  begin
+    put('a');
+    a := a - 1;
+  end
+  until a <= 0
+end

@@ -33,6 +33,7 @@ import triangle.abstractSyntaxTrees.commands.CallCommand;
 import triangle.abstractSyntaxTrees.commands.EmptyCommand;
 import triangle.abstractSyntaxTrees.commands.IfCommand;
 import triangle.abstractSyntaxTrees.commands.LetCommand;
+import triangle.abstractSyntaxTrees.commands.RepeatCommand;
 import triangle.abstractSyntaxTrees.commands.SequentialCommand;
 import triangle.abstractSyntaxTrees.commands.WhileCommand;
 import triangle.abstractSyntaxTrees.declarations.BinaryOperatorDeclaration;
@@ -158,6 +159,19 @@ public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
 		var d2 = ast.C.visit(this);
 		return layoutBinary("WhileCom.", d1, d2);
 	}
+	
+	public DrawingTree visitModifiedWhileCommand(WhileCommand ast, Void obj) {
+		var d1 = ast.E.visit(this);
+		var d2 = ast.C.visit(this);
+		return layoutBinary("WhileCom.", d1, d2);
+	}
+
+	@Override
+	public DrawingTree visitRepeatCommand(RepeatCommand ast, Void obj) {
+		var d1 = ast.E.visit(this);
+		var d2 = ast.C.visit(this);
+		return layoutBinary("RepeatCom.", d1, d2);
+	}
 
 	// Expressions
 	@Override
@@ -171,7 +185,7 @@ public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
 		var d1 = ast.E1.visit(this);
 		var d2 = ast.O.visit(this);
 		var d3 = ast.E2.visit(this);
-		return layoutTernary("Bin.Expr.", d1, d2, d3);
+		return layoutTernary("Bin.Expr." + "Operators Spelling", d1, d2, d3);
 	}
 
 	@Override
@@ -223,7 +237,7 @@ public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
 	public DrawingTree visitUnaryExpression(UnaryExpression ast, Void obj) {
 		var d1 = ast.O.visit(this);
 		var d2 = ast.E.visit(this);
-		return layoutBinary("UnaryExpr.", d1, d2);
+		return layoutBinary("UnaryExpr." + "Operators Spelling", d1, d2);
 	}
 
 	@Override

@@ -19,6 +19,7 @@ import triangle.abstractSyntaxTrees.commands.CallCommand;
 import triangle.abstractSyntaxTrees.commands.EmptyCommand;
 import triangle.abstractSyntaxTrees.commands.IfCommand;
 import triangle.abstractSyntaxTrees.commands.LetCommand;
+import triangle.abstractSyntaxTrees.commands.RepeatCommand;
 import triangle.abstractSyntaxTrees.commands.SequentialCommand;
 import triangle.abstractSyntaxTrees.commands.WhileCommand;
 import triangle.abstractSyntaxTrees.declarations.BinaryOperatorDeclaration;
@@ -275,6 +276,7 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 
 	@Override
 	public AbstractSyntaxTree visitBinaryExpression(BinaryExpression ast, Void arg) {
+		SummaryStatistics.addToCount("bin");
 		AbstractSyntaxTree replacement1 = ast.E1.visit(this);
 		AbstractSyntaxTree replacement2 = ast.E2.visit(this);
 		ast.O.visit(this);
@@ -463,6 +465,7 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 
 	@Override
 	public AbstractSyntaxTree visitIfCommand(IfCommand ast, Void arg) {
+		SummaryStatistics.addToCount("if");
 		ast.C1.visit(this);
 		ast.C2.visit(this);
 		AbstractSyntaxTree replacement = ast.E.visit(this);
@@ -488,6 +491,7 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 
 	@Override
 	public AbstractSyntaxTree visitWhileCommand(WhileCommand ast, Void arg) {
+		SummaryStatistics.addToCount("while");
 		ast.C.visit(this);
 		AbstractSyntaxTree replacement = ast.E.visit(this);
 		if (replacement != null) {
@@ -495,17 +499,16 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 		}
 		return null;
 	}
-
-	// TODO uncomment if you've implemented the repeat command
-//	@Override
-//	public AbstractSyntaxTree visitRepeatCommand(RepeatCommand ast, Void arg) {
-//		ast.C.visit(this);
-//		AbstractSyntaxTree replacement = ast.E.visit(this);
-//		if (replacement != null) {
-//			ast.E = (Expression) replacement;
-//		}
-//		return null;
-//	}
+	
+	@Override
+	public AbstractSyntaxTree visitRepeatCommand(RepeatCommand ast, Void arg) {
+		ast.C.visit(this);
+		AbstractSyntaxTree replacement = ast.E.visit(this);
+		if (replacement != null) {
+			ast.E = (Expression) replacement;
+		}
+		return null;
+	}
 
 	@Override
 	public AbstractSyntaxTree visitMultipleArrayAggregate(MultipleArrayAggregate ast, Void arg) {
@@ -595,5 +598,30 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 		// any unhandled situation (i.e., not foldable) is ignored
 		return null;
 	}
+	
+	/*public AbstractSyntaxTree constantFoldBinaryExpression(AbstractSyntaxTree node1, AbstractSyntaxTree node2, Operator o) {
+		// the only case we know how to deal with for now is two IntegerExpressions
+		if ((node1 instanceof BooleanExpression) && (node2 instanceof BooleanExpression)) {
+			int int1 = (Boolean.parseBoolean(((BooleanExpression) node1).IL.spelling));
+			int int2 = (Boolean.parseBoolean(((BooleanExpression) node2).IL.spelling));
+			Object foldedValue = null;
+			
+			if (o.decl == StdEnvironment.trueDecl) {
+				foldedValue = int1 + int2;
+			}
+
+			if (foldedValue instanceof Boolean) {
+				Identifier il = new Identifier(foldedValue.toString(), node1.getPosition());
+				Identifier ie = new Identifier(il.toString(), node1.getPosition());
+				ie.type = StdEnvironment.booleanType;
+				return ie;
+			} else if (foldedValue instanceof Integer) {
+				 //currently not handled! 
+			}
+		}
+
+		// any unhandled situation (i.e., not foldable) is ignored
+		return null;
+	}*/
 
 }

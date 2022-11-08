@@ -37,6 +37,7 @@ import triangle.abstractSyntaxTrees.commands.Command;
 import triangle.abstractSyntaxTrees.commands.EmptyCommand;
 import triangle.abstractSyntaxTrees.commands.IfCommand;
 import triangle.abstractSyntaxTrees.commands.LetCommand;
+import triangle.abstractSyntaxTrees.commands.RepeatCommand;
 import triangle.abstractSyntaxTrees.commands.SequentialCommand;
 import triangle.abstractSyntaxTrees.commands.WhileCommand;
 import triangle.abstractSyntaxTrees.declarations.ConstDeclaration;
@@ -297,6 +298,12 @@ public class Parser {
 			commandAST = parseCommand();
 			accept(Token.END);
 			break;
+			
+		case Token.LCURLY:
+			acceptIt();
+			commandAST = parseCommand();
+			accept(Token.RCURLY);
+			break;
 
 		case Token.LET: {
 			acceptIt();
@@ -329,9 +336,33 @@ public class Parser {
 			commandAST = new WhileCommand(eAST, cAST, commandPos);
 		}
 			break;
+			
+		/*case Token.WHILECON: {
+			for(numberOfArgs)
+			acceptIt();
+			Expression eAST = parseExpression();
+			while(condition){
+			accept(Token.DO);
+			Command cAST = parseSingleCommand();
+			finish(commandPos);
+			commandAST = new WhileCommand(eAST, cAST, commandPos);
+			}
+		}
+			break;*/
+			
+		/*case Token.REPEAT: {
+			 acceptIt();
+			 Command cAST = parseSingleCommand();
+			 accept(Token.UNTIL);
+			 Expression eAST = parseExpression();
+			 finish(commandPos);
+			 commandAST = new RepeatCommand(eAST, cAST, commandPos);
+			 }
+			 break;*/
 
 		case Token.SEMICOLON:
 		case Token.END:
+		case Token.RCURLY:
 		case Token.ELSE:
 		case Token.IN:
 		case Token.EOT:

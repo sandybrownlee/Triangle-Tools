@@ -38,6 +38,7 @@ import triangle.abstractSyntaxTrees.commands.CallCommand;
 import triangle.abstractSyntaxTrees.commands.EmptyCommand;
 import triangle.abstractSyntaxTrees.commands.IfCommand;
 import triangle.abstractSyntaxTrees.commands.LetCommand;
+import triangle.abstractSyntaxTrees.commands.RepeatCommand;
 import triangle.abstractSyntaxTrees.commands.SequentialCommand;
 import triangle.abstractSyntaxTrees.commands.WhileCommand;
 import triangle.abstractSyntaxTrees.declarations.BinaryOperatorDeclaration;
@@ -178,6 +179,14 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 		emitter.patch(jumpAddr);
 		ast.E.visit(this, frame);
 		emitter.emit(OpCode.JUMPIF, Machine.trueRep, Register.CB, loopAddr);
+		return null;
+	}
+
+	public Void visitRepeatCommand(RepeatCommand ast, Frame frame) {
+		var loopAddr = emitter.getNextInstrAddr();
+		ast.C.visit(this, frame);
+		ast.E.visit(this, frame);
+		emitter.emit(OpCode.JUMPIF, Machine.falseRep, Register.CB, loopAddr);
 		return null;
 	}
 
@@ -559,7 +568,7 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 		if (frame == null) { // in this case, we're just using the frame to wrap up the size
 			frame = Frame.Initial;
 		}
-		
+
 		var offset = frame.getSize();
 		int fieldSize;
 		if (ast.entity == null) {

@@ -43,6 +43,20 @@ public class TestScanner {
 		compileExpectFailure("/repeatuntil.tri");
 	}
 	
+	@Test
+	public void testRepeatDec() {
+		compileExpectFailure("/repeatdec.tri");
+	}
+	
+	/*@Test
+	public void testWhileCurly() {
+		compileExpectFailure("/while-curly.tri");
+	}*/
+	
+	/*@Test
+	public void testLoopWhile() {
+		compileExpectFailure("/loopwhile.tri");
+	}*/
 	
 	
 	private void compileExpectSuccess(String filename) {

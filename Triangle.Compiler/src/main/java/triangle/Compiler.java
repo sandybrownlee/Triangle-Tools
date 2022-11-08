@@ -19,10 +19,13 @@ import triangle.codeGenerator.Emitter;
 import triangle.codeGenerator.Encoder;
 import triangle.contextualAnalyzer.Checker;
 import triangle.optimiser.ConstantFolder;
+import triangle.optimiser.SummaryStatistics;
 import triangle.syntacticAnalyzer.Parser;
 import triangle.syntacticAnalyzer.Scanner;
 import triangle.syntacticAnalyzer.SourceFile;
 import triangle.treeDrawer.Drawer;
+import com.sampullara.cli.Args;
+import com.sampullara.cli.Argument;
 
 /**
  * The main driver class for the Triangle compiler.
@@ -34,7 +37,7 @@ public class Compiler {
 
 	/** The filename for the object program, normally obj.tam. */
 	static String objectName = "obj.tam";
-	
+
 	static boolean showTree = false;
 	static boolean folding = false;
 
@@ -96,7 +99,7 @@ public class Compiler {
 			if (folding) {
 				theAST.visit(new ConstantFolder());
 			}
-			
+
 			if (reporter.getNumErrors() == 0) {
 				System.out.println("Code Generation ...");
 				encoder.encodeRun(theAST, showingTable); // 3rd pass
@@ -125,18 +128,22 @@ public class Compiler {
 			System.out.println("Usage: tc filename [-o=outputfilename] [tree] [folding]");
 			System.exit(1);
 		}
-		
+
+		// Args.parseOrExit(someObject,args); Could not find object or class to parse
+		// the arguments too.
 		parseArgs(args);
 
 		String sourceName = args[0];
-		
+
 		var compiledOK = compileProgram(sourceName, objectName, showTree, false);
 
 		if (!showTree) {
+			System.out.println(SummaryStatistics.printOut());
+			drawer.draw(theAST);
 			System.exit(compiledOK ? 0 : 1);
 		}
 	}
-	
+
 	private static void parseArgs(String[] args) {
 		for (String s : args) {
 			var sl = s.toLowerCase();

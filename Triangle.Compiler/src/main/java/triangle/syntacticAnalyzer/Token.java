@@ -65,6 +65,7 @@ final class Token extends Object {
 			// reserved words - must be in alphabetical order...
 			ARRAY = 4, BEGIN = 5, CONST = 6, DO = 7, ELSE = 8, END = 9, FUNC = 10, IF = 11, IN = 12, LET = 13, OF = 14,
 			PROC = 15, RECORD = 16, THEN = 17, TYPE = 18, VAR = 19, WHILE = 20,
+			//PROC = 15, RECORD = 16, REPEAT = 17, THEN = 18, TYPE = 19, UNTIL = 20, VAR =21,WHILE=22,
 
 			// punctuation...
 			DOT = 21, COLON = 22, SEMICOLON = 23, COMMA = 24, BECOMES = 25, IS = 26,
