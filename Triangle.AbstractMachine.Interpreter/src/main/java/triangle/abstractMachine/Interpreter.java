@@ -639,6 +639,9 @@ public class Interpreter {
 		if (CT != CB) {
 			startTimeNanos = System.nanoTime();
 			interpretProgram();
+			System.out.println();
+			//calculate and display time taken to interpret program
+			System.out.println("Time taken to interpret: " + (System.nanoTime()-startTimeNanos));
 			showStatus();
 		}
 	}
