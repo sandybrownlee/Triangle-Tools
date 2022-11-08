@@ -118,18 +118,16 @@ public class Compiler {
 			if (showingAST) {// If the AST is being drawn before any folding
 				drawer.draw(theAST);
 			}
+			if (showStats) {
+				theAST.visit(statvisitor);
+				statvisitor.printResults();
+			}
 			if (folding) {// If folding should be required
 				theAST.visit(new ConstantFolder());
 			}
 			if (ASTAfterFold) {// If the AST is being drawn after folding
 				altdrawer.draw(theAST);
 			}
-			
-			if (showStats) {
-				theAST.visit(statvisitor);
-				statvisitor.printResults();
-			}
-
 			if (reporter.getNumErrors() == 0) {
 				System.out.println("Code Generation ...");
 				encoder.encodeRun(theAST, showingTable); // 3rd pass
