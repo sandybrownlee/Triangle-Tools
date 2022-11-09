@@ -9,12 +9,21 @@ repositories {
 
 
 dependencies {
+	implementation group: 'com.github.spullara.cli-parser', name: 'cli-parser', version: '1.1.5'
 	implementation project(':Triangle.AbstractMachine')
 	testImplementation group: 'junit', name: 'junit', version: '4.13.2'
 }
 
 application {
 	mainClass = 'Triangle.Compiler'
+}
+
+jar {
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+	from {
+		configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+	}
 }
 
 // allow access to programs for unit tests

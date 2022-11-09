@@ -37,6 +37,7 @@ import triangle.abstractSyntaxTrees.commands.Command;
 import triangle.abstractSyntaxTrees.commands.EmptyCommand;
 import triangle.abstractSyntaxTrees.commands.IfCommand;
 import triangle.abstractSyntaxTrees.commands.LetCommand;
+import triangle.abstractSyntaxTrees.commands.LoopCommand;
 import triangle.abstractSyntaxTrees.commands.SequentialCommand;
 import triangle.abstractSyntaxTrees.commands.WhileCommand;
 import triangle.abstractSyntaxTrees.declarations.ConstDeclaration;
@@ -282,12 +283,47 @@ public class Parser {
 				commandAST = new CallCommand(iAST, apsAST, commandPos);
 
 			} else {
-
 				Vname vAST = parseRestOfVname(iAST);
-				accept(Token.BECOMES);
-				Expression eAST = parseExpression();
-				finish(commandPos);
-				commandAST = new AssignCommand(vAST, eAST, commandPos);
+				if (currentToken.kind == Token.OPERATOR && currentToken.spelling.equals("++")) {
+					acceptIt();
+
+					IntegerLiteral il = new IntegerLiteral("1", commandPos);
+
+					IntegerExpression ie = new IntegerExpression(il, commandPos);
+
+					VnameExpression vne = new VnameExpression(vAST, commandPos);
+
+					Operator op = new Operator("+", commandPos);
+
+					Expression eAST = new BinaryExpression(vne, op, ie, commandPos);
+
+					finish(commandPos);
+
+					commandAST = new AssignCommand(vAST, eAST, commandPos);
+				}
+				else if (currentToken.kind == Token.OPERATOR && currentToken.spelling.equals("--")) {
+					acceptIt();
+
+					IntegerLiteral il = new IntegerLiteral("1", commandPos);
+
+					IntegerExpression ie = new IntegerExpression(il, commandPos);
+
+					VnameExpression vne = new VnameExpression(vAST, commandPos);
+
+					Operator op = new Operator("-", commandPos);
+
+					Expression eAST = new BinaryExpression(vne, op, ie, commandPos);
+
+					finish(commandPos);
+
+					commandAST = new AssignCommand(vAST, eAST, commandPos);
+				}
+				else {
+					accept(Token.BECOMES);
+					Expression eAST = parseExpression();
+					finish(commandPos);
+					commandAST = new AssignCommand(vAST, eAST, commandPos);
+				}
 			}
 		}
 			break;
@@ -297,6 +333,13 @@ public class Parser {
 			commandAST = parseCommand();
 			accept(Token.END);
 			break;
+
+		case Token.LCURLY: {
+			acceptIt();
+			commandAST = parseCommand();
+			accept(Token.RCURLY);
+			break;
+		}
 
 		case Token.LET: {
 			acceptIt();
@@ -330,11 +373,26 @@ public class Parser {
 		}
 			break;
 
+		case Token.LOOP: {
+			acceptIt();
+			Command c1AST = parseSingleCommand();
+			accept(Token.WHILE);
+			Expression eAST = parseExpression();
+			accept(Token.DO);
+			Command c2AST = parseSingleCommand();
+			finish(commandPos);
+			commandAST = new LoopCommand(eAST, c1AST, c2AST, commandPos);
+		}
+
+			break;
+
+
 		case Token.SEMICOLON:
 		case Token.END:
 		case Token.ELSE:
 		case Token.IN:
 		case Token.EOT:
+		case Token.RCURLY:
 
 			finish(commandPos);
 			commandAST = new EmptyCommand(commandPos);

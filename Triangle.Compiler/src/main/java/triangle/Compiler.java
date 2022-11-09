@@ -14,6 +14,8 @@
 
 package triangle;
 
+import com.sampullara.cli.Argument;
+import com.sampullara.cli.Args;
 import triangle.abstractSyntaxTrees.Program;
 import triangle.codeGenerator.Emitter;
 import triangle.codeGenerator.Encoder;
@@ -31,10 +33,14 @@ import triangle.treeDrawer.Drawer;
  */
 public class Compiler {
 
-	/** The filename for the object program, normally obj.tam. */
-	static String objectName = "obj.tam";
-	
-	static boolean showTree = false;
+	/**
+	 * The filename for the object program, normally obj.tam.
+	 */
+	@Argument(alias = "tree", description = "Used to output tree diagram", required = false)
+	protected boolean showTree = false;
+
+	@Argument(alias = "o", description = "Creates TAM binary file", required = false)
+	protected String objectName = "obj.tam";
 
 	private static Scanner scanner;
 	private static Parser parser;
@@ -44,7 +50,9 @@ public class Compiler {
 	private static ErrorReporter reporter;
 	private static Drawer drawer;
 
-	/** The AST representing the source program. */
+	/**
+	 * The AST representing the source program.
+	 */
 	private static Program theAST;
 
 	/**
@@ -58,7 +66,7 @@ public class Compiler {
 	 *                     displayed during code generation (not currently
 	 *                     implemented).
 	 * @return true iff the source program is free of compile-time errors, otherwise
-	 *         false.
+	 * false.
 	 */
 	static boolean compileProgram(String sourceName, String objectName, boolean showingAST, boolean showingTable) {
 
@@ -119,26 +127,36 @@ public class Compiler {
 			System.out.println("Usage: tc filename [-o=outputfilename] [tree]");
 			System.exit(1);
 		}
-		
+		//String objectName = parseString(compiler.objectName);
 		parseArgs(args);
 
-		String sourceName = args[0];
-		
-		var compiledOK = compileProgram(sourceName, objectName, showTree, false);
+		}
 
-		if (!showTree) {
+	private static void parseArgs(String[] args) {
+
+		String sourceName = args[0];
+
+		Compiler compiler = new Compiler();
+
+		Args.parseOrExit(compiler, args);
+
+		var compiledOK = compileProgram(sourceName, compiler.objectName, compiler.showTree, false);
+
+		if (!compiler.showTree) {
 			System.exit(compiledOK ? 0 : 1);
 		}
-	}
-	
-	private static void parseArgs(String[] args) {
+
+		/*
 		for (String s : args) {
 			var sl = s.toLowerCase();
 			if (sl.equals("tree")) {
-				showTree = true;
+				.showTree = true;
 			} else if (sl.startsWith("-o=")) {
 				objectName = s.substring(3);
 			}
+		}*/
 		}
 	}
-}
+
+
+

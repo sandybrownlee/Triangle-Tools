@@ -33,6 +33,7 @@ import triangle.abstractSyntaxTrees.commands.CallCommand;
 import triangle.abstractSyntaxTrees.commands.EmptyCommand;
 import triangle.abstractSyntaxTrees.commands.IfCommand;
 import triangle.abstractSyntaxTrees.commands.LetCommand;
+import triangle.abstractSyntaxTrees.commands.LoopCommand;
 import triangle.abstractSyntaxTrees.commands.SequentialCommand;
 import triangle.abstractSyntaxTrees.commands.WhileCommand;
 import triangle.abstractSyntaxTrees.declarations.BinaryOperatorDeclaration;
@@ -92,6 +93,8 @@ import triangle.abstractSyntaxTrees.visitors.VnameVisitor;
 import triangle.abstractSyntaxTrees.vnames.DotVname;
 import triangle.abstractSyntaxTrees.vnames.SimpleVname;
 import triangle.abstractSyntaxTrees.vnames.SubscriptVname;
+import triangle.syntacticAnalyzer.Parser;
+import triangle.syntacticAnalyzer.Token;
 
 public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
 		ActualParameterSequenceVisitor<Void, DrawingTree>, ArrayAggregateVisitor<Void, DrawingTree>,
@@ -146,6 +149,16 @@ public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
 	}
 
 	@Override
+	public DrawingTree visitLoopCommand(LoopCommand ast, Void obj) {
+		var d1 = ast.E.visit(this);
+		var d2 = ast.C1.visit(this);
+		var d3 = ast.C2.visit(this);
+		return layoutTernary("LoopWhileCom.", d1, d2, d3);
+	}
+
+
+
+	@Override
 	public DrawingTree visitSequentialCommand(SequentialCommand ast, Void obj) {
 		var d1 = ast.C1.visit(this);
 		var d2 = ast.C2.visit(this);
@@ -171,7 +184,7 @@ public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
 		var d1 = ast.E1.visit(this);
 		var d2 = ast.O.visit(this);
 		var d3 = ast.E2.visit(this);
-		return layoutTernary("Bin.Expr.", d1, d2, d3);
+		return layoutTernary("Bin.Expr. " + "(" + ast.O.spelling + ")", d1, d2, d3);
 	}
 
 	@Override
@@ -181,7 +194,6 @@ public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
 		return layoutBinary("CallExpr.", d1, d2);
 	}
 
-	@Override
 	public DrawingTree visitCharacterExpression(CharacterExpression ast, Void obj) {
 		var d1 = ast.CL.visit(this);
 		return layoutUnary("Char.Expr.", d1);
@@ -223,7 +235,7 @@ public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
 	public DrawingTree visitUnaryExpression(UnaryExpression ast, Void obj) {
 		var d1 = ast.O.visit(this);
 		var d2 = ast.E.visit(this);
-		return layoutBinary("UnaryExpr.", d1, d2);
+		return layoutBinary("UnaryExpr." + "(" + ast.O.spelling + ")", d1, d2);
 	}
 
 	@Override
