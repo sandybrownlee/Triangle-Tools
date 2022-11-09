@@ -1,0 +1,6 @@
+let 
+var z: Boolean
+in
+begin
+z := \true;
+end

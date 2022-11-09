@@ -22,7 +22,7 @@ import java.io.IOException;
 public class Interpreter {
 
 	static long startTimeNanos = 0;
-	
+
 	static String objectName;
 
 	// DATA STORE

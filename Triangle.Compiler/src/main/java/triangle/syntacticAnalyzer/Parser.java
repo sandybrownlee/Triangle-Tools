@@ -39,7 +39,8 @@ import triangle.abstractSyntaxTrees.commands.IfCommand;
 import triangle.abstractSyntaxTrees.commands.LetCommand;
 import triangle.abstractSyntaxTrees.commands.RepeatCommand;
 import triangle.abstractSyntaxTrees.commands.SequentialCommand;
-import triangle.abstractSyntaxTrees.commands.WhileCommand;
+import triangle.abstractSyntaxTrees.commands.WhileCommand; // Had to add this to get task 5 to run
+import triangle.abstractSyntaxTrees.commands.LoopWhileCommand; //task 5a
 import triangle.abstractSyntaxTrees.declarations.ConstDeclaration;
 import triangle.abstractSyntaxTrees.declarations.Declaration;
 import triangle.abstractSyntaxTrees.declarations.FuncDeclaration;
@@ -282,21 +283,41 @@ public class Parser {
 				finish(commandPos);
 				commandAST = new CallCommand(iAST, apsAST, commandPos);
 
-			} else {
+			}else {
 
 				Vname vAST = parseRestOfVname(iAST);
+
+				if (currentToken.kind == Token.OPERATOR && currentToken.spelling.equals("--")) {
+
+				acceptIt();
+				IntegerLiteral il = new IntegerLiteral("1", commandPos);
+				IntegerExpression ie = new IntegerExpression(il, commandPos);
+				VnameExpression vne = new VnameExpression(vAST, commandPos);
+				Operator op = new Operator("-", commandPos);
+				Expression eAST = new BinaryExpression(vne, op, ie, commandPos);
+				finish(commandPos);
+				commandAST = new AssignCommand(vAST, eAST, commandPos);
+			}else{
 				accept(Token.BECOMES);
 				Expression eAST = parseExpression();
 				finish(commandPos);
 				commandAST = new AssignCommand(vAST, eAST, commandPos);
 			}
+
 		}
+}
 			break;
 
 		case Token.BEGIN:
 			acceptIt();
 			commandAST = parseCommand();
 			accept(Token.END);
+			break;
+
+		case Token.LCURLY: //Task 4a
+			acceptIt();
+			commandAST = parseCommand();
+			accept(Token.RCURLY);
 			break;
 
 		case Token.LET: {
@@ -321,16 +342,6 @@ public class Parser {
 		}
 			break;
 
-		case Token.WHILE: {
-			acceptIt();
-			Expression eAST = parseExpression();
-			accept(Token.DO);
-			Command cAST = parseSingleCommand();
-			finish(commandPos);
-			commandAST = new WhileCommand(eAST, cAST, commandPos);
-		}
-			break;
-
 		case Token.REPEAT: {
 			acceptIt();
 			Command cAST = parseSingleCommand();
@@ -339,9 +350,37 @@ public class Parser {
 			finish(commandPos);
 			commandAST = new RepeatCommand(eAST, cAST, commandPos);
 		}
+
+		break;
+
+		case Token.WHILE: {
+			 acceptIt();
+			 Expression eAST = parseExpression();
+			 accept(Token.DO);
+			 Command cAST = parseSingleCommand();
+			 finish(commandPos);
+			 commandAST = new WhileCommand(eAST, cAST, commandPos);
+						  }
 			break;
 
+			//Task 5
+			case Token.LOOP: {
+				 acceptIt();
+				 Command c1AST = parseSingleCommand();
+				 accept(Token.WHILE);
+				 Expression eAST = parseExpression();
+				 accept(Token.DO);
+				 Command c2AST = parseSingleCommand();
+				 finish(commandPos);
+				 commandAST = new LoopWhileCommand(c1AST, eAST, c2AST, commandPos);
+						}
 
+						break;
+
+
+
+
+		case Token.RCURLY: // Task 4a
 		case Token.SEMICOLON:
 		case Token.END:
 		case Token.ELSE:
@@ -360,6 +399,7 @@ public class Parser {
 
 		return commandAST;
 	}
+
 
 	///////////////////////////////////////////////////////////////////////////////
 	//

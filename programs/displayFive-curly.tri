@@ -1,0 +1,6 @@
+let
+  var a : Integer
+in
+{  
+    put('5');
+  }

@@ -22,6 +22,7 @@ import triangle.abstractSyntaxTrees.commands.LetCommand;
 import triangle.abstractSyntaxTrees.commands.SequentialCommand;
 import triangle.abstractSyntaxTrees.commands.RepeatCommand;
 import triangle.abstractSyntaxTrees.commands.WhileCommand;
+import triangle.abstractSyntaxTrees.commands.LoopWhileCommand; //Task 5a
 import triangle.abstractSyntaxTrees.declarations.BinaryOperatorDeclaration;
 import triangle.abstractSyntaxTrees.declarations.ConstDeclaration;
 import triangle.abstractSyntaxTrees.declarations.FuncDeclaration;
@@ -508,6 +509,18 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 		return null;
 }
 
+//Task 5a
+@Override
+	public AbstractSyntaxTree visitLoopWhileCommand(LoopWhileCommand ast, Void arg) {
+		ast.C1.visit(this);
+		AbstractSyntaxTree replacement = ast.E.visit(this);
+		ast.C2.visit(this);
+		if (replacement != null) {
+			ast.E = (Expression) replacement;
+		}
+		return null;
+	}
+
 	@Override
 	public AbstractSyntaxTree visitMultipleArrayAggregate(MultipleArrayAggregate ast, Void arg) {
 		ast.AA.visit(this);
@@ -589,8 +602,26 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 				foldedValue = int1 * int2;
 			} else if (o.decl == StdEnvironment.subtractDecl) {
 				foldedValue = int1 - int2;
-}
 
+			} else if (o.decl == StdEnvironment.equalDecl) { //Task 7a implementation of boolean operators
+				foldedValue = (int1 == int2);
+
+			} else if (o.decl == StdEnvironment.unequalDecl) {
+				foldedValue = (int1 != int2);
+
+			} else if (o.decl == StdEnvironment.greaterDecl) {
+				foldedValue = (int1 > int2);
+
+			} else if (o.decl == StdEnvironment.notlessDecl) {
+				foldedValue = (int1 >= int2);
+
+			} else if (o.decl == StdEnvironment.lessDecl) {
+				foldedValue = (int1 < int2);
+
+			} else if (o.decl == StdEnvironment.notgreaterDecl) {
+				foldedValue = (int1 <= int2);
+
+			}
 
 			if (foldedValue instanceof Integer) {
 				IntegerLiteral il = new IntegerLiteral(foldedValue.toString(), node1.getPosition());
@@ -598,7 +629,18 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 				ie.type = StdEnvironment.integerType;
 				return ie;
 			} else if (foldedValue instanceof Boolean) {
-				/* currently not handled! */
+				//Task 7
+
+				Identifier identifier = new Identifier(foldedValue.toString(), node1.getPosition());
+				if (foldedValue.toString().equals("true")){
+						identifier.decl = StdEnvironment.trueDecl;
+				} else if (foldedValue.toString().equals("false"))
+						identifier.decl = StdEnvironment.falseDecl;
+						SimpleVname vn = new SimpleVname(identifier, node1.getPosition());
+						VnameExpression ve = new VnameExpression(vn, node1.getPosition());
+						ve.type = StdEnvironment.booleanType;
+				return ve;
+
 			}
 		}
 
