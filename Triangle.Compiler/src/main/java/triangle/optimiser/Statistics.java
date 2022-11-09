@@ -168,10 +168,7 @@ public class Statistics implements ActualParameterVisitor<Void, AbstractSyntaxTr
 
     @Override
     public RuntimeEntity visitSubscriptVname(SubscriptVname ast, Void arg) {
-        AbstractSyntaxTree replacement = ast.E.visit(this);
-        if (replacement != null) {
-            ast.E = (Expression) replacement;
-        }
+        ast.E.visit(this);
         ast.V.visit(this);
         return null;
     }
@@ -222,10 +219,7 @@ public class Statistics implements ActualParameterVisitor<Void, AbstractSyntaxTr
 
     @Override
     public AbstractSyntaxTree visitMultipleRecordAggregate(MultipleRecordAggregate ast, Void arg) {
-        AbstractSyntaxTree replacement = ast.E.visit(this);
-        if (replacement != null) {
-            ast.E = (Expression) replacement;
-        }
+        ast.E.visit(this);
         ast.I.visit(this);
         ast.RA.visit(this);
         return null;
@@ -233,10 +227,7 @@ public class Statistics implements ActualParameterVisitor<Void, AbstractSyntaxTr
 
     @Override
     public AbstractSyntaxTree visitSingleRecordAggregate(SingleRecordAggregate ast, Void arg) {
-        AbstractSyntaxTree replacement = ast.E.visit(this);
-        if (replacement != null) {
-            ast.E = (Expression) replacement;
-        }
+        ast.E.visit(this);
         ast.I.visit(this);
         return null;
     }
@@ -362,10 +353,7 @@ public class Statistics implements ActualParameterVisitor<Void, AbstractSyntaxTr
     @Override
     public AbstractSyntaxTree visitLetExpression(LetExpression ast, Void arg) {
         ast.D.visit(this);
-        AbstractSyntaxTree replacement = ast.E.visit(this);
-        if (replacement != null) {
-            ast.E = (Expression) replacement;
-        }
+        ast.E.visit(this);
         return null;
     }
 
@@ -377,10 +365,7 @@ public class Statistics implements ActualParameterVisitor<Void, AbstractSyntaxTr
 
     @Override
     public AbstractSyntaxTree visitUnaryExpression(UnaryExpression ast, Void arg) {
-        AbstractSyntaxTree replacement = ast.E.visit(this);
-        if (replacement != null) {
-            ast.E = (Expression) replacement;
-        }
+        ast.E.visit(this);
 
         ast.O.visit(this);
         return null;
@@ -403,20 +388,14 @@ public class Statistics implements ActualParameterVisitor<Void, AbstractSyntaxTr
 
     @Override
     public AbstractSyntaxTree visitConstDeclaration(ConstDeclaration ast, Void arg) {
-        AbstractSyntaxTree replacement = ast.E.visit(this);
-        if (replacement != null) {
-            ast.E = (Expression) replacement;
-        }
+        ast.E.visit(this);
         ast.I.visit(this);
         return null;
     }
 
     @Override
     public AbstractSyntaxTree visitFuncDeclaration(FuncDeclaration ast, Void arg) {
-        AbstractSyntaxTree replacement = ast.E.visit(this);
-        if (replacement != null) {
-            ast.E = (Expression) replacement;
-        }
+        ast.E.visit(this);
         ast.FPS.visit(this);
         ast.I.visit(this);
         ast.T.visit(this);
@@ -462,10 +441,7 @@ public class Statistics implements ActualParameterVisitor<Void, AbstractSyntaxTr
 
     @Override
     public AbstractSyntaxTree visitAssignCommand(AssignCommand ast, Void arg) {
-        AbstractSyntaxTree replacement = ast.E.visit(this);
-        if (replacement != null) {
-            ast.E = (Expression) replacement;
-        }
+        ast.E.visit(this);
         ast.V.visit(this);
         return null;
     }
@@ -485,10 +461,7 @@ public class Statistics implements ActualParameterVisitor<Void, AbstractSyntaxTr
         ifCommandCount++;
         ast.C1.visit(this);
         ast.C2.visit(this);
-        AbstractSyntaxTree replacement = ast.E.visit(this);
-        if (replacement != null) {
-            ast.E = (Expression) replacement;
-        }
+        ast.E.visit(this);
         return null;
     }
 
@@ -510,10 +483,7 @@ public class Statistics implements ActualParameterVisitor<Void, AbstractSyntaxTr
     public AbstractSyntaxTree visitWhileCommand(WhileCommand ast, Void arg) {
         whileCommandCount++;
         ast.C.visit(this);
-        AbstractSyntaxTree replacement = ast.E.visit(this);
-        if (replacement != null) {
-            ast.E = (Expression) replacement;
-        }
+        ast.E.visit(this);
         return null;
     }
 
@@ -521,20 +491,14 @@ public class Statistics implements ActualParameterVisitor<Void, AbstractSyntaxTr
     @Override
     public AbstractSyntaxTree visitRepeatCommand(RepeatCommand ast, Void arg) {
         ast.C.visit(this);
-        AbstractSyntaxTree replacement = ast.E.visit(this);
-        if (replacement != null) {
-            ast.E = (Expression) replacement;
-        }
+        ast.E.visit(this);
         return null;
     }
 
     @Override
     public AbstractSyntaxTree visitLoopCommand(LoopCommand ast, Void arg) {
         ast.C1.visit(this);
-        AbstractSyntaxTree replacement = ast.E.visit(this);
-        if (replacement != null) {
-            ast.E = (Expression) replacement;
-        }
+        ast.E.visit(this);
         ast.C2.visit(this);
         return null;
     }
@@ -542,19 +506,13 @@ public class Statistics implements ActualParameterVisitor<Void, AbstractSyntaxTr
     @Override
     public AbstractSyntaxTree visitMultipleArrayAggregate(MultipleArrayAggregate ast, Void arg) {
         ast.AA.visit(this);
-        AbstractSyntaxTree replacement = ast.E.visit(this);
-        if (replacement != null) {
-            ast.E = (Expression) replacement;
-        }
+        ast.E.visit(this);
         return null;
     }
 
     @Override
     public AbstractSyntaxTree visitSingleArrayAggregate(SingleArrayAggregate ast, Void arg) {
-        AbstractSyntaxTree replacement = ast.E.visit(this);
-        if (replacement != null) {
-            ast.E = (Expression) replacement;
-        }
+        ast.E.visit(this);
         return null;
     }
 
@@ -578,10 +536,7 @@ public class Statistics implements ActualParameterVisitor<Void, AbstractSyntaxTr
 
     @Override
     public AbstractSyntaxTree visitConstActualParameter(ConstActualParameter ast, Void arg) {
-        AbstractSyntaxTree replacement = ast.E.visit(this);
-        if (replacement != null) {
-            ast.E = (Expression) replacement;
-        }
+        ast.E.visit(this);
         return null;
     }
 
