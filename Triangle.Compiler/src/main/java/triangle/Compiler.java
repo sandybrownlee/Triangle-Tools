@@ -67,6 +67,7 @@ public class Compiler {
 	private static Emitter emitter;
 	private static ErrorReporter reporter;
 	private static Drawer drawer;
+	private static Drawer foldingDrawer;
 	private static Statistics statsCounter;
 
 	/** The AST representing the source program. */
@@ -104,6 +105,7 @@ public class Compiler {
 		emitter = new Emitter(reporter);
 		encoder = new Encoder(emitter, reporter);
 		drawer = new Drawer();
+		foldingDrawer = new Drawer();
 		statsCounter = new Statistics();
 
 		// scanner.enableDebugging();
@@ -120,7 +122,7 @@ public class Compiler {
 			if (folding) {
 				theAST.visit(new ConstantFolder());
 				if (showingFoldingAST) {
-					drawer.draw(theAST);
+					foldingDrawer.draw(theAST);
 				}
 			}
 			
@@ -166,7 +168,7 @@ public class Compiler {
 		
 		var compiledOK = compileProgram(sourceName, objectName, showTree, false, showFoldingTree, stats);
 
-		if (!showTree) {
+		if (!showTree && !showFoldingTree) {
 			System.exit(compiledOK ? 0 : 1);
 		}
 	}
