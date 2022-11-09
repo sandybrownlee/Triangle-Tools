@@ -288,18 +288,16 @@ public class Parser {
 				Vname vAST = parseRestOfVname(iAST);
 				if (currentToken.kind == Token.OPERATOR && currentToken.spelling.equals("--")) {
 					acceptIt();
-					//Create new Operator with a value of "-" and the command position.
+					//Create new Operator with a value of "-" and the command line number
 					Operator minus = new Operator("-", commandPos);  
-					//Create an integer literal 1 to subtract it from our variable.
+					//Create an integer literal 1 to subtract it from the variable.
 					IntegerLiteral intL = new IntegerLiteral("1", commandPos); 
-					//Create an IntegerExpression that is the variable we start with minus the integer literal 1.
+					//Create an IntegerExpression to wrap the integer literal 1.
 					IntegerExpression intE = new IntegerExpression(intL, commandPos);
-					//Create an object to wrap the variable name
+					//Create new variable-or-value expression to wrap the variable name
 					VnameExpression vnameE = new VnameExpression(vAST, commandPos);
 					//Combine all the other expressions in one expression.
 					Expression combinedE = new BinaryExpression(vnameE, minus, intE, commandPos);
-				
-		
 					finish(commandPos); 
 					commandAST = new AssignCommand(vAST, combinedE, commandPos); 
 				

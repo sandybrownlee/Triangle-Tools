@@ -197,9 +197,9 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 	@Override
 	public Void visitLoopWhileCommand(LoopWhileCommand ast, Frame frame) {
 		//Similar to visitWhileCommand but jump to C1 first
-		var jumpAddr = emitter.emit(OpCode.JUMP, 0, Register.CB, 0); //we want only once to store at 0 because we will soon know the jump address
+		var jumpAddr = emitter.emit(OpCode.JUMP, 0, Register.CB, 0);
 		var loopAddr = emitter.getNextInstrAddr();
-		//jump to C2 if JUMPIF (1)
+		//execute C2 only if JUMPIF is true
 		ast.C2.visit(this, frame);
 		emitter.patch(jumpAddr);  //backpatching
 		ast.C1.visit(this, frame);

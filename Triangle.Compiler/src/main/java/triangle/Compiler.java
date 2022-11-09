@@ -109,7 +109,6 @@ public class Compiler {
 			System.out.println("Contextual Analysis ...");
 			checker.check(theAST); // 2nd pass
 			
-			
 			//If folding is chosen
 			if (folding || foldThenShowTree) {
 				theAST.visit(new ConstantFolder());

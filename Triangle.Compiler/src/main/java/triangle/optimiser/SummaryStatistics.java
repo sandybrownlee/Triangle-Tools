@@ -98,9 +98,9 @@ public class SummaryStatistics implements ActualParameterVisitor<Void, AbstractS
 	private int allCommands = 0;
 	
 	public void printSummaryStatistics() {
-		System.out.println("Number of Binary Expressions = " + numBinaryExpressions + " out of " + allExpressions + " expressions");
-		System.out.println("Number of If Commands = " + numIfCommands + " out of " + allCommands + " commands");
-		System.out.println("Number of While Commands = " + numWhileCommands + " out of " + allCommands + " commands");
+		System.out.println("Number of Binary expressions = " + numBinaryExpressions + " out of " + allExpressions + " expressions");
+		System.out.println("Number of If commands = " + numIfCommands + " out of " + allCommands + " commands");
+		System.out.println("Number of While commands = " + numWhileCommands + " out of " + allCommands + " commands");
 	}
 	@Override
 	public AbstractSyntaxTree visitConstFormalParameter(ConstFormalParameter ast, Void arg) {
