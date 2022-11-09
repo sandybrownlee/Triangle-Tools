@@ -38,5 +38,5 @@ public class ConstDeclaration extends Declaration implements ConstantDeclaration
 	}
 
 	public final Identifier I;
-	public final Expression E;
+	public Expression E;
 }

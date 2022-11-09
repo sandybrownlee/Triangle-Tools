@@ -20,6 +20,7 @@ import triangle.abstractSyntaxTrees.Program;
 import triangle.codeGenerator.Emitter;
 import triangle.codeGenerator.Encoder;
 import triangle.contextualAnalyzer.Checker;
+import triangle.optimiser.ConstantFolder;
 import triangle.syntacticAnalyzer.Parser;
 import triangle.syntacticAnalyzer.Scanner;
 import triangle.syntacticAnalyzer.SourceFile;
@@ -33,6 +34,7 @@ import triangle.treeDrawer.Drawer;
  */
 public class Compiler {
 
+<<<<<<< HEAD
 	/**
 	 * The filename for the object program, normally obj.tam.
 	 */
@@ -41,6 +43,13 @@ public class Compiler {
 
 	@Argument(alias = "o", description = "Creates TAM binary file", required = false)
 	protected String objectName = "obj.tam";
+=======
+	/** The filename for the object program, normally obj.tam. */
+	static String objectName = "obj.tam";
+	
+	static boolean showTree = false;
+	static boolean folding = false;
+>>>>>>> cffe02042af614e88d949e41dfd75e71b7fb396d
 
 	private static Scanner scanner;
 	private static Parser parser;
@@ -99,6 +108,10 @@ public class Compiler {
 			if (showingAST) {
 				drawer.draw(theAST);
 			}
+			if (folding) {
+				theAST.visit(new ConstantFolder());
+			}
+			
 			if (reporter.getNumErrors() == 0) {
 				System.out.println("Code Generation ...");
 				encoder.encodeRun(theAST, showingTable); // 3rd pass
@@ -124,7 +137,7 @@ public class Compiler {
 	public static void main(String[] args) {
 
 		if (args.length < 1) {
-			System.out.println("Usage: tc filename [-o=outputfilename] [tree]");
+			System.out.println("Usage: tc filename [-o=outputfilename] [tree] [folding]");
 			System.exit(1);
 		}
 		//String objectName = parseString(compiler.objectName);
@@ -153,6 +166,8 @@ public class Compiler {
 				.showTree = true;
 			} else if (sl.startsWith("-o=")) {
 				objectName = s.substring(3);
+			} else if (sl.equals("folding")) {
+				folding = true;
 			}
 		}*/
 		}
