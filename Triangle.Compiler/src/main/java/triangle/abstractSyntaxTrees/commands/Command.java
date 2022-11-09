@@ -22,6 +22,7 @@ public abstract class Command extends AbstractSyntaxTree {
 
 	public Command(SourcePosition position) {
 		super(position);
+
 	}
 
 	public abstract <TArg, TResult> TResult visit(CommandVisitor<TArg, TResult> visitor, TArg arg);

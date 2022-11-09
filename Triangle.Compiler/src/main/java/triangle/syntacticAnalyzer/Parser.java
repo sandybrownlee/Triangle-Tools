@@ -14,7 +14,9 @@
 
 package triangle.syntacticAnalyzer;
 
+import triangle.Compiler;
 import triangle.ErrorReporter;
+import triangle.StatsCounter;
 import triangle.abstractSyntaxTrees.Program;
 import triangle.abstractSyntaxTrees.actuals.ActualParameter;
 import triangle.abstractSyntaxTrees.actuals.ActualParameterSequence;
@@ -31,14 +33,7 @@ import triangle.abstractSyntaxTrees.aggregates.MultipleRecordAggregate;
 import triangle.abstractSyntaxTrees.aggregates.RecordAggregate;
 import triangle.abstractSyntaxTrees.aggregates.SingleArrayAggregate;
 import triangle.abstractSyntaxTrees.aggregates.SingleRecordAggregate;
-import triangle.abstractSyntaxTrees.commands.AssignCommand;
-import triangle.abstractSyntaxTrees.commands.CallCommand;
-import triangle.abstractSyntaxTrees.commands.Command;
-import triangle.abstractSyntaxTrees.commands.EmptyCommand;
-import triangle.abstractSyntaxTrees.commands.IfCommand;
-import triangle.abstractSyntaxTrees.commands.LetCommand;
-import triangle.abstractSyntaxTrees.commands.SequentialCommand;
-import triangle.abstractSyntaxTrees.commands.WhileCommand;
+import triangle.abstractSyntaxTrees.commands.*;
 import triangle.abstractSyntaxTrees.declarations.ConstDeclaration;
 import triangle.abstractSyntaxTrees.declarations.Declaration;
 import triangle.abstractSyntaxTrees.declarations.FuncDeclaration;
@@ -89,10 +84,12 @@ public class Parser {
 	private Token currentToken;
 	private SourcePosition previousTokenPosition;
 
+
 	public Parser(Scanner lexer, ErrorReporter reporter) {
 		lexicalAnalyser = lexer;
 		errorReporter = reporter;
 		previousTokenPosition = new SourcePosition();
+
 	}
 
 	// accept checks whether the current token matches tokenExpected.
@@ -349,7 +346,21 @@ public class Parser {
 			Command c2AST = parseSingleCommand();
 			finish(commandPos);
 			commandAST = new IfCommand(eAST, c1AST, c2AST, commandPos);
+
 		}
+			break;
+
+		case Token.LOOP: {
+			acceptIt();
+			Command c1AST = parseSingleCommand();
+			accept(Token.WHILE);
+			Expression eAST = parseExpression();
+			accept(Token.DO);
+			Command c2AST = parseSingleCommand();
+			finish(commandPos);
+			commandAST = new WhileCenterCommand(eAST, c1AST, c2AST, commandPos);
+		}
+
 			break;
 
 		case Token.WHILE: {
@@ -511,6 +522,13 @@ public class Parser {
 			expressionAST = parseExpression();
 			accept(Token.RPAREN);
 			break;
+
+//		case Token.LOOP:
+//			acceptIt();
+//			expressionAST = parseExpression();
+//			accept(Token.DO);
+//			break;
+
 
 		default:
 			syntacticError("\"%\" cannot start an expression", currentToken.spelling);
@@ -949,5 +967,14 @@ public class Parser {
 			fieldAST = new SingleFieldTypeDenoter(iAST, tAST, fieldPos);
 		}
 		return fieldAST;
+	}
+
+	// Getter and setter for the current token
+	public String getCurrentToken() {
+		return currentToken.spelling;
+	}
+
+	public void setCurrentToken(Token currentToken) {
+		this.currentToken = currentToken;
 	}
 }

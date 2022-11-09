@@ -14,7 +14,9 @@
 
 package triangle.contextualAnalyzer;
 
+import triangle.Compiler;
 import triangle.ErrorReporter;
+import triangle.StatsCounter;
 import triangle.StdEnvironment;
 import triangle.abstractSyntaxTrees.AbstractSyntaxTree;
 import triangle.abstractSyntaxTrees.Program;
@@ -29,13 +31,7 @@ import triangle.abstractSyntaxTrees.aggregates.MultipleArrayAggregate;
 import triangle.abstractSyntaxTrees.aggregates.MultipleRecordAggregate;
 import triangle.abstractSyntaxTrees.aggregates.SingleArrayAggregate;
 import triangle.abstractSyntaxTrees.aggregates.SingleRecordAggregate;
-import triangle.abstractSyntaxTrees.commands.AssignCommand;
-import triangle.abstractSyntaxTrees.commands.CallCommand;
-import triangle.abstractSyntaxTrees.commands.EmptyCommand;
-import triangle.abstractSyntaxTrees.commands.IfCommand;
-import triangle.abstractSyntaxTrees.commands.LetCommand;
-import triangle.abstractSyntaxTrees.commands.SequentialCommand;
-import triangle.abstractSyntaxTrees.commands.WhileCommand;
+import triangle.abstractSyntaxTrees.commands.*;
 import triangle.abstractSyntaxTrees.declarations.BinaryOperatorDeclaration;
 import triangle.abstractSyntaxTrees.declarations.ConstDeclaration;
 import triangle.abstractSyntaxTrees.declarations.ConstantDeclaration;
@@ -156,6 +152,9 @@ public final class Checker implements ActualParameterVisitor<FormalParameter, Vo
 		ast.C1.visit(this);
 		ast.C2.visit(this);
 
+		// Visit the If Command visitor method in the stats counter
+		statsCounter.visitIfCommand(ast, null);
+
 		return null;
 	}
 
@@ -182,13 +181,18 @@ public final class Checker implements ActualParameterVisitor<FormalParameter, Vo
 		checkAndReportError(eType.equals(StdEnvironment.booleanType), "Boolean expression expected here", ast.E);
 		ast.C1.visit(this);
 
+		// Visit the While Command visitor method in the stats counter
+		statsCounter.visitWhileCommand(ast, null);
+
 		return null;
 	}
 
-	public Void visitWhileCenterCommand(WhileCommand ast, Void arg) {
+	@Override
+	public Void visitWhileCenterCommand(WhileCenterCommand ast, Void arg) {
 		var eType = ast.E.visit(this);
 
 		checkAndReportError(eType.equals(StdEnvironment.booleanType), "Boolean expression expected here", ast.E);
+		ast.C1.visit(this);
 		ast.C2.visit(this);
 
 		return null;
@@ -222,6 +226,10 @@ public final class Checker implements ActualParameterVisitor<FormalParameter, Vo
 				checkAndReportError(e1Type.equals(bbinding.ARG1), "wrong argument type for \"%\"", ast.O, ast.E1);
 				checkAndReportError(e2Type.equals(bbinding.ARG2), "wrong argument type for \"%\"", ast.O, ast.E2);
 			}
+
+			// Visit the Binary Expression visitor method in the stats counter
+			statsCounter.visitBinaryExpression(ast, null);
+
 			return ast.type = bbinding.RES;
 		}
 
@@ -775,15 +783,21 @@ public final class Checker implements ActualParameterVisitor<FormalParameter, Vo
 
 	/////////////////////////////////////////////////////////////////////////////
 
-	public Checker(ErrorReporter reporter) {
+	public Checker(ErrorReporter reporter, StatsCounter statsCounter) {
 		this.reporter = reporter;
 		this.idTable = new IdentificationTable();
+
+		// StatsCounter instantiation
+		this.statsCounter = statsCounter;
 		establishStdEnvironment();
 	}
 
 	private IdentificationTable idTable;
 	private static SourcePosition dummyPos = new SourcePosition();
 	private ErrorReporter reporter;
+
+	// StatsCounter object creation
+	private StatsCounter statsCounter;
 
 	private void reportUndeclaredOrError(Declaration binding, Terminal leaf, String message) {
 		if (binding == null) {

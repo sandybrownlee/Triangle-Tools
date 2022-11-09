@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.function.ThrowingRunnable;
 
 import triangle.ErrorReporter;
+import triangle.StatsCounter;
 import triangle.syntacticAnalyzer.Parser;
 import triangle.syntacticAnalyzer.Scanner;
 import triangle.syntacticAnalyzer.SourceFile;
@@ -48,6 +49,9 @@ public class TestScanner {
 
 	@Test
 	public void testCurlyBrace() {compileExpectSuccess("/while-curly.tri"); }
+
+	@Test
+	public void testCenterLoop() {compileExpectSuccess("/loopwhile.tri"); }
 	
 	
 	
@@ -60,6 +64,10 @@ public class TestScanner {
 		
 		Scanner scanner = new Scanner(source);
 		ErrorReporter reporter = new ErrorReporter(true);
+
+		// new StatCounter
+		StatsCounter statsCounter = new StatsCounter();
+
 		Parser parser = new Parser(scanner, reporter);
 		
 		parser.parseProgram();
@@ -74,6 +82,9 @@ public class TestScanner {
 		SourceFile source = SourceFile.fromResource(filename);
 		Scanner scanner = new Scanner(source);
 		ErrorReporter reporter = new ErrorReporter(true);
+
+		// new stat counter
+		StatsCounter statsCounter = new StatsCounter();
 		Parser parser = new Parser(scanner, reporter);
 
 		// we expect an exception here as the program has invalid syntax

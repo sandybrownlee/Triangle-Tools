@@ -46,6 +46,9 @@ public class Compiler {
 	@Argument(alias = "t", description = "Show Tree", required = false)
 	protected static boolean showTree = false;
 
+	@Argument(alias = "stats", description = "Summary Stats", required = false)
+	protected static boolean showStats = false;
+
 
 	private static Scanner scanner;
 	private static Parser parser;
@@ -54,6 +57,9 @@ public class Compiler {
 	private static Emitter emitter;
 	private static ErrorReporter reporter;
 	private static Drawer drawer;
+
+	// Create a new statsCounter object
+	private static StatsCounter statsCounter;
 
 	/** The AST representing the source program. */
 	private static Program theAST;
@@ -71,7 +77,9 @@ public class Compiler {
 	 * @return true iff the source program is free of compile-time errors, otherwise
 	 *         false.
 	 */
-	static boolean compileProgram(String sourceName, String objectName, boolean showingAST, boolean showingTable) {
+	static boolean compileProgram(String sourceName, String objectName, boolean showingAST, boolean showingTable, boolean showStats) {
+
+
 
 		System.out.println("********** " + "Triangle Compiler (Java Version 2.1)" + " **********");
 
@@ -83,13 +91,19 @@ public class Compiler {
 			System.exit(1);
 		}
 
+		// new statCounter object
+		statsCounter = new StatsCounter();
+
 		scanner = new Scanner(source);
 		reporter = new ErrorReporter(false);
 		parser = new Parser(scanner, reporter);
-		checker = new Checker(reporter);
+		checker = new Checker(reporter, statsCounter);
 		emitter = new Emitter(reporter);
 		encoder = new Encoder(emitter, reporter);
 		drawer = new Drawer();
+
+
+
 
 		// scanner.enableDebugging();
 		theAST = parser.parseProgram(); // 1st pass
@@ -138,7 +152,13 @@ public class Compiler {
 		}
 
 		
-		var compiledOK = compileProgram(compiler.fileName, compiler.objectName, compiler.showTree, false);
+		var compiledOK = compileProgram(compiler.fileName, compiler.objectName, compiler.showTree, false, showStats);
+
+		// Check if the showStats flag has been passed in via the command line
+		// If so, print the summary statistics
+		if(showStats) {
+			statsCounter.printStatistics();
+		}
 
 		if (!showTree) {
 			System.exit(compiledOK ? 0 : 1);
