@@ -83,6 +83,7 @@ import triangle.abstractSyntaxTrees.vnames.SubscriptVname;
 // added
 import triangle.abstractSyntaxTrees.commands.LoopWhileCommand;
 
+
 public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSyntaxTree>,
 		ActualParameterSequenceVisitor<Void, AbstractSyntaxTree>, ArrayAggregateVisitor<Void, AbstractSyntaxTree>,
 		CommandVisitor<Void, AbstractSyntaxTree>, DeclarationVisitor<Void, AbstractSyntaxTree>,
@@ -583,7 +584,6 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 		return null;
 	}
 
-
 	public AbstractSyntaxTree foldBinaryExpression(AbstractSyntaxTree node1, AbstractSyntaxTree node2, Operator o) {
 		// the only case we know how to deal with for now is two IntegerExpressions
 		if ((node1 instanceof IntegerExpression) && (node2 instanceof IntegerExpression)) {
@@ -594,6 +594,7 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 			if (o.decl == StdEnvironment.addDecl) {
 				foldedValue = int1 + int2;
 			}
+
 			else if (o.decl == StdEnvironment.divideDecl) {
 			foldedValue = int1 / int2;
 			} else if (o.decl == StdEnvironment.moduloDecl) {
@@ -603,6 +604,7 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 			} else if (o.decl == StdEnvironment.subtractDecl) {
 			foldedValue = int1 - int2;
 		}
+
 
 			if (foldedValue instanceof Integer) {
 				IntegerLiteral il = new IntegerLiteral(foldedValue.toString(), node1.getPosition());
@@ -621,6 +623,7 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 				return vne;
 			}
 		}
+
 		// any unhandled situation (i.e., not foldable) is ignored
 		return null;
 	}

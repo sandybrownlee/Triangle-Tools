@@ -115,6 +115,7 @@ public class Compiler {
 			}
 			if (folding) {
 				theAST.visit(new ConstantFolder());
+
 				// added
 				if (showingFoldingAST) {
 					foldingDrawer.draw(theAST);
@@ -154,7 +155,9 @@ public class Compiler {
 	public static void main(String[] args) {
 
 		if (args.length < 1) {
+
 			System.out.println("Usage: tc [-n = filename] [-o=outputfilename] [-ast = tree] [-fold = folding] [-fast = foldedAst] [-stats = statistics]");
+
 			System.exit(1);
 		}
 
@@ -175,6 +178,8 @@ public class Compiler {
 				showTree = true;
 			} else if (sl.startsWith("-o=")) {
 				objectName = s.substring(3);
+			} else if (sl.equals("folding")) {
+				folding = true;
 			}
 		}
 	} */
