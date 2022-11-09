@@ -627,6 +627,7 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 				}
 				SimpleVname svn = new SimpleVname(i,node1.getPosition());
 				VnameExpression vns = new VnameExpression(svn,node1.getPosition());
+				//set type to boolean
 				vns.type = StdEnvironment.booleanType;
 				return vns;
 			}
