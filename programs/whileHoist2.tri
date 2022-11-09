@@ -1,0 +1,33 @@
+let
+  var a : Integer;
+  var b : Integer;
+  var c : Integer
+in
+begin
+  a := 0;
+  b := 1;
+  c := 2;
+  while a < 5 do
+  begin
+    put('a');
+    a := a + 1;
+    b := c + 1; ! this could be hoisted
+    b := c + 2; ! this could be hoisted
+    b := c + 3; ! this could be hoisted
+    b := c + 4; ! this could be hoisted
+    b := c + 5; ! this could be hoisted
+    b := c + 6; ! this could be hoisted
+    b := c + 7; ! this could be hoisted
+    b := c + 8; ! this could be hoisted
+    b := c + 9; ! this could be hoisted
+    b := c + 10; ! this could be hoisted
+  end;
+
+  puteol();
+  putint(a);
+  puteol();
+  putint(b);
+  puteol();
+  putint(c);
+  puteol();
+end
