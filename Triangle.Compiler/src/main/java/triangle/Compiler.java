@@ -50,6 +50,10 @@ public class Compiler {
 	@Argument(alias = "sourceFileName", description = "The name of the file containing the source program.")
 	static String sourceName = "";
 
+	@Argument(alias = "stats", description = "True if summary statistics for number of binary expressions, if commands, and while commands of the triangle program are to be generated.")
+	static boolean showStats = false;
+
+	private static ProgramStatistics statistics;
 	private static Scanner scanner;
 	private static Parser parser;
 	private static Checker checker;
@@ -74,7 +78,7 @@ public class Compiler {
 	 * @return true if the source program is free of compile-time errors, otherwise
 	 *         false.
 	 */
-	static boolean compileProgram(String sourceName, String objectName, boolean showingAST, boolean showTreeAfterFolding, boolean showingTable) {
+	static boolean compileProgram(String sourceName, String objectName, boolean showingAST, boolean showTreeAfterFolding, boolean showStats, boolean showingTable) {
 
 		System.out.println("********** " + "Triangle Compiler (Java Version 2.1)" + " **********");
 
@@ -86,6 +90,7 @@ public class Compiler {
 			System.exit(1);
 		}
 
+		statistics = new ProgramStatistics();
 		scanner = new Scanner(source);
 		reporter = new ErrorReporter(false);
 		parser = new Parser(scanner, reporter);
@@ -108,6 +113,11 @@ public class Compiler {
 				if (showTreeAfterFolding) {
 					anotherDrawer.draw(theAST);
 				}
+			}
+
+			if (showStats) {
+				theAST.visit(statistics);
+				statistics.printStats();
 			}
 			
 			if (reporter.getNumErrors() == 0) {
@@ -140,7 +150,7 @@ public class Compiler {
 		// and the arguments you want to pass and populate as second argument
 		Args.parseOrExit(Compiler.class, args);
 
-		var compiledOK = compileProgram(sourceName, objectName, showTree, showTreeAfterFolding, false);
+		var compiledOK = compileProgram(sourceName, objectName, showTree, showTreeAfterFolding, showStats, false);
 
 		if (!showTree && !showTreeAfterFolding) {
 			System.exit(compiledOK ? 0 : 1);
