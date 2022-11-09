@@ -365,7 +365,6 @@ public class Parser {
 				finish(commandPos);
 				commandAST = new WhileCommand(eAST, c1AST, c2AST, commandPos); //Creating new While Command
 			}
-
 			break;
 
 		case Token.WHILE: {
