@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Triangle-Tools:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Triangle_Tools_jar</output-path>
+    <root id="archive" name="Triangle-Tools.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/Triangle.Compiler/build/resources/META-INF/MANIFEST.MF" />
+      </element>
+    </root>
+  </artifact>
+</component>

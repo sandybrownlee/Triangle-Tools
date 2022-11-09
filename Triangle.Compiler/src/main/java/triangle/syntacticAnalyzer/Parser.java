@@ -31,15 +31,7 @@ import triangle.abstractSyntaxTrees.aggregates.MultipleRecordAggregate;
 import triangle.abstractSyntaxTrees.aggregates.RecordAggregate;
 import triangle.abstractSyntaxTrees.aggregates.SingleArrayAggregate;
 import triangle.abstractSyntaxTrees.aggregates.SingleRecordAggregate;
-import triangle.abstractSyntaxTrees.commands.AssignCommand;
-import triangle.abstractSyntaxTrees.commands.CallCommand;
-import triangle.abstractSyntaxTrees.commands.Command;
-import triangle.abstractSyntaxTrees.commands.EmptyCommand;
-import triangle.abstractSyntaxTrees.commands.IfCommand;
-import triangle.abstractSyntaxTrees.commands.LetCommand;
-import triangle.abstractSyntaxTrees.commands.SequentialCommand;
-import triangle.abstractSyntaxTrees.commands.RepeatCommand;
-import triangle.abstractSyntaxTrees.commands.WhileCommand;
+import triangle.abstractSyntaxTrees.commands.*;
 import triangle.abstractSyntaxTrees.declarations.ConstDeclaration;
 import triangle.abstractSyntaxTrees.declarations.Declaration;
 import triangle.abstractSyntaxTrees.declarations.FuncDeclaration;
@@ -297,14 +289,58 @@ public class Parser {
 				accept(Token.RPAREN);
 				finish(commandPos);
 				commandAST = new CallCommand(iAST, apsAST, commandPos);
-
 			} else {
 
 				Vname vAST = parseRestOfVname(iAST);
-				accept(Token.BECOMES);
-				Expression eAST = parseExpression();
-				finish(commandPos);
-				commandAST = new AssignCommand(vAST, eAST, commandPos);
+				if (currentToken.kind == Token.OPERATOR && currentToken.spelling.equals("++")) {
+					acceptIt();
+
+					// added for practical 3
+					// e.g. a++ translates to an assignment a=a+1
+					// vAST is the variable we'll be updating
+					// "commandPos" is the line number in the source of the current command.
+					// We can just reuse that for each new AST node we make
+
+					// first, we need to make the integerliteral for the 1
+					IntegerLiteral il = new IntegerLiteral("1", commandPos);
+
+					// this gets wrapped in an IntegerExpression
+					IntegerExpression ie = new IntegerExpression(il, commandPos);
+
+					// the variable name gets wrapped in a VnameExpression
+					VnameExpression vne = new VnameExpression(vAST, commandPos);
+
+					// the operator will be a + (each operator is just defined by its spelling)
+					Operator op = new Operator("+", commandPos);
+
+					// now we assemble the expressions into a BinaryExpression for the a + 1
+					Expression eAST = new BinaryExpression(vne, op, ie, commandPos);
+
+					// this sets the last line of the command for debugging purposes
+					finish(commandPos);
+
+					// we need to make an assignment, with a binary expression on the right
+					commandAST = new AssignCommand(vAST, eAST, commandPos);
+
+				}
+				// added
+				    else if (currentToken.kind == Token.OPERATOR && currentToken.spelling.equals("--")) {
+					acceptIt();
+					IntegerLiteral il = new IntegerLiteral("1", commandPos);
+					IntegerExpression ie = new IntegerExpression(il, commandPos);
+					VnameExpression vne = new VnameExpression(vAST, commandPos);
+					Operator op = new Operator("-", commandPos);
+					Expression eAST = new BinaryExpression(vne, op, ie, commandPos);
+					finish(commandPos);
+					commandAST = new AssignCommand(vAST, eAST, commandPos);
+					}
+
+					else {
+					accept(Token.BECOMES);
+					Expression eAST = parseExpression();
+					finish(commandPos);
+					commandAST = new AssignCommand(vAST, eAST, commandPos);
+				}
 			}
 		}
 			break;
@@ -315,6 +351,13 @@ public class Parser {
 			accept(Token.END);
 			break;
 
+			// added
+		case Token.LCURLY:
+				acceptIt();
+				commandAST = parseCommand();
+				accept(Token.RCURLY);
+				break;
+
 		case Token.LET: {
 			acceptIt();
 			Declaration dAST = parseDeclaration();
@@ -323,6 +366,19 @@ public class Parser {
 			finish(commandPos);
 			commandAST = new LetCommand(dAST, cAST, commandPos);
 		}
+			break;
+
+			// added
+			case Token.LOOP: {
+				acceptIt();
+				Command c1AST = parseSingleCommand();
+				accept(Token.WHILE);
+				Expression eAST = parseExpression();
+				accept(Token.DO);
+				Command c2AST = parseSingleCommand();
+				finish(commandPos);
+				commandAST = new LoopWhileCommand(eAST, c1AST, c2AST, commandPos);
+			}
 			break;
 
 		case Token.IF: {
@@ -359,9 +415,12 @@ public class Parser {
 
 		case Token.SEMICOLON:
 		case Token.END:
+		// added
+		case Token.RCURLY:
 		case Token.ELSE:
 		case Token.IN:
 		case Token.EOT:
+
 
 			finish(commandPos);
 			commandAST = new EmptyCommand(commandPos);

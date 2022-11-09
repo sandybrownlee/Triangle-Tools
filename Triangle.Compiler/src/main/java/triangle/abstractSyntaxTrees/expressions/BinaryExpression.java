@@ -31,6 +31,7 @@ public class BinaryExpression extends Expression {
 		return v.visitBinaryExpression(this, arg);
 	}
 
-	public final Expression E1, E2;
+	public Expression E1;
+    public Expression E2;
 	public final Operator O;
 }

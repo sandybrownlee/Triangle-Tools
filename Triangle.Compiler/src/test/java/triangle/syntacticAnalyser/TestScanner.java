@@ -45,6 +45,20 @@ public class TestScanner {
 
 	@Test
 	public void testAddTri() { compileExpectSuccess("/add.tri"); }
+
+	// added for practical 3
+	@Test
+	public void testIncrement() { compileExpectSuccess("/increment.tri");}
+
+	// added
+	@Test
+	public void testDecrement() { compileExpectSuccess("/decrement.tri");}
+	// added
+	@Test
+	public void testWhileCurly() { compileExpectSuccess("/while-curly.tri");}
+	// added
+	 @Test
+	public void testLoopWhile() { compileExpectSuccess("/loopwhile.tri"); }
 	
 	
 	

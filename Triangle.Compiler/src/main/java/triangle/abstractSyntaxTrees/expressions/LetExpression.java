@@ -30,6 +30,6 @@ public class LetExpression extends Expression {
 		return v.visitLetExpression(this, arg);
 	}
 
-	public final Declaration D;
-	public final Expression E;
+	public Declaration D;
+	public Expression E;
 }

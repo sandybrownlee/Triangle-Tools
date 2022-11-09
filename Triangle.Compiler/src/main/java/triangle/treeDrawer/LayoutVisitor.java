@@ -28,14 +28,7 @@ import triangle.abstractSyntaxTrees.aggregates.MultipleArrayAggregate;
 import triangle.abstractSyntaxTrees.aggregates.MultipleRecordAggregate;
 import triangle.abstractSyntaxTrees.aggregates.SingleArrayAggregate;
 import triangle.abstractSyntaxTrees.aggregates.SingleRecordAggregate;
-import triangle.abstractSyntaxTrees.commands.AssignCommand;
-import triangle.abstractSyntaxTrees.commands.CallCommand;
-import triangle.abstractSyntaxTrees.commands.EmptyCommand;
-import triangle.abstractSyntaxTrees.commands.IfCommand;
-import triangle.abstractSyntaxTrees.commands.LetCommand;
-import triangle.abstractSyntaxTrees.commands.SequentialCommand;
-import triangle.abstractSyntaxTrees.commands.RepeatCommand;
-import triangle.abstractSyntaxTrees.commands.WhileCommand;
+import triangle.abstractSyntaxTrees.commands.*;
 import triangle.abstractSyntaxTrees.declarations.BinaryOperatorDeclaration;
 import triangle.abstractSyntaxTrees.declarations.ConstDeclaration;
 import triangle.abstractSyntaxTrees.declarations.FuncDeclaration;
@@ -172,7 +165,9 @@ public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
 		var d1 = ast.E1.visit(this);
 		var d2 = ast.O.visit(this);
 		var d3 = ast.E2.visit(this);
-		return layoutTernary("Bin.Expr.", d1, d2, d3);
+		// return layoutTernary("Bin.Expr.", d1, d2, d3);
+		return layoutTernary("Bin.Expr." + "(" + d2.caption + ")", d1, d2, d3);
+
 	}
 
 	@Override
@@ -189,8 +184,19 @@ public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
 	}
 	@Override
 	public DrawingTree visitRepeatCommand(RepeatCommand ast, Void obj) {
-		return null;
+		var d1 = ast.E.visit(this);
+		var d2 = ast.C.visit(this);
+		return layoutBinary("RepeatCom.", d1, d2);
 		}
+
+		// added
+	@Override
+	public DrawingTree visitLoopWhileCommand(LoopWhileCommand loopWhileCommand, Void obj) {
+		var d1 = loopWhileCommand.C1.visit(this);
+		var d2 = loopWhileCommand.E.visit(this);
+		var d3 = loopWhileCommand.C2.visit(this);
+		return layoutTernary("LoopWhileCommand", d1, d2, d3);
+	}
 
 	@Override
 	public DrawingTree visitEmptyExpression(EmptyExpression ast, Void obj) {
@@ -228,7 +234,9 @@ public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
 	public DrawingTree visitUnaryExpression(UnaryExpression ast, Void obj) {
 		var d1 = ast.O.visit(this);
 		var d2 = ast.E.visit(this);
-		return layoutBinary("UnaryExpr.", d1, d2);
+		// return layoutBinary("UnaryExpr.", d1, d2);
+		return layoutBinary("UnaryExpr." + "(" + d1.caption + ")", d1, d2);
+
 	}
 
 	@Override

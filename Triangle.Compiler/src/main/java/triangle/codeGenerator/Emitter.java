@@ -103,7 +103,7 @@ public class Emitter {
 	/**
 	 * Saves the object program in the given object file.
 	 * 
-	 * @param objectFile the object file
+	 * @param objectFileName the object file
 	 */
 	public void saveObjectProgram(String objectFileName) {
 		try (var objectFile = new FileOutputStream(objectFileName)) {
