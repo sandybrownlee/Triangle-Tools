@@ -16,7 +16,7 @@ package triangle.treeDrawer;
 
 import java.awt.FontMetrics;
 
-import triangle.abstractSyntaxTrees.commands.RepeatCommand;
+import triangle.abstractSyntaxTrees.commands.*;
 import triangle.abstractSyntaxTrees.Program;
 import triangle.abstractSyntaxTrees.actuals.ConstActualParameter;
 import triangle.abstractSyntaxTrees.actuals.EmptyActualParameterSequence;
@@ -29,13 +29,6 @@ import triangle.abstractSyntaxTrees.aggregates.MultipleArrayAggregate;
 import triangle.abstractSyntaxTrees.aggregates.MultipleRecordAggregate;
 import triangle.abstractSyntaxTrees.aggregates.SingleArrayAggregate;
 import triangle.abstractSyntaxTrees.aggregates.SingleRecordAggregate;
-import triangle.abstractSyntaxTrees.commands.AssignCommand;
-import triangle.abstractSyntaxTrees.commands.CallCommand;
-import triangle.abstractSyntaxTrees.commands.EmptyCommand;
-import triangle.abstractSyntaxTrees.commands.IfCommand;
-import triangle.abstractSyntaxTrees.commands.LetCommand;
-import triangle.abstractSyntaxTrees.commands.SequentialCommand;
-import triangle.abstractSyntaxTrees.commands.WhileCommand;
 import triangle.abstractSyntaxTrees.declarations.BinaryOperatorDeclaration;
 import triangle.abstractSyntaxTrees.declarations.ConstDeclaration;
 import triangle.abstractSyntaxTrees.declarations.FuncDeclaration;
@@ -165,6 +158,14 @@ public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
 		var d1 = ast.E.visit(this);
 		var d2 = ast.C.visit(this);
 		return layoutBinary("RepeatCom.", d1, d2);
+	}
+
+	@Override
+	public DrawingTree visitLoopCommand(LoopCommand ast, Void obj) {
+		var d1 = ast.E.visit(this);
+		var d2 = ast.C1.visit(this);
+		var d3 = ast.C2.visit(this);
+		return layoutBinary("LoopCom.", d1, d2);
 	}
 
 	// Expressions
