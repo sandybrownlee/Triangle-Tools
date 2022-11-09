@@ -36,7 +36,7 @@ import com.sampullara.cli.Argument;
 public class Compiler {
 
 	//Example cmd line cmd:
-	// java -cp build/libs/Triangle-Tools.jar triangle.Compiler -src programs/loopwhile.tri -o compiled/loopwhile.tam -tree -fold -treeafterfold
+	// java -cp build/libs/Triangle-Tools.jar triangle.Compiler -src programs/control.tri -o compiled/control.tam -tree -stats
 	// java -cp build/libs/Triangle-Tools.jar triangle.abstractMachine.Interpreter compiled/loopwhile.tam
 
 	/** The filename for the object program, normally obj.tam. */
@@ -55,6 +55,9 @@ public class Compiler {
 	@Argument(alias = "src", description = "The name of the file containing the source program.", required=true)
 	static String sourceName = "";
 
+	@Argument(alias = "stats", description="Summary statistics for amount of BinaryExpressions, IfCommands and WhileCommands")
+	static boolean dispSummaryStatistics = false;
+
 	private static Scanner scanner;
 	private static Parser parser;
 	private static Checker checker;
@@ -62,6 +65,7 @@ public class Compiler {
 	private static Emitter emitter;
 	private static ErrorReporter reporter;
 	private static Drawer drawer;
+	private static SummaryStatistics summaryStatistics;
 
 	/** The AST representing the source program. */
 	private static Program theAST;
@@ -94,6 +98,8 @@ public class Compiler {
 		emitter = new Emitter(reporter);
 		encoder = new Encoder(emitter, reporter);
 		drawer = new Drawer();
+		
+
 
 		// scanner.enableDebugging();
 		theAST = parser.parseProgram(); // 1st pass
@@ -103,6 +109,15 @@ public class Compiler {
 			// }
 			System.out.println("Contextual Analysis ...");
 			checker.check(theAST); // 2nd pass
+
+			if(dispSummaryStatistics)
+			{
+				summaryStatistics = new SummaryStatistics();
+				theAST.visit(summaryStatistics);
+				System.out.println("Summary statistics:\n# of Binary Exressions: "+summaryStatistics.getcountBinaryExpressions()+
+				"\n# of If Commands: "+ summaryStatistics.getcountIfCommands()+
+				"\n# of While Commands: "+ summaryStatistics.getcountWhileCommands()+".");
+			}
 
 			if(folding)
 			{
