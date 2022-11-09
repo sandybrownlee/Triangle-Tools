@@ -1,5 +1,6 @@
 let
     var n : Integer;
+    var m : Integer;
     var c : Char
 in
 
