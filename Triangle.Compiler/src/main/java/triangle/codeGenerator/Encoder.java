@@ -186,7 +186,7 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 		ast.C2.visit(this, frame);
 		//jumps back to loop address
 		emitter.emit(OpCode.JUMP, Machine.trueRep, Register.CB, loopAddr);
-		//if condition satisfied, jump to do C2
+		//if condition not satisfied, don't jump to do C2
 		emitter.patch(jumpifAddr);
 		return null;
 	}
