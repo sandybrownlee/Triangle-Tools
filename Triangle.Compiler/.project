@@ -20,4 +20,22 @@
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.eclipse.buildship.core.gradleprojectnature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>programs</name>
+			<type>2</type>
+			<location>C:/Users/PaulD/OneDrive/Stirling/Year 3/CSCU9A5/Assignment/Triangle-Tools/programs</location>
+		</link>
+	</linkedResources>
+	<filteredResources>
+		<filter>
+			<id>1667988410318</id>
+			<name></name>
+			<type>30</type>
+			<matcher>
+				<id>org.eclipse.core.resources.regexFilterMatcher</id>
+				<arguments>node_modules|\.git|__CREATED_BY_JAVA_LANGUAGE_SERVER__</arguments>
+			</matcher>
+		</filter>
+	</filteredResources>
 </projectDescription>
