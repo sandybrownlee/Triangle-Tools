@@ -57,7 +57,7 @@ public class TestScanner {
 
     @Test
     public void testLoopWhile() {
-        compileExpectFailure("/loopWhile.tri");
+        compileExpectFailure("/loopwhile.tri");
     }
 
     private void compileExpectSuccess(String filename) {
