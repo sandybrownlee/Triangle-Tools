@@ -24,6 +24,7 @@ import triangle.syntacticAnalyzer.Scanner;
 import triangle.syntacticAnalyzer.SourceFile;
 import triangle.treeDrawer.Drawer;
 import triangle.statsAnalyzer.Statistics;
+import triangle.hoister.Hoister;
 
 import com.sampullara.cli.Args;
 import com.sampullara.cli.Argument;
@@ -48,6 +49,8 @@ public class Compiler {
 	public static String objectName = "obj.tam";
 	@Argument(alias = "t", description = "Show the abstract syntax tree")
 	public static boolean showTree = false;
+	@Argument(alias = "h", description = "Enable hoisting")
+	public static boolean hoisting = false;
 	@Argument(alias = "f", description = "Enable constant folding")
 	public static boolean folding = false;
 	@Argument(alias = "S", description = "Show statistics")
@@ -115,7 +118,10 @@ public class Compiler {
 				drawerBefore.draw(theAST);
 			}
 			checker.check(theAST); // 2nd pass
-			
+			if (hoisting) {
+				System.out.println("Hoisting ...");
+				theAST.visit(new Hoister());
+			}
 			if (folding) {
 				theAST.visit(new ConstantFolder());
 			}
