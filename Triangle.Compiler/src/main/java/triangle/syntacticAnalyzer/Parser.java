@@ -39,6 +39,7 @@ import triangle.abstractSyntaxTrees.commands.IfCommand;
 import triangle.abstractSyntaxTrees.commands.LetCommand;
 import triangle.abstractSyntaxTrees.commands.SequentialCommand;
 import triangle.abstractSyntaxTrees.commands.WhileCommand;
+import triangle.abstractSyntaxTrees.commands.LoopCommand;
 import triangle.abstractSyntaxTrees.declarations.ConstDeclaration;
 import triangle.abstractSyntaxTrees.declarations.Declaration;
 import triangle.abstractSyntaxTrees.declarations.FuncDeclaration;
@@ -280,7 +281,17 @@ public class Parser {
 				accept(Token.RPAREN);
 				finish(commandPos);
 				commandAST = new CallCommand(iAST, apsAST, commandPos);
-
+			}
+			else if (currentToken.kind == Token.OPERATOR && currentToken.spelling.equals("--")) {
+				Vname vAST = parseRestOfVname(iAST);
+				acceptIt();
+				IntegerLiteral il = new IntegerLiteral("1", commandPos);
+				IntegerExpression ie = new IntegerExpression(il, commandPos);
+				VnameExpression vne = new VnameExpression(vAST, commandPos);
+				Operator op = new Operator("-", commandPos);
+				Expression eAST = new BinaryExpression(vne, op, ie, commandPos);
+				finish(commandPos);
+				commandAST = new AssignCommand(vAST, eAST, commandPos);
 			} else {
 
 				Vname vAST = parseRestOfVname(iAST);
@@ -296,6 +307,12 @@ public class Parser {
 			acceptIt();
 			commandAST = parseCommand();
 			accept(Token.END);
+			break;
+
+		case Token.LCURLY:
+			acceptIt();
+			commandAST = parseCommand();
+			accept(Token.RCURLY);
 			break;
 
 		case Token.LET: {
@@ -330,8 +347,21 @@ public class Parser {
 		}
 			break;
 
+		case Token.LOOP: {
+			acceptIt();
+			Command c1AST = parseSingleCommand();
+			accept(Token.WHILE);
+			Expression eAST = parseExpression();
+			accept(Token.DO);
+			Command c2AST = parseSingleCommand();
+			finish(commandPos);
+			commandAST = new LoopCommand(eAST, c1AST, c2AST, commandPos);
+		}
+		break;
+
 		case Token.SEMICOLON:
 		case Token.END:
+		case Token.RCURLY:
 		case Token.ELSE:
 		case Token.IN:
 		case Token.EOT:
