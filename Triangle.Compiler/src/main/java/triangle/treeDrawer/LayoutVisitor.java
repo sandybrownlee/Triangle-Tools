@@ -160,12 +160,13 @@ public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
 		return layoutBinary("RepeatCom.", d1, d2);
 	}
 
+	// Override Method to add while loop functionality.
 	@Override
 	public DrawingTree visitLoopCommand(LoopCommand ast, Void obj) {
 		var d1 = ast.E.visit(this);
 		var d2 = ast.C1.visit(this);
 		var d3 = ast.C2.visit(this);
-		return layoutTernary("LoopCom.", d1, d2, d3);
+		return layoutTernary("LoopCom.", d1, d2, d3); //Returns as a Ternary Layout to support the three vars.
 	}
 
 	// Expressions
