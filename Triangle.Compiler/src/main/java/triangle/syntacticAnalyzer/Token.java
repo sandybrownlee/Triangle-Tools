@@ -74,11 +74,11 @@ final class Token extends Object {
 			LPAREN = 28, RPAREN = 29, LBRACKET = 30, RBRACKET = 31, LCURLY = 32, RCURLY = 33,
 
 			// special tokens...
-			EOT = 34, ERROR = 35;
+			EOT = 34, ERROR = 35, FALSE = 36, TRUE = 37; 
 
 	private static String[] tokenTable = new String[] { "<int>", "<char>", "<identifier>", "<operator>", "array",
 			"begin", "const", "decrement", "do", "else", "end", "func", "if", "in", "let", "of", "proc", "record", "then", "type",
-			"var", "while", ".", ":", ";", ",", ":=", "~", "(", ")", "[", "]", "{", "}", "", "<error>" };
+			"var", "while", ".", ":", ";", ",", ":=", "~", "(", ")", "[", "]", "{", "}", "", "<error>", "<flase>", "<true>",};
 
 	private final static int firstReservedWord = Token.ARRAY, lastReservedWord = Token.WHILE;
 
