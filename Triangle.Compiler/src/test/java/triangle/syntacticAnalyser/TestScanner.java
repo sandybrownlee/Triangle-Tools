@@ -45,13 +45,33 @@ public class TestScanner {
 		compileExpectSuccess("/repeatuntil.tri");
 	}
 
+	/* new test for while-longloop.tri */
+	@Test
+	public void testWhileLongLoop(){
+		while (a < 5000); {
+			while (b < 3000) {
+				compileExpectSuccess("/while-longloop.tri");
+			}
+		}
+	}
+
+	/* test for while-longloop.tri taking it as a concatenated loop
+	 * @Test
+	 * public void testWhileLongLoop() {
+	 *      while (a < 5000); {
+	 *           compileExpectSuccess("/while-longloop.tri"); }
+	 *      while (b < 3000); {
+	 *           compileExpectSuccess("/while-longloop.tri"); }
+	 *  }
+	 */
+
 	/* new test for DecrementCommand */
 	@Test
 	public void testDecrementCommand() {
 		compileExpectSuccess("/DecrementCommand.java");
 	}
-	
-	
+
+		
 	
 	private void compileExpectSuccess(String filename) {
 		// build.gradle has a line sourceSets.test.resources.srcDir file("$rootDir/programs")
