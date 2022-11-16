@@ -33,6 +33,7 @@ import triangle.abstractSyntaxTrees.commands.CallCommand;
 import triangle.abstractSyntaxTrees.commands.EmptyCommand;
 import triangle.abstractSyntaxTrees.commands.IfCommand;
 import triangle.abstractSyntaxTrees.commands.LetCommand;
+import triangle.abstractSyntaxTrees.commands.LoopWhileCommand;
 import triangle.abstractSyntaxTrees.commands.SequentialCommand;
 import triangle.abstractSyntaxTrees.commands.WhileCommand;
 import triangle.abstractSyntaxTrees.commands.RepeatCommand;
@@ -145,6 +146,14 @@ public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
 		var d2 = ast.C.visit(this);
 		return layoutBinary("LetCom.", d1, d2);
 	}
+	
+	@Override
+	public DrawingTree visitLoopWhileCommand(LoopWhileCommand ast, Void obj) {
+		var d1 = ast.C1.visit(this);
+		var d2 = ast.E.visit(this);
+		var d3 = ast.C2.visit(this);
+		return layoutTernary("LoopWhile.", d1, d2, d3);
+	}
 
 	@Override
 	public DrawingTree visitSequentialCommand(SequentialCommand ast, Void obj) {
@@ -179,7 +188,8 @@ public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
 		var d1 = ast.E1.visit(this);
 		var d2 = ast.O.visit(this);
 		var d3 = ast.E2.visit(this);
-		return layoutTernary("Bin.Expr.", d1, d2, d3);
+		// Changed from Ternary to Binary as the operator has moved from an argument to apart of the caption
+		return layoutBinary("Bin.Expr. (" + d2.caption + ") ", d1, d3);
 	}
 
 	@Override
@@ -231,7 +241,8 @@ public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
 	public DrawingTree visitUnaryExpression(UnaryExpression ast, Void obj) {
 		var d1 = ast.O.visit(this);
 		var d2 = ast.E.visit(this);
-		return layoutBinary("UnaryExpr.", d1, d2);
+		// Change from Binary to Unary as the operator has moved from an argument to being apart of the caption
+		return layoutUnary("UnaryExpr. (" + d1.caption + ") ", d2);
 	}
 
 	@Override
@@ -247,7 +258,9 @@ public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
 		var d2 = ast.ARG1.visit(this);
 		var d3 = ast.ARG2.visit(this);
 		var d4 = ast.RES.visit(this);
-		return layoutQuaternary("Bin.Op.Decl.", d1, d2, d3, d4);
+		// Changed from Quaternary layout to Ternary as the operator has been moved from an argument 
+		// to apart of the string caption for the tree
+		return layoutTernary("Bin.Op.Decl. (" + d1.caption + ") ", d2, d3, d4);
 	}
 
 	@Override
@@ -293,7 +306,8 @@ public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
 		var d1 = ast.O.visit(this);
 		var d2 = ast.ARG.visit(this);
 		var d3 = ast.RES.visit(this);
-		return layoutTernary("UnaryOp.Decl.", d1, d2, d3);
+		// Changed from a Ternary to a Binary as the operator has moved from an argument to apart of the caption 
+		return layoutBinary("UnaryOp.Decl. (" + d1.caption + ") ", d2, d3);
 	}
 
 	@Override

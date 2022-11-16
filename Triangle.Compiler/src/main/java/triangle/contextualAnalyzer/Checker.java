@@ -34,6 +34,7 @@ import triangle.abstractSyntaxTrees.commands.CallCommand;
 import triangle.abstractSyntaxTrees.commands.EmptyCommand;
 import triangle.abstractSyntaxTrees.commands.IfCommand;
 import triangle.abstractSyntaxTrees.commands.LetCommand;
+import triangle.abstractSyntaxTrees.commands.LoopWhileCommand;
 import triangle.abstractSyntaxTrees.commands.SequentialCommand;
 import triangle.abstractSyntaxTrees.commands.WhileCommand;
 import triangle.abstractSyntaxTrees.commands.RepeatCommand;
@@ -166,6 +167,18 @@ public final class Checker implements ActualParameterVisitor<FormalParameter, Vo
 		ast.D.visit(this);
 		ast.C.visit(this);
 		idTable.closeScope();
+		return null;
+	}
+	
+	@Override
+	public Void visitLoopWhileCommand(LoopWhileCommand ast, Void arg) {
+		var eType = ast.E.visit(this);
+		
+		checkAndReportError(eType.equals(StdEnvironment.booleanType), "Boolean expression expected here", ast.E);
+		
+		ast.C1.visit(this);
+		ast.C2.visit(this);
+		
 		return null;
 	}
 
@@ -934,6 +947,9 @@ public final class Checker implements ActualParameterVisitor<FormalParameter, Vo
 		StdEnvironment.trueDecl = declareStdConst("true", StdEnvironment.booleanType);
 		StdEnvironment.notDecl = declareStdUnaryOp("\\", StdEnvironment.booleanType, StdEnvironment.booleanType);
 		StdEnvironment.barDecl = declareStdUnaryOp("|", StdEnvironment.integerType, StdEnvironment.integerType);
+		StdEnvironment.incDecl = declareStdUnaryOp("++", StdEnvironment.integerType, StdEnvironment.integerType);
+		// Assign decrement declaration as new Unary Operator with its spelling, input and return types which are both of type integer
+		StdEnvironment.decDecl = declareStdUnaryOp("--", StdEnvironment.integerType, StdEnvironment.integerType);
 		StdEnvironment.andDecl = declareStdBinaryOp("/\\", StdEnvironment.booleanType, StdEnvironment.booleanType,
 				StdEnvironment.booleanType);
 		StdEnvironment.orDecl = declareStdBinaryOp("\\/", StdEnvironment.booleanType, StdEnvironment.booleanType,
@@ -989,4 +1005,5 @@ public final class Checker implements ActualParameterVisitor<FormalParameter, Vo
 				StdEnvironment.booleanType);
 
 	}
+	
 }

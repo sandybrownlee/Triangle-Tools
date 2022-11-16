@@ -47,6 +47,29 @@ public class TestScanner {
 		compileExpectSuccess("/repeatuntil.tri");
 	}
 	
+	@Test
+	public void testIncrement() {
+		compileExpectSuccess("/increment.tri");
+	}
+	
+	// Test for Task 3a)
+	@Test
+	public void testDecrement() {
+		compileExpectSuccess("/decrement.tri");
+	}
+	
+	// Test for Task 4a)
+	@Test
+	public void testCurly() {
+		compileExpectSuccess("/while-curly.tri");
+	}
+	
+	// Test for Task 5a)
+//	@Test
+//	public void testLoopWhile() {
+//		compileExpectSuccess("/loopwhile.tri");
+//	}
+	
 	private void compileExpectSuccess(String filename) {
 		// build.gradle has a line sourceSets.test.resources.srcDir file("$rootDir/programs")
 		// which adds the programs directory to the list of places Java can easily find files

@@ -38,6 +38,7 @@ import triangle.abstractSyntaxTrees.commands.CallCommand;
 import triangle.abstractSyntaxTrees.commands.EmptyCommand;
 import triangle.abstractSyntaxTrees.commands.IfCommand;
 import triangle.abstractSyntaxTrees.commands.LetCommand;
+import triangle.abstractSyntaxTrees.commands.LoopWhileCommand;
 import triangle.abstractSyntaxTrees.commands.SequentialCommand;
 import triangle.abstractSyntaxTrees.commands.WhileCommand;
 import triangle.abstractSyntaxTrees.commands.RepeatCommand;
@@ -102,9 +103,11 @@ import triangle.abstractSyntaxTrees.vnames.SubscriptVname;
 import triangle.abstractSyntaxTrees.vnames.Vname;
 import triangle.codeGenerator.entities.AddressableEntity;
 import triangle.codeGenerator.entities.BarPrimitiveRoutine;
+import triangle.codeGenerator.entities.DecrementPrimitiveRoutine;
 import triangle.codeGenerator.entities.EqualityRoutine;
 import triangle.codeGenerator.entities.FetchableEntity;
 import triangle.codeGenerator.entities.Field;
+import triangle.codeGenerator.entities.IncrementPrimitiveRoutine;
 import triangle.codeGenerator.entities.KnownAddress;
 import triangle.codeGenerator.entities.KnownRoutine;
 import triangle.codeGenerator.entities.KnownValue;
@@ -162,6 +165,18 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 		if (extraSize > 0) {
 			emitter.emit(OpCode.POP, extraSize);
 		}
+		return null;
+	}
+	
+	@Override
+	public Void visitLoopWhileCommand(LoopWhileCommand ast, Frame frame) {
+		ast.C1.visit(this, frame);
+		var jumpAddr = emitter.emit(OpCode.JUMP, 0, Register.CB, 0);
+		var loopAddr = emitter.getNextInstrAddr();
+		ast.C2.visit(this, frame);
+		emitter.patch(jumpAddr);
+		ast.E.visit(this, frame);
+		emitter.emit(OpCode.JUMPIF, Machine.trueRep, Register.CB, loopAddr);
 		return null;
 	}
 
@@ -746,6 +761,9 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 		elaborateStdEqRoutine(StdEnvironment.equalDecl, Primitive.EQ);
 		elaborateStdEqRoutine(StdEnvironment.unequalDecl, Primitive.NE);
 		StdEnvironment.barDecl.entity = new BarPrimitiveRoutine();
+		StdEnvironment.incDecl.entity = new IncrementPrimitiveRoutine();
+		// Assigned decrement operator entity as DecrementPrimtitiveRoutine object
+		StdEnvironment.decDecl.entity = new DecrementPrimitiveRoutine();
 	}
 
 	boolean tableDetailsReqd;
@@ -801,4 +819,5 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 		var baseObject = (AddressableEntity) V.visit(this, frame);
 		baseObject.encodeFetchAddress(emitter, frame, V);
 	}
+
 }

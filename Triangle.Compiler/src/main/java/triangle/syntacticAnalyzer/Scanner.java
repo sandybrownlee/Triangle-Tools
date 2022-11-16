@@ -172,6 +172,12 @@ public final class Scanner {
 
 		case '+':
 		case '-':
+			takeIt();
+			if (isOperator(currentChar)) {
+				takeIt();
+				return Token.OPERATOR;
+			}
+			
 		case '*':
 		case '/':
 		case '=':
@@ -188,7 +194,7 @@ public final class Scanner {
 			while (isOperator(currentChar))
 				takeIt();
 			return Token.OPERATOR;
-
+		
 		case '\'':
 			takeIt();
 			takeIt(); // the quoted character

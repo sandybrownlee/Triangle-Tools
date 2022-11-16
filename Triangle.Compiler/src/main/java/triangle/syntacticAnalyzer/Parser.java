@@ -37,6 +37,7 @@ import triangle.abstractSyntaxTrees.commands.Command;
 import triangle.abstractSyntaxTrees.commands.EmptyCommand;
 import triangle.abstractSyntaxTrees.commands.IfCommand;
 import triangle.abstractSyntaxTrees.commands.LetCommand;
+import triangle.abstractSyntaxTrees.commands.LoopWhileCommand;
 import triangle.abstractSyntaxTrees.commands.SequentialCommand;
 import triangle.abstractSyntaxTrees.commands.WhileCommand;
 import triangle.abstractSyntaxTrees.commands.RepeatCommand;
@@ -282,9 +283,9 @@ public class Parser {
 				finish(commandPos);
 				commandAST = new CallCommand(iAST, apsAST, commandPos);
 
-			} else {
+			} 
+			else {
 				Vname vAST = parseRestOfVname(iAST);
-
 				if(currentToken.kind == Token.OPERATOR && currentToken.spelling.equals("++")) {
 					acceptIt();
 					
@@ -315,13 +316,51 @@ public class Parser {
 					
 					// we need to make an assignment with a binary expression on the right
 					commandAST = new AssignCommand(vAST, eAST, commandPos);
-				} else {
+				} else if (currentToken.kind == Token.OPERATOR && currentToken.spelling.equals("--")) {
+					acceptIt();
+					
+					// e.g. a-- translates to an assignment a=a-1
+					
+					// vAST is the variable we'll be updating
+					// "commandPos" is the line number in the source of the current command.
+					//   We can just reuse that for each new AST node we make 
+					// first, we need to make the integerliteral for the 1
+					
+					// first, we need to make the integerLiteral for the 1
+					IntegerLiteral il = new IntegerLiteral("1", commandPos);
+					
+					// this gets wrapped in an IntegerExpression
+					IntegerExpression ie = new IntegerExpression(il, commandPos);
+					
+					// the variable name gets wrapped in a VnameExpression
+					VnameExpression vne = new VnameExpression(vAST, commandPos);
+					
+					// the operator will be a - (each operator is just defined by its spelling)
+					Operator op = new Operator("-", commandPos);
+					
+					// now we assemble the expressions into a BinaryExpression for the a -\ 1
+					Expression eAST = new BinaryExpression(vne, op, ie, commandPos);
+					
+					// this sets the last line of the command for debugging purposes
+					finish(commandPos);
+					
+					// we need to make an assignment with a binary expression on the right
+					commandAST = new AssignCommand(vAST, eAST, commandPos);
+				} 
+				else {
 					accept(Token.BECOMES);
 					Expression eAST = parseExpression();
 					finish(commandPos);
 					commandAST = new AssignCommand(vAST, eAST, commandPos);
 				}
 			}
+//			else {
+//				Vname vAST = parseRestOfVname(iAST);
+//				accept(Token.BECOMES);
+//				Expression eAST = parseExpression();
+//				finish(commandPos);
+//				commandAST = new AssignCommand(vAST, eAST, commandPos);
+//			}
 		}
 			break;
 
@@ -329,6 +368,14 @@ public class Parser {
 			acceptIt();
 			commandAST = parseCommand();
 			accept(Token.END);
+			break;
+			
+		// Added Left curly bracket to perform same functionality as Begin token
+		case Token.LCURLY:
+			
+			acceptIt();
+			commandAST = parseCommand();
+			accept(Token.RCURLY);
 			break;
 
 		case Token.LET: {
@@ -340,6 +387,17 @@ public class Parser {
 			commandAST = new LetCommand(dAST, cAST, commandPos);
 		}
 			break;
+			
+		case Token.LOOP: {
+			acceptIt();
+			Expression eAST = parseExpression();
+			accept(Token.WHILE);
+			Command c1AST = parseSingleCommand();
+			accept(Token.DO);
+			Command c2AST = parseSingleCommand();
+			finish(commandPos);
+			commandAST = new LoopWhileCommand(eAST, c1AST, c2AST, commandPos);
+		}
 
 		case Token.IF: {
 			acceptIt();
@@ -378,6 +436,8 @@ public class Parser {
 		case Token.ELSE:
 		case Token.IN:
 		case Token.EOT:
+		// End token as right curly bracket
+		case Token.RCURLY:
 
 			finish(commandPos);
 			commandAST = new EmptyCommand(commandPos);
