@@ -22,6 +22,10 @@ import triangle.syntacticAnalyzer.Parser;
 import triangle.syntacticAnalyzer.Scanner;
 import triangle.syntacticAnalyzer.SourceFile;
 import triangle.treeDrawer.Drawer;
+import triangle.optimiser.ConstantFolder;
+
+import com.sampullara.cli.Args;
+import com.sampullara.cli.Argument;
 
 /**
  * The main driver class for the Triangle compiler.
@@ -31,7 +35,17 @@ import triangle.treeDrawer.Drawer;
  */
 public class Compiler {
 
+	@Argument(alias = "i", description = "Input", required = true)
+	static String sourceName;
+	@Argument(alias = "tree", description = "before optimisations occur", required = false)
+	static boolean showTree = false;
+	@Argument(alias = "treeAfter", description = "after optimisations occur", required = false)
+	static boolean showTreeOptimised = false;
+	@Argument(alias = "s", description = "Show summary stat", required = false)
+	static boolean stats = false;
+
 	/** The filename for the object program, normally obj.tam. */
+	@Argument(alias = "o", description = "Output", required = false)
 	static String objectName = "obj.tam";
 
 	private static Scanner scanner;
@@ -41,6 +55,8 @@ public class Compiler {
 	private static Emitter emitter;
 	private static ErrorReporter reporter;
 	private static Drawer drawer;
+	private static Drawer drawerAfter;
+	private static Summariser summariser;
 
 	/** The AST representing the source program. */
 	private static Program theAST;
@@ -77,11 +93,13 @@ public class Compiler {
 		emitter = new Emitter(reporter);
 		encoder = new Encoder(emitter, reporter);
 		drawer = new Drawer();
+		drawerAfter = new Drawer();
+		summariser = new Summariser();
 
 		// scanner.enableDebugging();
 		theAST = parser.parseProgram(); // 1st pass
-		if (reporter.numErrors == 0) {
-			// if (showingAST) {
+		if (reporter.getNumErrors == 0) {
+			// if (show1ingAST) {
 			// drawer.draw(theAST);
 			// }
 			System.out.println("Contextual Analysis ...");
@@ -89,13 +107,28 @@ public class Compiler {
 			if (showingAST) {
 				drawer.draw(theAST);
 			}
-			if (reporter.numErrors == 0) {
+			if (folding) {
+				theAST.visit(new ConstantFolder());
+			}
+			if (showingASTAfter) {
+				drawerAfter.draw(theAST);
+			}
+			if (stats) {
+				System.out.println("Generating Summary ...");
+				theAST.visit(summariser);
+				System.out.println("Number of Binary Expressions: " + summariser.getNumBinaryExpressions());
+				System.out.println("Number of If Commands: " + summariser.getNumIfCommands());
+				System.out.println("Number of While Commands: " + summariser.getNumWhileCommands());
+
+			}
+
+			if (reporter.getNumErrors == 0) {
 				System.out.println("Code Generation ...");
 				encoder.encodeRun(theAST, showingTable); // 3rd pass
 			}
 		}
 
-		boolean successful = (reporter.numErrors == 0);
+		boolean successful = (reporter.getNumErrors() == 0);
 		if (successful) {
 			emitter.saveObjectProgram(objectName);
 			System.out.println("Compilation was successful.");
@@ -112,18 +145,15 @@ public class Compiler {
 	 *             source filename.
 	 */
 	public static void main(String[] args) {
-
-		if (args.length < 1) {
-			System.out.println("Usage: tc filename [tree]");
-			System.exit(1);
-		}
+		Compiler compiler = new Compiler();
+		Args.parseOrExit(compiler, args);
 
 		String sourceName = args[0];
 		boolean tree = (args.length > 1 && args[1].equalsIgnoreCase("tree"));
-		var compiledOK = compileProgram(sourceName, objectName, tree, false);
+		var compiledOK = compileProgram(sourceName, objectName, showTree, showTreeOptimised, false);
 
-		if (!tree) {
-			System.exit(compiledOK ? 0 : 1);
+		if (!compiledOK && !showTree && !showTreeOptimised) {
+			System.exit(1);
 		}
 	}
 }

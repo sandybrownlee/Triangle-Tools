@@ -1,0 +1,12 @@
+let
+    var z: Integer
+in
+begin
+    getint(var z);
+    z--;
+    putint(z);
+    puteol();
+    z--;
+    putint(z);
+    puteol();
+end
