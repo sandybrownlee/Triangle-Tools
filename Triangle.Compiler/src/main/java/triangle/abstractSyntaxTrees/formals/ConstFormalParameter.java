@@ -39,8 +39,8 @@ public class ConstFormalParameter extends FormalParameter implements ConstantDec
 
 	@Override
 	public boolean equals(Object fpAST) {
-		if (fpAST instanceof ConstFormalParameter cfpAST) {
-			return T.equals(cfpAST.T);
+		if (fpAST instanceof ConstFormalParameter) {
+			return T.equals(((ConstFormalParameter)fpAST).T);
 		} else {
 			return false;
 		}

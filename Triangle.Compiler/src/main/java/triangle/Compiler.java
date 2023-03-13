@@ -18,11 +18,12 @@ import triangle.abstractSyntaxTrees.Program;
 import triangle.codeGenerator.Emitter;
 import triangle.codeGenerator.Encoder;
 import triangle.contextualAnalyzer.Checker;
+import triangle.optimiser.ConstantFolder;
 import triangle.syntacticAnalyzer.Parser;
 import triangle.syntacticAnalyzer.Scanner;
 import triangle.syntacticAnalyzer.SourceFile;
 import triangle.treeDrawer.Drawer;
-import triangle.optimiser.ConstantFolder;
+//import java.io.*;   // For println()
 
 import com.sampullara.cli.Args;
 import com.sampullara.cli.Argument;
@@ -35,18 +36,19 @@ import com.sampullara.cli.Argument;
  */
 public class Compiler {
 
-	@Argument(alias = "i", description = "Input", required = true)
-	static String sourceName;
-	@Argument(alias = "tree", description = "before optimisations occur", required = false)
-	static boolean showTree = false;
-	@Argument(alias = "treeAfter", description = "after optimisations occur", required = false)
-	static boolean showTreeOptimised = false;
-	@Argument(alias = "s", description = "Show summary stat", required = false)
-	static boolean stats = false;
-
 	/** The filename for the object program, normally obj.tam. */
-	@Argument(alias = "o", description = "Output", required = false)
+	@Argument(alias = "i", description = "input filename", required = true)
+	static String sourceName;
+	@Argument(alias = "o", description = "output filename", required = false)
 	static String objectName = "obj.tam";
+	@Argument(alias = "tree", description = "tree before optimization", required = false)
+	static boolean showTree = false;
+	@Argument(description = "Constant-Folder optimisation", required = false)
+	static boolean folding = false;
+	@Argument(alias = "treeAfter", description = "tree before optimization", required = false)
+	static boolean showTreeOptimised = false;
+	@Argument(alias = "s", description = "summ. statistics", required = false)
+	static boolean stats = false;
 
 	private static Scanner scanner;
 	private static Parser parser;
@@ -64,17 +66,19 @@ public class Compiler {
 	/**
 	 * Compile the source program to TAM machine code.
 	 *
-	 * @param sourceName   the name of the file containing the source program.
-	 * @param objectName   the name of the file containing the object program.
-	 * @param showingAST   true iff the AST is to be displayed after contextual
-	 *                     analysis
-	 * @param showingTable true iff the object description details are to be
-	 *                     displayed during code generation (not currently
-	 *                     implemented).
+	 * @param sourceName      the name of the file containing the source program.
+	 * @param objectName      the name of the file containing the object program.
+	 * @param showingAST      true iff the AST is to be displayed after contextual
+	 *                        analysis
+	 * @param showingASTAfter
+	 * @param showingTable    true iff the object description details are to be
+	 *                        displayed during code generation (not currently
+	 *                        implemented).
 	 * @return true iff the source program is free of compile-time errors, otherwise
 	 *         false.
 	 */
-	static boolean compileProgram(String sourceName, String objectName, boolean showingAST, boolean showingTable) {
+	static boolean compileProgram(String sourceName, String objectName, boolean showingAST, boolean showingASTAfter,
+			boolean showingTable) {
 
 		System.out.println("********** " + "Triangle Compiler (Java Version 2.1)" + " **********");
 
@@ -87,7 +91,7 @@ public class Compiler {
 		}
 
 		scanner = new Scanner(source);
-		reporter = new ErrorReporter();
+		reporter = new ErrorReporter(false);
 		parser = new Parser(scanner, reporter);
 		checker = new Checker(reporter);
 		emitter = new Emitter(reporter);
@@ -98,8 +102,8 @@ public class Compiler {
 
 		// scanner.enableDebugging();
 		theAST = parser.parseProgram(); // 1st pass
-		if (reporter.getNumErrors == 0) {
-			// if (show1ingAST) {
+		if (reporter.getNumErrors() == 0) {
+			// if (showingAST) {
 			// drawer.draw(theAST);
 			// }
 			System.out.println("Contextual Analysis ...");
@@ -122,7 +126,7 @@ public class Compiler {
 
 			}
 
-			if (reporter.getNumErrors == 0) {
+			if (reporter.getNumErrors() == 0) {
 				System.out.println("Code Generation ...");
 				encoder.encodeRun(theAST, showingTable); // 3rd pass
 			}
@@ -143,17 +147,44 @@ public class Compiler {
 	 *
 	 * @param args the only command-line argument to the program specifies the
 	 *             source filename.
+	 * 				The optional files give outputfile and flags.
 	 */
 	public static void main(String[] args) {
+
+		// Printing of Copyright text
+		System.out.println("Triangle Tools compiler copyright (c)2023 Manish Bhujel")
+
+		// if (args.length < 1) {
+		// 	System.out.println("Usage: tc filename [-o=outputfilename] [tree] [folding]");
+		// 	System.exit(1);
+		// }
+		
+		// parseArgs(args);
+
 		Compiler compiler = new Compiler();
-		Args.parseOrExit(compiler, args);
+		Args.parseOrExit(compiler,args);
 
-		String sourceName = args[0];
-		boolean tree = (args.length > 1 && args[1].equalsIgnoreCase("tree"));
-		var compiledOK = compileProgram(sourceName, objectName, showTree, showTreeOptimised, false);
+		//String sourceName = args[0];
+	
+		
+		var compiledOK = compileProgram(sourceName, objectName, showTree,showTreeOptimised, false);
 
-		if (!compiledOK && !showTree && !showTreeOptimised) {
+		if (!compiledOK ? !showTree : !showTreeOptimised) {
 			System.exit(1);
 		}
 	}
+
+	// The CLI Parser Library is used instead.
+	// private static void parseArgs(String[] args) {
+	// for (String s : args) {
+	// var sl = s.toLowerCase();
+	// if (sl.equals("tree")) {
+	// showTree = true;
+	// } else if (sl.startsWith("-o=")) {
+	// objectName = s.substring(3);
+	// } else if (sl.equals("folding")) {
+	// folding = true;
+	// }
+	// }
+	// }
 }

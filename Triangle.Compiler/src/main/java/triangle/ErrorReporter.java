@@ -18,25 +18,44 @@ import triangle.syntacticAnalyzer.SourcePosition;
 
 public class ErrorReporter {
 
-	int numErrors;
+	private int numErrors;
+	
+	private boolean throwExceptions;
 
-	ErrorReporter() {
+	/**
+	 * @param throwExceptions if true, throw exceptions (good for unit tests) otherwise write to stdout
+	 */
+	public ErrorReporter(boolean throwExceptions) {
 		numErrors = 0;
+		this.throwExceptions = throwExceptions;
 	}
 
 	public void reportError(String message, String tokenName, SourcePosition pos) {
-		System.out.print("ERROR: ");
+
+		numErrors++;
+		
+		String s = ("ERROR: ");
 
 		for (int p = 0; p < message.length(); p++)
 			if (message.charAt(p) == '%')
-				System.out.print(tokenName);
+				s += tokenName;
 			else
-				System.out.print(message.charAt(p));
-		System.out.println(" " + pos.start + ".." + pos.finish);
-		numErrors++;
+				s += message.charAt(p);
+		s += (" " + pos.start + ".." + pos.finish);
+		
+		if (throwExceptions) {
+			throw new RuntimeException(s);
+		} else {
+			System.out.println(s);
+		}
+		
 	}
 
 	public void reportRestriction(String message) {
 		System.out.println("RESTRICTION: " + message);
+	}
+	
+	public int getNumErrors() {
+		return numErrors;
 	}
 }

@@ -20,9 +20,16 @@
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.eclipse.buildship.core.gradleprojectnature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>programs</name>
+			<type>2</type>
+			<location>/SSD_Data/DevFile/ManishTriangleProject/Triangle-Tools/programs</location>
+		</link>
+	</linkedResources>
 	<filteredResources>
 		<filter>
-			<id>1668598107977</id>
+			<id>1678548985350</id>
 			<name></name>
 			<type>30</type>
 			<matcher>

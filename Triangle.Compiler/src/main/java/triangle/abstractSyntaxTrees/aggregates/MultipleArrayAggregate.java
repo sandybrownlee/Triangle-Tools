@@ -30,6 +30,6 @@ public class MultipleArrayAggregate extends ArrayAggregate {
 		return v.visitMultipleArrayAggregate(this, arg);
 	}
 
-	public final Expression E;
+	public Expression E;
 	public final ArrayAggregate AA;
 }

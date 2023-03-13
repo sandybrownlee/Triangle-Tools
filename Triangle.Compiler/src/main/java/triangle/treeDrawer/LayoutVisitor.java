@@ -169,9 +169,11 @@ public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
 	@Override
 	public DrawingTree visitBinaryExpression(BinaryExpression ast, Void obj) {
 		var d1 = ast.E1.visit(this);
-		var d2 = ast.O.visit(this);
+		var d2 = ast.O.spelling;
 		var d3 = ast.E2.visit(this);
-		return layoutTernary("Bin.Expr.", d1, d2, d3);
+		String expName = "Bin.Expr. (" + d2 + ")"; // Formanting the string
+		// Ammending this to display the sign
+		return layoutBinary(expName, d1, d3);
 	}
 
 	@Override

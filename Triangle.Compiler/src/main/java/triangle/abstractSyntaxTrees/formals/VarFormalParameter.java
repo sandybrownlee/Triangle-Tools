@@ -39,8 +39,8 @@ public class VarFormalParameter extends FormalParameter implements VariableDecla
 
 	@Override
 	public boolean equals(Object fpAST) {
-		if (fpAST instanceof VarFormalParameter vfpAST) {
-			return T.equals(vfpAST.T);
+		if (fpAST instanceof VarFormalParameter) {
+			return T.equals(((VarFormalParameter)fpAST).T);
 		} else {
 			return false;
 		}

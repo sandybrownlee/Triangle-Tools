@@ -1,0 +1,12 @@
+
+let
+  var a : Integer
+in
+{
+  a := 0;
+  while a < 10 do
+  BEGIN
+    put('a');
+    a := a + 1;
+  }
+}

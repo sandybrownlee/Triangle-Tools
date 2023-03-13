@@ -113,6 +113,8 @@ import triangle.codeGenerator.entities.TypeRepresentation;
 import triangle.codeGenerator.entities.UnknownAddress;
 import triangle.codeGenerator.entities.UnknownRoutine;
 import triangle.codeGenerator.entities.UnknownValue;
+import triangle.abstractSyntaxTrees.commands.LoopCommand;
+import triangle.abstractSyntaxTrees.commands.UnaryCommand;
 
 public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 		ActualParameterSequenceVisitor<Frame, Integer>, ArrayAggregateVisitor<Frame, Integer>,
@@ -171,6 +173,15 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 	}
 
 	@Override
+	public Void visitUnaryCommand(UnaryCommand ast, Frame frame) {
+		var valSize = ast.V.type.visit(this, frame);
+		encodeFetch(ast.V, frame, valSize);
+		ast.O.visit(this);
+		encodeStore(ast.V, frame, valSize);
+		return null;
+	}
+
+	@Override
 	public Void visitWhileCommand(WhileCommand ast, Frame frame) {
 		var jumpAddr = emitter.emit(OpCode.JUMP, 0, Register.CB, 0);
 		var loopAddr = emitter.getNextInstrAddr();
@@ -178,6 +189,19 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 		emitter.patch(jumpAddr);
 		ast.E.visit(this, frame);
 		emitter.emit(OpCode.JUMPIF, Machine.trueRep, Register.CB, loopAddr);
+		return null;
+	}
+
+	@Override
+	public Void visitLoopCommand(LoopCommand ast, Frame frame) {
+		var jumpAddr = emitter.emit(OpCode.JUMP, 0, Register.CB, 0);
+		var loopAddr = emitter.getNextInstrAddr();
+		ast.C2.visit(this, frame);
+		emitter.patch(jumpAddr);
+		ast.C1.visit(this, frame);
+		ast.E.visit(this, frame);
+		emitter.emit(OpCode.JUMPIF, Machine.trueRep, Register.CB, loopAddr);
+
 		return null;
 	}
 
@@ -559,7 +583,7 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 		if (frame == null) { // in this case, we're just using the frame to wrap up the size
 			frame = Frame.Initial;
 		}
-		
+
 		var offset = frame.getSize();
 		int fieldSize;
 		if (ast.entity == null) {
@@ -741,10 +765,9 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 	public static void writeTableDetails(AbstractSyntaxTree ast) {
 	}
 
-	// Generates code to fetch the value of a named constant or variable
-	// and push it on to the stack.
-	// currentLevel is the routine level where the vname occurs.
-	// frameSize is the anticipated size of the local stack frame when
+	// Generates code to pop the top off the stack
+	// and store the value in a named constant or variable
+	// frame the local stack frame when
 	// the constant or variable is fetched at run-time.
 	// valSize is the size of the constant or variable's value.
 

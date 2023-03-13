@@ -1,4 +1,3 @@
-
 package triangle.abstractSyntaxTrees.commands;
 
 import triangle.abstractSyntaxTrees.expressions.Expression;

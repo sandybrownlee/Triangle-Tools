@@ -14,26 +14,36 @@
 
 package triangle.syntacticAnalyzer;
 
+//import java.net.URL;
+
 public class SourceFile {
 
 	public static final char EOL = '\n';
 	public static final char EOT = '\u0000';
 
 	java.io.File sourceFile;
-	java.io.FileInputStream source;
+	java.io.InputStream source;
 	int currentLine;
 
 	public static SourceFile ofPath(String pathname) {
 		try {
-			return new SourceFile(pathname);
+			SourceFile sf = new SourceFile();
+			sf.sourceFile = new java.io.File(pathname);
+			sf.source = new java.io.FileInputStream(sf.sourceFile);
+			return sf;
 		} catch (java.io.IOException s) {
 			return null;
 		}
 	}
 
-	private SourceFile(String pathname) throws java.io.FileNotFoundException {
-		sourceFile = new java.io.File(pathname);
-		source = new java.io.FileInputStream(sourceFile);
+	public static SourceFile fromResource(String handle) {
+		SourceFile sf = new SourceFile();
+		// sf.sourceFile = new java.io.File(pathname);
+		sf.source = sf.getClass().getResourceAsStream(handle);
+		return sf;
+	}
+
+	private SourceFile() {
 		currentLine = 1;
 	}
 
