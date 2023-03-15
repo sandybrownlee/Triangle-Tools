@@ -555,8 +555,8 @@ public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
 	}
 
 	private DrawingTree layoutTernary(String name, DrawingTree d1, DrawingTree d2, DrawingTree d3) {
-		var dt = layoutCaption(name);
-		dt.setChildren(new DrawingTree[] { d1, d2, d3 });
+		var dt = layoutCaption(name + "(" + d2.caption + ")");
+		dt.setChildren(new DrawingTree[] { d1, d3 });
 		attachParent(dt, join(dt));
 		return dt;
 	}

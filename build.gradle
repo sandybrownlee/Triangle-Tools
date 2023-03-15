@@ -6,6 +6,12 @@ subprojects.each { subproject ->
   evaluationDependsOn(subproject.path)
 }
 
+
 jar {
-  from subprojects.sourceSets.main.output
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from {subprojects.sourceSets.main.output}
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    
 }

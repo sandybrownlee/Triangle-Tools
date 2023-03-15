@@ -14,6 +14,9 @@
 
 package triangle;
 
+//import com.sampullara.cli.Args;
+//import com.sampullara.cli.Argument;
+
 import triangle.abstractSyntaxTrees.Program;
 import triangle.codeGenerator.Emitter;
 import triangle.codeGenerator.Encoder;
@@ -24,6 +27,8 @@ import triangle.syntacticAnalyzer.Scanner;
 import triangle.syntacticAnalyzer.SourceFile;
 import triangle.treeDrawer.Drawer;
 
+
+
 /**
  * The main driver class for the Triangle compiler.
  *
@@ -32,11 +37,23 @@ import triangle.treeDrawer.Drawer;
  */
 public class Compiler {
 
-	/** The filename for the object program, normally obj.tam. */
-	static String objectName = "obj.tam";
 	
-	static boolean showTree = false;
-	static boolean folding = false;
+		static String objectName = "obj.tam";
+		//@Argument(alias = "o", description = "The filename for the object program", required = true)
+		//protected static String objectName = "obj.tam";
+		
+		static boolean showTree = false;
+		//@Argument(alias = "t", description = "Option for tree", required = false)
+		//protected static boolean showTree = false;
+		
+		static boolean folding = false;
+		//@Argument(alias = "f", description = "Option for folding", required = false)
+		//protected static boolean folding = false;
+		
+		//static boolean crText = false;
+		//@Argument(alias = "c", description = "Option for copyrite text", required = false)
+		//protected static boolean crText = false;
+		
 
 	private static Scanner scanner;
 	private static Parser parser;
@@ -62,9 +79,17 @@ public class Compiler {
 	 * @return true iff the source program is free of compile-time errors, otherwise
 	 *         false.
 	 */
+	//static boolean compileProgram(String sourceName, String objectName, boolean showingAST, boolean showingTable, boolean showingCopyright) {
 	static boolean compileProgram(String sourceName, String objectName, boolean showingAST, boolean showingTable) {
-
 		System.out.println("********** " + "Triangle Compiler (Java Version 2.1)" + " **********");
+		
+		/**
+		if (showingCopyright)
+		{
+			System.out.println("Triangle-Tools Compiler copyright 2023");
+		}
+		
+		**/
 
 		System.out.println("Syntactic Analysis ...");
 		SourceFile source = SourceFile.ofPath(sourceName);
@@ -73,6 +98,7 @@ public class Compiler {
 			System.out.println("Can't access source file " + sourceName);
 			System.exit(1);
 		}
+		
 
 		scanner = new Scanner(source);
 		reporter = new ErrorReporter(false);
@@ -120,7 +146,7 @@ public class Compiler {
 	 *             source filename.
 	 */
 	public static void main(String[] args) {
-
+		
 		if (args.length < 1) {
 			System.out.println("Usage: tc filename [-o=outputfilename] [tree] [folding]");
 			System.exit(1);
@@ -135,6 +161,21 @@ public class Compiler {
 		if (!showTree) {
 			System.exit(compiledOK ? 0 : 1);
 		}
+
+
+		/**
+		Compiler compiler = new Compiler();
+		
+		String sourceName = args[0];
+		Args.parseOrExit(compiler, args);
+		
+		var compiledOK = compileProgram(sourceName, objectName, showTree, false, crText);
+		
+		if (!showTree) {
+			System.exit(compiledOK ? 0 : 1);
+		}
+		**/
+
 	}
 	
 	private static void parseArgs(String[] args) {

@@ -284,10 +284,30 @@ public class Parser {
 			} else {
 
 				Vname vAST = parseRestOfVname(iAST);
-				accept(Token.BECOMES);
-				Expression eAST = parseExpression();
-				finish(commandPos);
-				commandAST = new AssignCommand(vAST, eAST, commandPos);
+				if (currentToken.kind == Token.OPERATOR && currentToken.spelling.equals("**"))
+					{
+						acceptIt();
+					
+						VnameExpression vne = new VnameExpression(vAST, commandPos); //variable name wrapped in expression
+					
+						Operator op = new Operator("*", commandPos); //the operator
+						
+						Expression eAST = new BinaryExpression(vne, op, vne, commandPos); //Binary expression containing variable name expression and the operator
+						
+						finish(commandPos);
+						
+						commandAST = new AssignCommand(vAST, eAST, commandPos); //The assignment to my binary assignment
+					
+					}
+				else
+					{
+				
+						accept(Token.BECOMES);
+						Expression eAST = parseExpression();
+						finish(commandPos);
+						commandAST = new AssignCommand(vAST, eAST, commandPos);
+					}
+					
 			}
 		}
 			break;
@@ -296,6 +316,13 @@ public class Parser {
 			acceptIt();
 			commandAST = parseCommand();
 			accept(Token.END);
+			break;
+			
+		case Token.LCURLY: { //if token is opening curly bracket
+			acceptIt();
+			commandAST = parseCommand();
+			accept(Token.RCURLY); //stop parsing at closing curly bracket
+		}
 			break;
 
 		case Token.LET: {
@@ -332,6 +359,7 @@ public class Parser {
 
 		case Token.SEMICOLON:
 		case Token.END:
+		case Token.RCURLY:  //case to end command when closing curly occurs.
 		case Token.ELSE:
 		case Token.IN:
 		case Token.EOT:

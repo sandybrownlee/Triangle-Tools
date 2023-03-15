@@ -20,4 +20,11 @@
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.eclipse.buildship.core.gradleprojectnature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>programs</name>
+			<type>2</type>
+			<location>C:/Users/johnw/Documents/University/CSCU9A5/CSCU9A5 Assignment Resit/Triangle-Tools/programs</location>
+		</link>
+	</linkedResources>
 </projectDescription>
