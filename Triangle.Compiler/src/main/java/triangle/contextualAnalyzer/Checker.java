@@ -775,7 +775,7 @@ public final class Checker implements ActualParameterVisitor<FormalParameter, Vo
 
 	public Checker(ErrorReporter reporter) {
 		this.reporter = reporter;
-		this.idTacanvable = new IdentificationTable();
+		this.idTable = new IdentificationTable();
 		establishStdEnvironment();
 	}
 
