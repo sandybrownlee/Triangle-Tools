@@ -1,6 +1,13 @@
 /*
- * @(#)Checker.java                        2.1 2003/10/07
+ * @(#)Checker.java                       
+ * 
+ * Revisions and updates (c) 2022-2023 Sandy Brownlee. alexander dot brownlee at stir dot ac dot uk
+ * 
+ * Original release:
  *
+ * Revisions and updates (c) 2022-2023 Sandy Brownlee. alexander dot brownlee at stir dot ac dot uk
+ * 
+ * Original release:
  * Copyright (C) 1999, 2003 D.A. Watt and D.F. Brown
  * Dept. of Computing Science, University of Glasgow, Glasgow G12 8QQ Scotland
  * and School of Computer and Math Sciences, The Robert Gordon University,
@@ -768,7 +775,7 @@ public final class Checker implements ActualParameterVisitor<FormalParameter, Vo
 
 	public Checker(ErrorReporter reporter) {
 		this.reporter = reporter;
-		this.idTable = new IdentificationTable();
+		this.idTacanvable = new IdentificationTable();
 		establishStdEnvironment();
 	}
 
